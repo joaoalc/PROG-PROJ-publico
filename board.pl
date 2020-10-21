@@ -8,38 +8,43 @@ elem(wr, C) :- C = 'WR'.  % white ring
 elem(br, C) :- C = 'BR'.   % black ring
 
 boardEmpty([
+    [[e],[e],[e],[c],[c]],
+    [[e],[e],[e],[e],[c]],
+    [[e],[e],[e],[e],[e]],
+    [[c],[e],[e],[e],[e]],
+    [[c],[c],[e],[e],[e]]
+]).
+
+/*
+boardEmpty([
     [e,e,e,c,c],
     [e,e,e,e,c],
     [e,e,e,e,e],
     [c,e,e,e,e],
     [c,c,e,e,e]
 ]).
-
-boardPieces([
-    [e,e,e,c,c],
-    [e,e,e,e,c],
-    [e,e,e,e,e],
-    [c,e,e,e,e],
-    [c,c,e,e,e]
-]).
+*/
 
 
-writeLine([]) :- write('|'), nl.
+
 writeColIndex(X) :-write('   | 1 | 2 | 3 | 4 | 5 |'), nl.
-writeHeader(X) :- write('---+-------------------+'), nl.
+writeHeader(X) :- write('-----------------------+'), nl.
 writeRowIndex(L) :- name(C, [L]),
-                    format(' ~p ', [C]).
+                    format(' ~p |', [C]).
 
-writeLine([Head|Tail]) :-
-    elem(Head, C),
-    format('| ~p ', C),
-    writeLine(Tail).
+printCell([Top|_]) :- elem(Top, C),
+                      format(' ~p |', [C]).
+
+printLine([]) :- nl.
+printLine([Head|Tail]) :-
+    printCell(Head),
+    printLine(Tail).
 
 printBoard([]).
 printBoard([Head|Tail], L) :-
     writeRowIndex(L),
     L1 is L+1, 
-    writeLine(Head),
+    printLine(Head),
     writeHeader(X),
     printBoard(Tail, L1).
 
