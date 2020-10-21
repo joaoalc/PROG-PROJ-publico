@@ -1,46 +1,54 @@
 :- use_module(library(lists)).
 
-symbol(e, C) :- C = ' '.
-symbol(c, C) :- C = '.'.
-symbol(wb, C) :- C = 'WB'.  % white Ball
-symbol(bb, C) :- C = 'BB'.  % black Ball
-symbol(wr, C) :- C = 'WR'.  % white ring
-symbol(br, C) :- C = 'BR'.   %black ring
+elem(e, C) :- C = ' '.
+elem(c, C) :- C = '.'.
+elem(wb, C) :- C = 'WB'.  % white Ball
+elem(bb, C) :- C = 'BB'.  % black Ball
+elem(wr, C) :- C = 'WR'.  % white ring
+elem(br, C) :- C = 'BR'.   % black ring
 
 boardEmpty([
-    [e,e,e,corner,corner],
-    [e,e,e,e,corner],
+    [e,e,e,c,c],
+    [e,e,e,e,c],
     [e,e,e,e,e],
-    [corner,e,e,e,e],
-    [corner,corner,e,e,e]
+    [c,e,e,e,e],
+    [c,c,e,e,e]
 ]).
 
 boardPieces([
-    [e,e,e,corner,corner],
-    [e,e,e,e,corner],
+    [e,e,e,c,c],
+    [e,e,e,e,c],
     [e,e,e,e,e],
-    [corner,e,e,e,e],
-    [corner,corner,e,e,e]
+    [c,e,e,e,e],
+    [c,c,e,e,e]
 ]).
 
 
 writeLine([]) :- write('|'), nl.
-writeHeader(X) :- write('+-------------------+'), nl.
+writeColIndex(X) :-write('   | 1 | 2 | 3 | 4 | 5 |'), nl.
+writeHeader(X) :- write('---+-------------------+'), nl.
+writeRowIndex(L) :- name(C, [L]),
+                    format(' ~p ', [C]).
+
 writeLine([Head|Tail]) :-
-    symbol(Head, C),
+    elem(Head, C),
     format('| ~p ', C),
     writeLine(Tail).
 
 printBoard([]).
-printBoard([Head|Tail]) :-
+printBoard([Head|Tail], L) :-
+    writeRowIndex(L),
+    L1 is L+1, 
     writeLine(Head),
     writeHeader(X),
-    printBoard(Tail).
+    printBoard(Tail, L1).
 
 printBoard :- 
+    nl,
+    writeColIndex(X),
     writeHeader(X),
     boardEmpty(X),
-    printBoard(X),
+    printBoard(X, 65).
 
 
 
