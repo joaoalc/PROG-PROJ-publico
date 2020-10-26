@@ -8,11 +8,11 @@ elem(wr, C) :- C = 'WR'.  % white ring
 elem(br, C) :- C = 'BR'.   % black ring
 
 initialBoard([
-    [[e],[e],[e],[bb,c],[bb,c]],
-    [[e],[e],[e],[e],[bb,c]],
-    [[e],[e],[e],[e],[e]],
-    [[wb,c],[e],[e],[e],[e]],
-    [[wb,c],[wb,c],[e],[e],[e]]
+    [[e   ],[e   ],[e],[bb,c],[bb,c]],
+    [[e   ],[e   ],[e],[e   ],[bb,c]],
+    [[e   ],[e   ],[e],[e   ],[e   ]],
+    [[wb,c],[e   ],[e],[e   ],[e   ]],
+    [[wb,c],[wb,c],[e],[e   ],[e   ]]
 ]).
 
 
@@ -43,7 +43,7 @@ printLine([Head|Tail]) :-
     printLine(Tail).
 
 % prints board matrix
-printBoard([]).
+printBoard([],L).
 printBoard([Head|Tail], L) :-
     writeRowIndex(L),
     L1 is L+1,          
