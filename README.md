@@ -22,8 +22,8 @@ The game consists of one gameboard depicting a 5x5 grid, 6 balls (3 white and 3 
 
 ### How to play
 In each turn the player should:
-    1 - Place or move one of his rings;
-    2 - Move one of his balls.
+    1. Place or move one of his rings;
+    2. Move one of his balls.
 If the player is unhable to perform one or more of these steps, then he is out of the game.
 
 **1- Ring Placement**
