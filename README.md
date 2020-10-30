@@ -85,17 +85,20 @@ As a simplification our displayGame function only prints the top element of the 
 The displayGame function starts by printing the column indexes and then calls the printMatrix function which receives a list and a letter for row identification.
 The printMatrix accesses each row and calls the printLine function whoose job is to print each board cell.
 
-#### Initial State 
-![Initial Board State](/images/initialState.png "Initial Board State")
+#### Initial State
 Each player starts with 3 balls positioned in the board's corners.
 
+![Initial Board State](/images/initialState.png "Initial Board State") 
+
 #### Intermediate State
-![Intermediate Board State](/images/intermediateState.png "Intermediate Board State")
 In this state the both player have reached one of the goal spaces for their balls (WB in D1 and BB in B5).
 
+![Intermediate Board State](/images/intermediateState.png "Intermediate Board State")
+
 #### Final State
-![Final Board State](/images/finalState.png "Final Board State")
 In the final state the player with the black pieces reached the goal spaces with all of his 3 balls first, so he wins the game.
+
+![Final Board State](/images/finalState.png "Final Board State") 
 
 
 
