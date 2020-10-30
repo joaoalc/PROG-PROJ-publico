@@ -7,7 +7,7 @@ elem(bb, C) :- C = 'BB'.  % black Ball
 elem(wr, C) :- C = 'WR'.  % white ring
 elem(br, C) :- C = 'BR'.   % black ring
 
-initialBoard([
+initial([
     [[e   ],[e   ],[e],[bb,c],[bb,c]],
     [[e   ],[e   ],[e],[e   ],[bb,c]],
     [[e   ],[e   ],[e],[e   ],[e   ]],
@@ -26,7 +26,7 @@ emptyBoard([
 
 
 
-
+/*---DISPLAY FUNCTIONS---*/
 writeColIndex(X) :-write('   |  1 |  2 |  3 |  4 |  5 |'), nl.
 writeHeader(X) :- write('----------------------------+'), nl.
 writeRowIndex(L) :- name(C, [L]),
@@ -43,25 +43,35 @@ printLine([Head|Tail]) :-
     printLine(Tail).
 
 % prints board matrix
-printBoard([],L).
-printBoard([Head|Tail], L) :-
+printMatrix([],L).
+printMatrix([Head|Tail], L) :-
     writeRowIndex(L),
     L1 is L+1,          
     printLine(Head),
     writeHeader(X),
-    printBoard(Tail, L1).
-
-printBoard :- 
-    nl,
-    writeColIndex(X),
-    writeHeader(X),
-    initialBoard(X),
-    printBoard(X, 65).
+    printMatrix(Tail, L1).
 
 
+displayGame(GameState, Player) :- 
+    initial(GameState),         %attribute initial board to game state
+    nl,                         %start printing board
+    writeColIndex(X),           %index from 1 to 5
+    writeHeader(X),             %separator
+    printMatrix(GameState,65).
+
+
+
+play :- 
+    displayGame(State, Player).
+
+
+
+
+
+
+/*DEBUG*/
 %Print board layer N
-%N is the "Layer" it's printing
-
+%N is the "Layer" its printing
 
 printBoardLayer(N) :-
     nl,
@@ -69,26 +79,7 @@ printBoardLayer(N) :-
     writeHeader(X),
     initialBoard(X),
     printBoardLayer(N, X, 65).
-/*
-printCellLayer(N, []) :- write('    |').
 
-printCellLayer(N, [Top|_]) :- N is 1, elem(Top, C), 
-                      format(' ~p |', [C]).*/
-/*
-printCellLayer(0, [Top|Rest], 1) :- 
-    ((Top == 'wb' ; Top == 'bb'), elem(Top, C), format(' ~p |', [C])) ;
-     ((Top \== 'wb' , Top \== 'bb'), elem(e, C) , format(' ~p |', [C])).
-
-printCellLayer(0, [Top|Rest], N) :-  ((Top == 'wb' ; Top == 'bb'), A1 is 2, printCellLayer(A1, Rest, N)); ((Top \== 'bb' ; Top \== 'wb'), A1 is 2, printCellLayer(A1, [Top|Rest], N)).
-
-printCellLayer(A, [], N) .- write('   |').
-
-printCellLayer(A, [Top|Rest], N) :- (A =\= 0), A > 1, A < N, A1 is A + 1, printCellLayer(A1, Rest, N).
-
-%printCellLayer(N, [Top|Rest]) :- N >= 2, (Top == 'wb',  N1 is N - 1, printCellLayer(N1, Rest)); printCellLayer(N, Rest).
-printCellLayer(A, [Top|_], N) :- A == N, elem(Top, C), 
-                      format(' ~p |', [C]).
-*/
 
 %A == N == 0
 printCellLayer(1, [Top|Tail], 1) :- ((Top == 'wb' ; Top == 'bb'), elem(Top, C), format(' ~p |', [C])) ; ((Top \== 'wb' ; Top \== 'bb'), elem(e, C), format(' ~p |', [C])).
