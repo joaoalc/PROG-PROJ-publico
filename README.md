@@ -40,9 +40,8 @@ The game ends when one the player gets all 3 balls on the opposite corner of the
 
 ### Game Representation
 #### Elements
-Every board pieces are represented by an atom. In order to print every element to the ocnsole we call the predicates listed bellow.
+Every board piece is represented by an atom. In order to print every element to the console we call the predicates listed bellow.
     
-    elem(e, C) :- C = '  '.   % empty cell
     elem(c, C) :- C = ' _'.   % board corner (goal space)
     elem(wb, C) :- C = 'WB'.  % white Ball
     elem(bb, C) :- C = 'BB'.  % black Ball
@@ -50,18 +49,48 @@ Every board pieces are represented by an atom. In order to print every element t
     elem(br, C) :- C = 'BR'.  % black ring
 
 #### Board
-The board consists of a list of lists. A row is represented by a list of lists aswell, in wich the interior lists (stacks) represent each cell of the board. In our game a cell can have more than one element in it and because of that we decided that the best of representing a cell would be a stack. The first element of the cell is the top of the stack and the last is the bottom.
+The board consists of a list of lists. A row is represented by a list of lists aswell, in which the interior lists (stacks) represent each cell of the board. In our game a cell can have more than one element in it and because of that we decided that the best way of representing a cell would be a stack. The first element of the cell is the top of the stack and the last is the bottom.
 
-    initialBoard([
-    [[e   ],[e   ],[e],[bb,c],[bb,c]],
-    [[e   ],[e   ],[e],[e   ],[bb,c]],
-    [[e   ],[e   ],[e],[e   ],[e   ]],
-    [[wb,c],[e   ],[e],[e   ],[e   ]],
-    [[wb,c],[wb,c],[e],[e   ],[e   ]]
+    *Initial board*
+    initial([
+        [[       ],[       ],[],[wb,wr,c],[wb,wr,c]],
+        [[       ],[       ],[],[       ],[wb,wr,c]],
+        [[       ],[       ],[],[       ],[       ]],
+        [[bb,br,c],[       ],[],[       ],[       ]],
+        [[bb,br,c],[bb,br,c],[],[       ],[       ]]
     ]).
 
-    
+    *Intermediate board*
+    intermediate([
+        [[       ],[     ],[     ],[c         ],[c         ]],
+        [[       ],[     ],[wb,wr],[wr        ],[bb,br,wr,c]],
+        [[       ],[     ],[wb,wr],[br        ],[          ]],
+        [[wb,wr,c],[bb,br],[bb,br],[wb,wr     ],[          ]],
+        [[c      ],[c    ],[     ],[          ],[          ]]
+    ]).
 
+    *Final board*
+    final([
+        [[       ],[        ],[  ],[bb,br,c ],[bb,br,c   ]],
+        [[       ],[        ],[  ],[br      ],[bb,br,wr,c]],
+        [[       ],[        ],[wr],[        ],[          ]],
+        [[wb,wr,c],[wb,wr,br],[  ],[        ],[          ]],
+        [[wr,c   ],[wb,wrc  ],[  ],[        ],[          ]]
+    ]).
+
+### Console Visualization
+Our board consists 5x5 matrix in which the columns are numbered from 1 to 5 and rows are named from A to E.
+As a simplification our displayGame function only prints the top element of the board. It would be redundant to print the bottom elements, because if for instance we have a Black ball on top then we know that there must be a black ring bellow. By doing this we reduce the ammount of useless data on the screen which would only make it more confusing.
+
+The displayGame function starts by printing the column indexes and then calls the printMatrix function which receives a list and a letter for row identification.
+The printMatrix accesses each row and calls the printLine function whoose job is to print each board cell.
+
+    
+![Initial Board State](/images/initialState.png "Initial Board State")
+
+![Intermediate Board State](/images/intermediateState.png "Intermediate Board State")
+
+![Final Board State](/images/finalState.png "Final Board State")
 
 
 
