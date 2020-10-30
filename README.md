@@ -51,7 +51,7 @@ Every board piece is represented by an atom. In order to print every element to 
 #### Board
 The board consists of a list of lists. A row is represented by a list of lists aswell, in which the interior lists (stacks) represent each cell of the board. In our game a cell can have more than one element in it and because of that we decided that the best way of representing a cell would be a stack. The first element of the cell is the top of the stack and the last is the bottom.
 
-    *Initial board*
+    /*Initial board*/
     initial([
         [[       ],[       ],[],[wb,wr,c],[wb,wr,c]],
         [[       ],[       ],[],[       ],[wb,wr,c]],
@@ -60,7 +60,7 @@ The board consists of a list of lists. A row is represented by a list of lists a
         [[bb,br,c],[bb,br,c],[],[       ],[       ]]
     ]).
 
-    *Intermediate board*
+    /*Intermediate board*/
     intermediate([
         [[       ],[     ],[     ],[c         ],[c         ]],
         [[       ],[     ],[wb,wr],[wr        ],[bb,br,wr,c]],
@@ -69,7 +69,7 @@ The board consists of a list of lists. A row is represented by a list of lists a
         [[c      ],[c    ],[     ],[          ],[          ]]
     ]).
 
-    *Final board*
+    /*Final board*/
     final([
         [[       ],[        ],[  ],[bb,br,c ],[bb,br,c   ]],
         [[       ],[        ],[  ],[br      ],[bb,br,wr,c]],
@@ -85,12 +85,17 @@ As a simplification our displayGame function only prints the top element of the 
 The displayGame function starts by printing the column indexes and then calls the printMatrix function which receives a list and a letter for row identification.
 The printMatrix accesses each row and calls the printLine function whoose job is to print each board cell.
 
-    
+#### Initial State 
 ![Initial Board State](/images/initialState.png "Initial Board State")
+Each player starts with 3 balls positioned in the board's corners.
 
+#### Intermediate State
 ![Intermediate Board State](/images/intermediateState.png "Intermediate Board State")
+In this state the both player have reached one of the goal spaces for their balls (WB in D1 and BB in B5).
 
+#### Final State
 ![Final Board State](/images/finalState.png "Final Board State")
+In the final state the player with the black pieces reached the goal spaces with all of his 3 balls first, so he wins the game.
 
 
 
