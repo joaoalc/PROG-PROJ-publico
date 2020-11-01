@@ -81,7 +81,7 @@ displayGame(GameState, Player) :-
 
 play :- 
     readPlayer(Player),
-    final(State),         %attribute initial board to game state
+    initial(State),         %attribute initial board to game state
     displayGame(State, Player).
 
 
