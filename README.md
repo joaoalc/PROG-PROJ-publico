@@ -8,7 +8,7 @@
 
 ## Description
 The objective of this game is to lay stepping stones (rings) for the player's trio (balls) in order to 
-to walk and vault their way onto the oposite board corner.
+to walk and vault their way onto the opposite corner of the board.
 
 The game consists of one gameboard depicting a 5x5 grid, 6 balls (3 white and 3 black) and 16 rings (8 in white and the other 8 in black).
 
@@ -17,14 +17,14 @@ The game consists of one gameboard depicting a 5x5 grid, 6 balls (3 white and 3 
 + Once a component - ring or ball - is at play it may never leave the board.
 + A ball can only sit directly on a ring of the same color.
 + A component is only allowed to move to adjacent (orthogonally or diagonally adjacent) tiles.
-    - If an ajacent tile has another component the player can vault over it.
+    - If an adjacent tile has another component the player can vault over it.
 + Once a ball reaches one of it's goal spaces, it never leaves that space.
 
 ### How to play
 In each turn the player should:
     1. Place or move one of his rings;
     2. Move one of his balls.
-If the player is unhable to perform one or more of these steps, then he is out of the game.
+If the player is unable to perform one or more of these steps, then they are out of the game.
 
 #### 1- Ring Placement
 The player can place a new ring from the supply, or move one of his exposed rings (the ring cannot have a ball or another ring on top).
@@ -49,7 +49,7 @@ Every board piece is represented by an atom. In order to print every element to 
     elem(br, C) :- C = 'BR'.  % black ring
 
 #### Board
-The board consists of a list of lists. A row is represented by a list of lists aswell, in which the interior lists (stacks) represent each cell of the board. In our game a cell can have more than one element in it and because of that we decided that the best way of representing a cell would be a stack. The first element of the cell is the top of the stack and the last is the bottom.
+The board consists of a list of lists. A row is represented by a list of lists as well, in which the interior lists (stacks) represent each cell of the board. In our game a cell can have more than one element in it and because of that we decided that the best way of representing a cell would be a stack. The first element of the cell is the top of the stack and the last is the bottom.
 
     /*Initial board*/
     initial([
@@ -80,10 +80,10 @@ The board consists of a list of lists. A row is represented by a list of lists a
 
 ### Console Visualization
 Our board consists 5x5 matrix in which the columns are numbered from 1 to 5 and rows are named from A to E.
-As a simplification our displayGame function only prints the top element of the board. It would be redundant to print the bottom elements, because if for instance we have a Black ball on top then we know that there must be a black ring bellow. By doing this we reduce the ammount of useless data on the screen which would only make it more confusing.
+As a simplification our displayGame function only prints the top element of the board. It would be redundant to print the bottom elements, because if for instance we have a Black ball on top then we know that there must be a black ring bellow. By doing this, we reduce the amount of useless data on the screen, which would only make it more confusing.
 
 The displayGame function starts by printing the column indexes and then calls the printMatrix function which receives a list and a letter for row identification.
-The printMatrix accesses each row and calls the printLine function whoose job is to print each board cell.
+The printMatrix accesses each row and calls the printLine function whose job is to print each board cell.
 
 #### Initial State
 Each player starts with 3 balls positioned in the board's corners.
