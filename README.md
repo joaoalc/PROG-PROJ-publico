@@ -100,6 +100,6 @@ In the final state the player with the black pieces reached the goal spaces with
 
 ![Final Board State](/images/finalState.png "Final Board State") 
 
-
-
+### Sources
+https://nestorgames.com/#mitsudomoe_detail
 
