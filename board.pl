@@ -67,16 +67,20 @@ printMatrix([Head|Tail], L) :-
     writeHeader(X),
     printMatrix(Tail, L1).
 
+% input player name
+readPlayer(X) :- 
+    format('~n ~s ~n', ['Insert player name (no capital letters): ']),
+    read(X).
 
-displayGame(GameState, Player) :-         
+displayGame(GameState, Player) :-    
+    format('~n Player: ~p ~n', [Player]),   
     nl,                         %start printing board
     writeColIndex(X),           %index from 1 to 5
     writeHeader(X),             %separator
     printMatrix(GameState,65).
 
-
-
 play :- 
+    readPlayer(Player),
     final(State),         %attribute initial board to game state
     displayGame(State, Player).
 
