@@ -47,11 +47,6 @@ writeHeader(X) :- write('--------------------------------------+'), nl.
 writeRowIndex(L) :- name(C, [L]),
                     format(' ~p |', [C]).
 /*
-% prints top element of cell stack
-printCell([]) :- write('    |'). %base case empty cell
-printCell([Top|_]) :- elem(Top, C), 
-                      format(' ~p |', [C]).
-                      */
 
 /*Prints first 2 elements of a list*/
 printElements([],2) :- write('      ').

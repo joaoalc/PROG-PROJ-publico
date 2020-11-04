@@ -7,17 +7,17 @@ play :-
     initial(State),         %attribute initial board to game state
     displayGame(State, Player1),
     doIt(State).
-
+/*Testing*/
 doIt(Board) :-
-    playPiece(Board, 3,1,wr,Res),
-    displayGame(Res, X).
+    playPiece(Board, 1,1,wr,Res),
+    displayGame(Res, 'TESTING ').
 
 /*PIECE PLACEMENT*/
 playPiece(BoardIn, Line, Col, Piece, BoardOut) :-                        %TODO line indexes are letters
-    playLine(Line, BoardIn, Col, Piece, BoardOut).
+    playLine(Lindex, BoardIn, Col, Piece, BoardOut).
 
  %TabOut=tabuleiro com  a peça
-playLine(1, [Line | Rest], Col, Piece, [NewLine | NewRest]) :- 
+playLine(1, [Line | Rest], Col, Piece, [NewLine | Rest]) :- 
     playCol(Col, Line, Piece, NewLine). 
 
 playLine(Lindex, [Line | Rest], Col , Piece, [Line | NewLines]) :- 
@@ -26,8 +26,11 @@ playLine(Lindex, [Line | Rest], Col , Piece, [Line | NewLines]) :-
 
 %M is N -1
 
-playCol(1, [_ | MoreCols], Piece, [Piece | MoreCols]).
+pushFront(Piece, List, [Piece|List]).
+
+playCol(1, [Stack | MoreStacks], Piece, [Res|MoreStacks]) :-
+    pushFront(Piece, Stack, Res).
 
 playCol(N, [P | MoreCols], Piece, [P | NewPieces]) :-
-    M is N-1,
-    playCol(M, MoreCols, Piece, NewPieces). %M is N-1, N > 1
+    M is N-1, N > 1,
+    playCol(M, MoreCols, Piece, NewPieces).
