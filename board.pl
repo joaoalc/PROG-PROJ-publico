@@ -28,7 +28,7 @@ final([
     [[       ],[        ],[  ],[br      ],[bb,br,wr,c]],
     [[       ],[        ],[wr],[        ],[          ]],
     [[wb,wr,c],[wb,wr,br],[  ],[        ],[          ]],
-    [[wr,c   ],[wb,wrc  ],[  ],[        ],[          ]]
+    [[wr,c   ],[wb,wr,c  ],[  ],[        ],[          ]]
 ]).
 
 emptyBoard([
@@ -42,20 +42,32 @@ emptyBoard([
 
 
 /*---DISPLAY FUNCTIONS---*/
-writeColIndex(X) :-write('   |  1 |  2 |  3 |  4 |  5 |'), nl.
-writeHeader(X) :- write('----------------------------+'), nl.
+writeColIndex(X) :-write('   |  1   |  2   |  3   |  4   |  5   |'), nl.
+writeHeader(X) :- write('--------------------------------------+'), nl.
 writeRowIndex(L) :- name(C, [L]),
                     format(' ~p |', [C]).
-
+/*
 % prints top element of cell stack
 printCell([]) :- write('    |'). %base case empty cell
 printCell([Top|_]) :- elem(Top, C), 
                       format(' ~p |', [C]).
+                      */
+
+
+printElements([],2) :- write('      ').
+printElements([],1) :-write('   ').
+printElements([],0).
+printElements([Top|Head], 0).
+printElements([Top|Rest], N) :- elem(Top, C),
+                                N1 is N-1,
+                                format('~p ', [C]),
+                                printElements(Rest, N1).
 
 % prints board row
 printLine([]) :- nl.
 printLine([Head|Tail]) :-
-    printCell(Head),
+    printElements(Head,2),
+    write('|'),
     printLine(Tail).
 
 % prints board matrix
@@ -81,7 +93,7 @@ displayGame(GameState, Player) :-
 
 play :- 
     readPlayer(Player),
-    initial(State),         %attribute initial board to game state
+    intermediate(State),         %attribute initial board to game state
     displayGame(State, Player).
 
 
