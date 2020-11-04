@@ -82,7 +82,14 @@ printMatrix([Head|Tail], L) :-
 % input player name
 readPlayer(Msg,X) :- 
     format('~n ~s ~n', [Msg]),
-    read(X).
+    get_code(C),
+    readRest(C,Asciis),
+    name(X,Asciis).
+
+readRest(10,[]).
+readRest(13,[]).
+readRest(C,[C|Rest]) :- 
+    get_code(C2), readRest(C2,Rest).
 
 displayGame(GameState, Player) :-    
     format('~n Player: ~p ~n', [Player]),   
