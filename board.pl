@@ -1,6 +1,6 @@
 :- use_module(library(lists)).
 
-elem(c, C) :- C = ' _'.
+elem(c, C) :- C = '_ '.
 elem(wb, C) :- C = 'WB'.  % white Ball
 elem(bb, C) :- C = 'BB'.  % black Ball
 elem(wr, C) :- C = 'WR'.  % white ring
@@ -53,7 +53,7 @@ printCell([Top|_]) :- elem(Top, C),
                       format(' ~p |', [C]).
                       */
 
-
+/*Prints first 2 elements of a list*/
 printElements([],2) :- write('      ').
 printElements([],1) :-write('   ').
 printElements([],0).
@@ -80,8 +80,8 @@ printMatrix([Head|Tail], L) :-
     printMatrix(Tail, L1).
 
 % input player name
-readPlayer(X) :- 
-    format('~n ~s ~n', ['Insert player name (no capital letters): ']),
+readPlayer(Msg,X) :- 
+    format('~n ~s ~n', [Msg]),
     read(X).
 
 displayGame(GameState, Player) :-    
@@ -91,10 +91,6 @@ displayGame(GameState, Player) :-
     writeHeader(X),             %separator
     printMatrix(GameState,65).
 
-play :- 
-    readPlayer(Player),
-    intermediate(State),         %attribute initial board to game state
-    displayGame(State, Player).
 
 
 
