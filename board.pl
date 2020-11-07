@@ -1,10 +1,10 @@
 :- use_module(library(lists)).
 
-elem(c, C) :- C = '_ '.
-elem(wb, C) :- C = 'WB'.  % white Ball
-elem(bb, C) :- C = 'BB'.  % black Ball
-elem(wr, C) :- C = 'WR'.  % white ring
-elem(br, C) :- C = 'BR'.   % black ring
+elem(c, 'C').% :- C = '_ '.
+elem(wb, 'WB').% :- C = 'WB'.  % white Ball
+elem(bb, 'BB').% :- C = 'BB'.  % black Ball
+elem(wr, 'WR').% :- C = 'WR'.  % white ring
+elem(br, 'BR').% :- C = 'BR'.   % black ring
 
 initial([
     [[       ],[       ],[],[wb,wr,c],[wb,wr,c]],
