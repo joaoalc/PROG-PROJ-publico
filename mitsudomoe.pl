@@ -7,6 +7,7 @@ play :-
     initial(State),         %attribute initial board to game state
     displayGame(State, Player1),
     doIt(State).
+
 /*Testing*/
 doIt(Board) :-
     playPiece(Board, 1,1,wr,Res),
@@ -29,6 +30,7 @@ playLine(Lindex, [Line | Rest], Col , Piece, [Line | NewLines]) :-
 pushFront(Piece, List, [Piece|List]).
 
 playCol(1, [Stack | MoreStacks], Piece, [Res|MoreStacks]) :-
+    %playableOn(Piece, Stack), %playableOn only works if it's supposed to place a piece there. If it isn't, (probably backtracking issues) cause it to crash
     pushFront(Piece, Stack, Res).
 
 playCol(N, [P | MoreCols], Piece, [P | NewPieces]) :-

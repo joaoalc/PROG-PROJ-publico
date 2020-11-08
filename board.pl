@@ -1,10 +1,22 @@
 :- use_module(library(lists)).
 
-elem(c, 'C').% :- C = '_ '.
-elem(wb, 'WB').% :- C = 'WB'.  % white Ball
-elem(bb, 'BB').% :- C = 'BB'.  % black Ball
-elem(wr, 'WR').% :- C = 'WR'.  % white ring
-elem(br, 'BR').% :- C = 'BR'.   % black ring
+%Facts that indicate that piece A can be placed on piece B. Rings can also be played on nothing, but 
+playableOn(wr, [br|_]).
+playableOn(br, [wr|_]).
+playableOn(wb, [wr|_]).
+playableOn(bb, [br|_]).
+
+%-------TODO: Not sure if these can be used for the purposes I want right now
+playableOn(wr, []).
+playableOn(br, []).
+%-------
+
+
+elem(c, 'C').
+elem(wb, 'WB').  % white Ball
+elem(bb, 'BB').  % black Ball
+elem(wr, 'WR').  % white ring
+elem(br, 'BR').  % black ring
 
 initial([
     [[       ],[       ],[],[wb,wr,c],[wb,wr,c]],
