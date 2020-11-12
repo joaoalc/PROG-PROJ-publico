@@ -2,7 +2,9 @@
 
 %Facts that indicate that piece A can be placed on piece B. Rings can also be played on nothing, but 
 playableOn(wr, [br|_]).
+playableOn(wr, [wr|_]).
 playableOn(br, [wr|_]).
+playableOn(br, [br|_]).
 playableOn(wb, [wr|_]).
 playableOn(bb, [br|_]).
 
@@ -12,11 +14,20 @@ playableOn(br, []).
 %-------
 
 
+elem(none, '0'). % DEBUG
+
 elem(c, 'C').
 elem(wb, 'WB').  % white Ball
 elem(bb, 'BB').  % black Ball
 elem(wr, 'WR').  % white ring
 elem(br, 'BR').  % black ring
+
+/*TODO is there a better way to compare? */
+equalTo(c, c).
+equalTo(wb, wb).  % white Ball
+equalTo(bb, bb).  % black Ball
+equalTo(wr, wr).  % white ring
+equalTo(br, br).  % black ring
 
 initial([
     [[       ],[       ],[],[wb,wr,c],[wb,wr,c]],
@@ -53,7 +64,7 @@ emptyBoard([
 
 
 
-/*---DISPLAY FUNCTIONS---*/
+/*DISPLAY FUNCTIONS ------------------------------------------------------*/
 writeColIndex(X) :-write('   |  1   |  2   |  3   |  4   |  5   |'), nl.
 writeHeader(X) :- write('--------------------------------------+'), nl.
 writeRowIndex(L) :- name(C, [L]),
@@ -86,25 +97,32 @@ printMatrix([Head|Tail], L) :-
     writeHeader(X),
     printMatrix(Tail, L1).
 
-% input player name
-readPlayer(Msg,X) :- 
-    format('~n ~s ~n', [Msg]),
-    get_code(C),
-    readRest(C,Asciis),
-    name(X,Asciis).
-
-readRest(10,[]).
-readRest(13,[]).
-readRest(C,[C|Rest]) :- 
-    get_code(C2), readRest(C2,Rest).
-
-displayGame(GameState, Player) :-    
-    format('~n Player: ~p ~n', [Player]),   
+displayBoard(Board, PlayerName) :-    
+    format('~n Player: ~p ~n', [PlayerName]),   
     nl,                         %start printing board
     writeColIndex(X),           %index from 1 to 5
     writeHeader(X),             %separator
-    printMatrix(GameState,65).
+    printMatrix(Board,65).
 
+
+/*GET TOP ELEMENT BY INDEX ---------------------------------*/
+getTopElem([], Piece) :- Piece = none.
+getTopElem([First|_], Piece) :- Piece = First.
+
+getCell([First|_], 0, Piece) :-
+    getTopElem(First, Piece).
+
+getCell([First|Rest], X, Piece) :-
+    X1 is X-1,
+    getCell(Rest, X1, Piece).
+
+getTopXY([First|_], X, 0, Piece) :-
+    getCell(First, X, Piece).
+
+getTopXY([First|Rest], X, Y, Piece) :-
+    Y1 is Y-1,
+    getTopXY(Rest, X, Y1, Piece).
+    
 
 
 
