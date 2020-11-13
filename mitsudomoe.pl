@@ -5,8 +5,8 @@
 
 play :- 
     initPlayersPvP, % initialize players
-    initial(Board), % initizlize board
-    gameLoop(Board). % start game loop
+    initial(Board), % initialize board
+    gameLoop(Board, 0). % start game loop
 
 % /*Testing*/
 % doIt(Board) :-
@@ -18,45 +18,50 @@ playerTurn(Player, Board, UpdatedBoard) :-
     UpdatedBoard = Board. %TODO
 
 /*GAME LOOP ---------------------------------------------*/
-gameLoop(Board) :-
+gameLoop(_,1) :- !.
+gameLoop(_,2) :- !.
+gameLoop(Board, Winner) :-
     getPlayerTurn(PlayerID, 1), % get current player
+    displayGame(Board, PlayerID), % display result
     playerTurn(PlayerID, Board, UpdatedBoard), %execute turn
-    displayGame(UpdatedBoard, PlayerID), % display result
-    getTopXY(Board, 0, 2, Piece),
-    \+endGame(Board, PlayerID),
+    gameOver(UpdatedBoard, Value),
     setNextPlayer, % switch to next player
-    gameLoop(Board).
+    gameLoop(UpdatedBoard, Value).
 
 /*END GAME ----------------------------------------------*/
-endGame(Board, PlayerID) :-
-    getPlayerColor(PlayerId, Color),
-    isEndGame(Board, Color),
+
+gameOver(Board, Winner) :-
+    value(Board, PlayerID, Winner).
+
+value(Board, PlayerID, Value) :-
+    getPlayerColor(PlayerID, Color),
     !,
-    getPlayerName(PlayerID, Name),
-    format('[!] ~p is the winner', Name).
+    isEndGame(Board) -> 
+        Value is PlayerID % game over
+        ; 
+        Value is 0, nl, write('[!] Next Turn'), nl.  % game continues
 
-isEndGame(Board, white) :- whiteEndGame(Board).
-isEndGame(Board, black) :- blackEndGame(Board).
+% assert if one of the players have won the game
+isEndGame(Board) :- 
+    (   % true when right top corners have all white balls (white pieces win)
+        getTopXY(Board, 0, 3, D1),  
+        getTopXY(Board, 0, 4, E1),
+        getTopXY(Board, 1, 4, E2),
+        !,
+        equalTo(D1, wb),
+        equalTo(E1, wb),
+        equalTo(E2, wb)
+    );
+    (    % true when left bottom corners have all black balls (black pieces win)
+        getTopXY(Board, 3, 0, A4),  
+        getTopXY(Board, 4, 0, A5),
+        getTopXY(Board, 4, 1, B5),
+        !,
+        equalTo(A4, bb),
+        equalTo(A5, bb),
+        equalTo(B5, bb)
+    ).
 
-% check for white victory
-% true when left bottom corners have all white balls
-whiteEndGame(Board) :-
-    getTopXY(Board, 0, 3, D1),  
-    getTopXY(Board, 0, 4, E1),
-    getTopXY(Board, 1, 4, E2),
-    equalTo(D1, wb),
-    equalTo(E1, wb),
-    equalTo(E2, wb).
-
-% check for black victory
-% true when right top corners have all black balls
-blackEndGame(Board) :-
-    getTopXY(Board, 3, 0, A4),  
-    getTopXY(Board, 4, 0, A5),
-    getTopXY(Board, 4, 1, B5),
-    equalTo(A4, bb),
-    equalTo(A5, bb),
-    equalTo(B5, bb).
 
 /*DISPLAY GAME ------------------------------------------*/
 displayGame(GameState, PlayerID) :-  
