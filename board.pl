@@ -97,8 +97,7 @@ printMatrix([Head|Tail], L) :-
     writeHeader(X),
     printMatrix(Tail, L1).
 
-displayBoard(Board, PlayerName) :-    
-    format('~n Player: ~p ~n', [PlayerName]),   
+displayBoard(Board) :-    
     nl,                         %start printing board
     writeColIndex(X),           %index from 1 to 5
     writeHeader(X),             %separator

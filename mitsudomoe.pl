@@ -18,8 +18,8 @@ playerTurn(Player, Board, UpdatedBoard) :-
     UpdatedBoard = Board. %TODO
 
 /*GAME LOOP ---------------------------------------------*/
-gameLoop(_,1) :- !.
-gameLoop(_,2) :- !.
+gameLoop(_,1) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
+gameLoop(_,2) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
 gameLoop(Board, Winner) :-
     getPlayerTurn(PlayerID, 1), % get current player
     displayGame(Board, PlayerID), % display result
@@ -29,7 +29,7 @@ gameLoop(Board, Winner) :-
     gameLoop(UpdatedBoard, Value).
 
 /*END GAME ----------------------------------------------*/
-
+% asserts if the game has been won
 gameOver(Board, Winner) :-
     value(Board, PlayerID, Winner).
 
@@ -41,7 +41,7 @@ value(Board, PlayerID, Value) :-
         ; 
         Value is 0, nl, write('[!] Next Turn'), nl.  % game continues
 
-% assert if one of the players have won the game
+% verify is white or black pieces have reached their goals
 isEndGame(Board) :- 
     (   % true when right top corners have all white balls (white pieces win)
         getTopXY(Board, 0, 3, D1),  
@@ -65,8 +65,19 @@ isEndGame(Board) :-
 
 /*DISPLAY GAME ------------------------------------------*/
 displayGame(GameState, PlayerID) :-  
+    printHeader(PlayerID),
+    displayBoard(GameState),
+    getStashSize(PlayerID, Size),
+    format('~n Stash: ~p rings ~n', Size). %TODO define ring stash
+
+printHeader(PlayerID) :-
     getPlayerName(PlayerID, Name),
-    displayBoard(GameState, Name).
+    getPlayerColor(PlayerID, Color),
+    nl,
+    write('======================================='),
+    format('~n Player: ~p   ', Name),
+    format(' Color: ~p ~n', Color),
+    write('=======================================').
 
 
 /*PIECE PLACEMENT----------------------------------------*/
