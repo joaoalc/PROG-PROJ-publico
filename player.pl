@@ -32,7 +32,7 @@ getStashSize(ID, Size) :- player(ID,_,_,Size,_).    % TODO decrement stash
 
 % PLAYER INPUT ------------------------------------------
 inputString(Msg , X) :-
-    format('~n ~s ~n', [Msg]),
+    format('~n ~s', [Msg]),
     get_code(C),
     readRest(C,Asciis),
     name(X,Asciis).
@@ -43,4 +43,21 @@ readRest(C,[C|Rest]) :-
     get_code(C2), readRest(C2,Rest).
 
 
-% INPUT VALIDATION --------------------------------------
+% PARSE MOVE --------------------------------------
+
+pieceColor('R', white, wr).
+pieceColor('R', black, br).
+
+inputMove(Piece, Line, Col) :-
+    inputString('Type: ', Cmd),
+    getPlayerTurn(ID, 1),
+    getPlayerColor(ID, Color),
+    pieceColor(Cmd, Color, Piece),
+    inputString('Line: ', L),
+    char_code(L, Code),
+    Line is Code-64,             % starts at 64+1
+    inputString('Col:  ', Col).
+
+
+
+

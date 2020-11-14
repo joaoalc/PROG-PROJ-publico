@@ -8,14 +8,16 @@ play :-
     initial(Board), % initialize board
     gameLoop(Board, 0). % start game loop
 
+
 % /*Testing*/
 % doIt(Board) :-
 %     playPiece(Board, 1,1,wr,Res),
 %     displayGame(Res, 'TESTING ').
 
 playerTurn(Player, Board, UpdatedBoard) :- 
-    input('Move', X),
-    UpdatedBoard = Board. %TODO
+    inputMove(Piece, Line, Col),
+    format('~n ~p ~p ~p ', [Piece, Line,Col]),
+    playPiece(Board, Line, Col, wr, UpdatedBoard).   
 
 /*GAME LOOP ---------------------------------------------*/
 gameLoop(_,1) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
@@ -81,8 +83,8 @@ printHeader(PlayerID) :-
 
 
 /*PIECE PLACEMENT----------------------------------------*/
-playPiece(BoardIn, Line, Col, Piece, BoardOut) :-                        %TODO line indexes are letters
-    playLine(Lindex, BoardIn, Col, Piece, BoardOut).
+playPiece(BoardIn, Line, Col, Piece, BoardOut) :-                      %TODO line indexes are letters
+    playLine(Line, BoardIn, Col, Piece, BoardOut).
 
  %TabOut=tabuleiro com  a peça
 playLine(1, [Line | Rest], Col, Piece, [NewLine | Rest]) :- 
@@ -102,4 +104,5 @@ playCol(1, [Stack | MoreStacks], Piece, [Res|MoreStacks]) :-
 
 playCol(N, [P | MoreCols], Piece, [P | NewPieces]) :-
     M is N-1, N > 1,
+    write('nice2'),
     playCol(M, MoreCols, Piece, NewPieces).
