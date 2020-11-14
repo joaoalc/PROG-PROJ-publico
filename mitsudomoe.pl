@@ -1,4 +1,5 @@
 :- prolog_flag(single_var_warnings,_,off).
+:-consult('utils.pl').
 :-consult('board.pl').
 :-consult('player.pl').
 
@@ -8,24 +9,41 @@ play :-
     initial(Board), % initialize board
     gameLoop(Board, 0). % start game loop
 
+/* EXECUTE TURN ---------------------------------------*/
+executeTurn(Player, Board, UpdatedBoard) :- 
+    inputType(Ret),
+    move(Board, Ret, UpdatedBoard).
 
-% /*Testing*/
-% doIt(Board) :-
-%     playPiece(Board, 1,1,wr,Res),
-%     displayGame(Res, 'TESTING ').
+% executeTurn(Player, Board, UpdatedBoard)
+    
 
-playerTurn(Player, Board, UpdatedBoard) :- 
-    inputType(Arg1, Arg2, Arg3),
-    % format('~n ~p ~p ~p ', [Piece, Line,Col]),
-    playPiece(Board, Arg1, Arg2, Arg3, UpdatedBoard).   
+move(GameState, Move, NewGameState) :-
+    getNth(0, Move, Type),
+    executeMove(Type, GameState, Move, NewGameState).
+
+
+% place ring
+executeMove('R',GameState, Move, NewGameState) :-
+    getNth(1, Move, Piece),
+    getNth(2, Move, Line),
+    getNth(3, Move, Col),
+    playPiece(GameState, Line, Col, Piece, NewGameState).
+
+% move top piece from A to B
+executeMove('M',GameState, Move, NewGameState) :-
+    getNth(1, Move, Piece),
+    getNth(2, Move, Line),
+    getNth(3, Move, Col),
+    playPiece(GameState, Line, Col, Piece, NewGameState).
+
 
 /*GAME LOOP ---------------------------------------------*/
 gameLoop(_,1) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
 gameLoop(_,2) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
 gameLoop(Board, Winner) :-
     getPlayerTurn(PlayerID, 1), % get current player
-    displayGame(Board, PlayerID), % display result
-    playerTurn(PlayerID, Board, UpdatedBoard), %execute turn
+    displayGame(Board, PlayerID), !, % display result
+    executeTurn(PlayerID, Board, UpdatedBoard), % execute turn for current player
     gameOver(UpdatedBoard, Value),
     setNextPlayer, % switch to next player
     gameLoop(UpdatedBoard, Value).
@@ -68,19 +86,20 @@ isEndGame(Board) :-
 /*DISPLAY GAME ------------------------------------------*/
 displayGame(GameState, PlayerID) :-  
     printHeader(PlayerID),
-    displayBoard(GameState),
-    getStashSize(PlayerID, Size),
-    format('~n Stash: ~p rings ~n', Size). %TODO define ring stash
+    displayBoard(GameState).
 
 printHeader(PlayerID) :-
     getPlayerName(PlayerID, Name),
     getPlayerColor(PlayerID, Color),
+    getStashSize(PlayerID, Size),
     nl,
     write('======================================='),
     format('~n Player: ~p   ', Name),
-    format(' Color: ~p ~n', Color),
+    format('Color: ~p ', Color),
+    format('~n Rings:  ~p ~n', Size),
     write('=======================================').
 
+/* MOVE PIECE ---------------------------------------------*/
 
 /*PIECE PLACEMENT----------------------------------------*/
 playPiece(BoardIn, Line, Col, Piece, BoardOut) :-                      %TODO line indexes are letters
@@ -104,5 +123,4 @@ playCol(1, [Stack | MoreStacks], Piece, [Res|MoreStacks]) :-
 
 playCol(N, [P | MoreCols], Piece, [P | NewPieces]) :-
     M is N-1, N > 1,
-    write('nice2'),
     playCol(M, MoreCols, Piece, NewPieces).

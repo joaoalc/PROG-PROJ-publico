@@ -40,7 +40,8 @@ inputString(Msg , X) :-
 readRest(10,[]).
 readRest(13,[]).
 readRest(C,[C|Rest]) :- 
-    get_code(C2), readRest(C2,Rest).
+    get_code(C2),
+    readRest(C2,Rest).
 
 
 % PARSE MOVE --------------------------------------
@@ -51,12 +52,15 @@ selectPiece('R', black, br).
 
 % get input type to call respective inputMove Funtion
 % values of inputMove are returned in Arg1, Arg2
-inputType(Type, Arg1, Arg2, Arg3) :-    %TODO change return to list
+
+inputType(Ret) :-    %TODO change return to list
     inputString('Type: ', Type),
-    inputMove(Type, Arg1, Arg2, Arg3).
+    !,
+    inputMove(Type, Ret).
+
 
 % Place ring from stash
-inputMove('R', Line, Col, Piece) :-
+inputMove('R', ['R', Piece, Line, Col]) :-
     getPlayerTurn(ID, 1),
     getPlayerColor(ID, Color),
     selectPiece('R', Color, Piece),
@@ -66,11 +70,16 @@ inputMove('R', Line, Col, Piece) :-
     inputString('Col:  ', Col).
 
 % move top element from one cell to the other
-inputMove('M', Line, Col,_) :-
-    inputString('Line (A-E): ', L),
-    char_code(L, Code),
-    Line is Code-64,             % starts at 64+1
-    inputString('Col (1-5):  ', Col).
+inputMove('M', ['M', Line1, Col1, Line2, Col2]) :-
+    inputString('Line1 (A-E): ', L1),
+    char_code(L1, Code),
+    Line1 is Code-64,             % starts at 64+1
+    inputString('Col1 (1-5):  ', Col1),
+    inputString('Line2 (A-E): ', L2),
+    char_code(L2, Code2),
+    Line2 is Code2-64,             % starts at 64+1
+    inputString('Col2 (1-5):  ', Col2).
+
 
 
 
