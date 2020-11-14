@@ -15,9 +15,9 @@ play :-
 %     displayGame(Res, 'TESTING ').
 
 playerTurn(Player, Board, UpdatedBoard) :- 
-    inputMove(Piece, Line, Col),
-    format('~n ~p ~p ~p ', [Piece, Line,Col]),
-    playPiece(Board, Line, Col, wr, UpdatedBoard).   
+    inputType(Arg1, Arg2, Arg3),
+    % format('~n ~p ~p ~p ', [Piece, Line,Col]),
+    playPiece(Board, Arg1, Arg2, Arg3, UpdatedBoard).   
 
 /*GAME LOOP ---------------------------------------------*/
 gameLoop(_,1) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.

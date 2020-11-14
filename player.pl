@@ -45,18 +45,35 @@ readRest(C,[C|Rest]) :-
 
 % PARSE MOVE --------------------------------------
 
-pieceColor('R', white, wr).
-pieceColor('R', black, br).
+% select piece according to player's color 
+selectPiece('R', white, wr).
+selectPiece('R', black, br).
 
-inputMove(Piece, Line, Col) :-
-    inputString('Type: ', Cmd),
+% get input type to call respective inputMove Funtion
+% values of inputMove are returned in Arg1, Arg2
+inputType(Type, Arg1, Arg2, Arg3) :-    %TODO change return to list
+    inputString('Type: ', Type),
+    inputMove(Type, Arg1, Arg2, Arg3).
+
+% Place ring from stash
+inputMove('R', Line, Col, Piece) :-
     getPlayerTurn(ID, 1),
     getPlayerColor(ID, Color),
-    pieceColor(Cmd, Color, Piece),
+    selectPiece('R', Color, Piece),
     inputString('Line: ', L),
     char_code(L, Code),
     Line is Code-64,             % starts at 64+1
     inputString('Col:  ', Col).
+
+% move top element from one cell to the other
+inputMove('M', Line, Col,_) :-
+    inputString('Line (A-E): ', L),
+    char_code(L, Code),
+    Line is Code-64,             % starts at 64+1
+    inputString('Col (1-5):  ', Col).
+
+
+
 
 
 
