@@ -16,7 +16,7 @@ playableOn(br, []).
 
 elem(none, '0'). % DEBUG
 
-elem(c, 'C').
+elem(c, 'C ').
 elem(wb, 'WB').  % white Ball
 elem(bb, 'BB').  % black Ball
 elem(wr, 'WR').  % white ring
@@ -122,7 +122,22 @@ getTopXY([First|Rest], X, Y, Piece) :-
     Y1 is Y-1,
     getTopXY(Rest, X, Y1, Piece).
     
+/*REMOVE TOP ELEMENT ----------------------------------------*/
+% removes top element off a cell at XY and returns it in Piece
+popTopXY(BoardIn, Y, X, BoardOut, Piece) :-
+    selectLine(BoardIn, Y, Line),
+    selectCell(Line, X, Cell),
+    popTop(Cell, NewCell, Piece),
+    replace(Line, X, NewCell, NewLine),
+    replace(BoardIn, Y, NewLine, BoardOut).
 
+% pushTopXY(Piece, BoardIn, X, Y, BoardOut) :-
+%     write(Cell),
+%     selectLine(BoardIn, Y, Line),
+%     selectCell(Line, X, Cell),
+%     pushTop(Piece, Cell, NewCell),
+%     replace(Line, X, NewCell, NewLine),
+%     replace(BoardIn, Y, NewLine, BoardOut).
 
 
 /*DEBUG*/

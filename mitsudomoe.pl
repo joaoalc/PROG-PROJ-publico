@@ -9,16 +9,24 @@ play :-
     initial(Board), % initialize board
     gameLoop(Board, 0). % start game loop
 
+% use this to debug functions
+test :- 
+    initPlayersPvP, % initialize players
+    initial(Board), % initialize board
+    %Board, Line, Col, Piece, BoardOut
+    playPiece(Board, 0, 2, bb, BoardOut),
+    displayBoard(BoardOut).
+
 /* EXECUTE TURN ---------------------------------------*/
+% executeTurn(Player, Board, UpdatedBoard)
 executeTurn(Player, Board, UpdatedBoard) :- 
     inputType(Ret),
     move(Board, Ret, UpdatedBoard).
 
-% executeTurn(Player, Board, UpdatedBoard)
-    
 
 move(GameState, Move, NewGameState) :-
     getNth(0, Move, Type),
+    % TODO verify valid move
     executeMove(Type, GameState, Move, NewGameState).
 
 
@@ -27,14 +35,17 @@ executeMove('R',GameState, Move, NewGameState) :-
     getNth(1, Move, Piece),
     getNth(2, Move, Line),
     getNth(3, Move, Col),
+    format('~n ~p ~p  ', [Col, Line]),
     playPiece(GameState, Line, Col, Piece, NewGameState).
 
 % move top piece from A to B
 executeMove('M',GameState, Move, NewGameState) :-
-    getNth(1, Move, Piece),
-    getNth(2, Move, Line),
-    getNth(3, Move, Col),
-    playPiece(GameState, Line, Col, Piece, NewGameState).
+    getNth(1, Move, Ysrc),
+    getNth(2, Move, Xsrc),
+    getNth(3, Move, Ydest),
+    getNth(4, Move, Xdest),
+    format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
+    movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
 
 
 /*GAME LOOP ---------------------------------------------*/
@@ -99,14 +110,18 @@ printHeader(PlayerID) :-
     format('~n Rings:  ~p ~n', Size),
     write('=======================================').
 
-/* MOVE PIECE ---------------------------------------------*/
+/* MOVE PIECE ---------------------------------------------*/   %TODO verify invalid moves
+movePiece(BoardIn, Ysrc, Xsrc, Ydest, Xdest, BoardOut) :- 
+    popTopXY(BoardIn,Ysrc, Xsrc,  TmpB, Piece),
+    playPiece(TmpB, Ydest, Xdest, Piece, BoardOut).
+
 
 /*PIECE PLACEMENT----------------------------------------*/
 playPiece(BoardIn, Line, Col, Piece, BoardOut) :-                      %TODO line indexes are letters
     playLine(Line, BoardIn, Col, Piece, BoardOut).
 
  %TabOut=tabuleiro com  a peça
-playLine(1, [Line | Rest], Col, Piece, [NewLine | Rest]) :- 
+playLine(0, [Line | Rest], Col, Piece, [NewLine | Rest]) :- 
     playCol(Col, Line, Piece, NewLine). 
 
 playLine(Lindex, [Line | Rest], Col , Piece, [Line | NewLines]) :- 
@@ -117,10 +132,12 @@ playLine(Lindex, [Line | Rest], Col , Piece, [Line | NewLines]) :-
 
 pushFront(Piece, List, [Piece|List]).
 
-playCol(1, [Stack | MoreStacks], Piece, [Res|MoreStacks]) :-
+playCol(0, [Stack | MoreStacks], Piece, [Res|MoreStacks]) :-
     %playableOn(Piece, Stack), %playableOn only works if it's supposed to place a piece there. If it isn't, (probably backtracking issues) cause it to crash
     pushFront(Piece, Stack, Res).
 
 playCol(N, [P | MoreCols], Piece, [P | NewPieces]) :-
-    M is N-1, N > 1,
+    M is N-1, N > 0,
     playCol(M, MoreCols, Piece, NewPieces).
+
+

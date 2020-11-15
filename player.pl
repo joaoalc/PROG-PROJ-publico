@@ -66,19 +66,22 @@ inputMove('R', ['R', Piece, Line, Col]) :-
     selectPiece('R', Color, Piece),
     inputString('Line: ', L),
     char_code(L, Code),
-    Line is Code-64,             % starts at 64+1
-    inputString('Col:  ', Col).
+    Line is Code-65,             % starts at 64+1
+    inputString('Col:  ', C),
+    Col is C-1.
 
 % move top element from one cell to the other
 inputMove('M', ['M', Line1, Col1, Line2, Col2]) :-
-    inputString('Line1 (A-E): ', L1),
+    inputString('Line 1 (A-E): ', L1),
     char_code(L1, Code),
-    Line1 is Code-64,             % starts at 64+1
-    inputString('Col1 (1-5):  ', Col1),
+    Line1 is Code-65,             % starts at 64+1
+    inputString('Col1 (1-5):  ', C1),
+    Col1 is C1-1,
     inputString('Line2 (A-E): ', L2),
     char_code(L2, Code2),
-    Line2 is Code2-64,             % starts at 64+1
-    inputString('Col2 (1-5):  ', Col2).
+    Line2 is Code2-65,             % starts at 64+1
+    inputString('Col2 (1-5):  ', C2),
+    Col2 is C2-1.
 
 
 
