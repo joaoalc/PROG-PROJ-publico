@@ -14,20 +14,8 @@ play :-
 test :- 
     initPlayersPvP, % initialize players
     initial(Board), % initialize board
-    calculateValidPlays(Board, 1, ValidPlays),
+    validMoves(Board, 1, ValidPlays),
     write(ValidPlays).
-
-validate(PlayerID, Board, ['R' | Args]) :-
-    write('val '),
-    getPlayerColor(PlayerID, Color),
-    selectPiece('R', Color, Piece),
-    getNth(1, Args, Line),
-    getNth(2, Args, Col),
-    getTopXY(Board, Col, Line, TopPiece),
-    write(TopPiece),
-    !,  % red cut avoid crash when play is invalid
-    playableOn(Piece, TopPiece),
-    write('end ').
 
 
 /* EXECUTE TURN ---------------------------------------*/
@@ -36,8 +24,9 @@ executeTurn(Player, Board, UpdatedBoard) :-
     repeat,
     inputType(Move),
     write('enter val '),
+    validMoves(Board, Player, MovesList),
     !,
-    validate(Player,Board, Move),
+    isValidMove(Move, MovesList),
     move(Board, Move, UpdatedBoard).
 
 
