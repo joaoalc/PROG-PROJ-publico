@@ -53,7 +53,7 @@ selectPiece('R', black, br).
 % get input type to call respective inputMove Funtion
 % values of inputMove are returned in Arg1, Arg2
 
-inputType(Ret) :-    %TODO change return to list
+inputType(Ret) :-   
     inputString('Type: ', Type),
     !,
     inputMove(Type, Ret).

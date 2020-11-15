@@ -1,6 +1,7 @@
 :- prolog_flag(single_var_warnings,_,off).
 :-consult('utils.pl').
 :-consult('board.pl').
+:-consult('validation.pl').
 :-consult('player.pl').
 
 
@@ -13,8 +14,8 @@ play :-
 test :- 
     initPlayersPvP, % initialize players
     initial(Board), % initialize board
-    executeTurn(1, Board, UpdatedBoard),
-    displayBoard(UpdatedBoard).
+    calculateValidPlays(Board, 1, ValidPlays),
+    write(ValidPlays).
 
 validate(PlayerID, Board, ['R' | Args]) :-
     write('val '),
