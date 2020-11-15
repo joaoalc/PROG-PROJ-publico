@@ -1,16 +1,16 @@
 :- use_module(library(lists)).
 
 %Facts that indicate that piece A can be placed on piece B. Rings can also be played on nothing, but 
-playableOn(wr, [br|_]).
-playableOn(wr, [wr|_]).
-playableOn(br, [wr|_]).
-playableOn(br, [br|_]).
-playableOn(wb, [wr|_]).
-playableOn(bb, [br|_]).
+playableOn(wr, br).
+playableOn(wr, wr).
+playableOn(br, wr).
+playableOn(br, br).
+playableOn(wb, wr).
+playableOn(bb, br).
 
 %-------TODO: Not sure if these can be used for the purposes I want right now
-playableOn(wr, []).
-playableOn(br, []).
+playableOn(wr, none).
+playableOn(br, none).
 %-------
 
 
@@ -130,14 +130,6 @@ popTopXY(BoardIn, Y, X, BoardOut, Piece) :-
     popTop(Cell, NewCell, Piece),
     replace(Line, X, NewCell, NewLine),
     replace(BoardIn, Y, NewLine, BoardOut).
-
-% pushTopXY(Piece, BoardIn, X, Y, BoardOut) :-
-%     write(Cell),
-%     selectLine(BoardIn, Y, Line),
-%     selectCell(Line, X, Cell),
-%     pushTop(Piece, Cell, NewCell),
-%     replace(Line, X, NewCell, NewLine),
-%     replace(BoardIn, Y, NewLine, BoardOut).
 
 
 /*DEBUG*/

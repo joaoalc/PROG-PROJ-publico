@@ -13,15 +13,31 @@ play :-
 test :- 
     initPlayersPvP, % initialize players
     initial(Board), % initialize board
-    %Board, Line, Col, Piece, BoardOut
-    playPiece(Board, 0, 2, bb, BoardOut),
-    displayBoard(BoardOut).
+    executeTurn(1, Board, UpdatedBoard),
+    displayBoard(UpdatedBoard).
+
+validate(PlayerID, Board, ['R' | Args]) :-
+    write('val '),
+    getPlayerColor(PlayerID, Color),
+    selectPiece('R', Color, Piece),
+    getNth(1, Args, Line),
+    getNth(2, Args, Col),
+    getTopXY(Board, Col, Line, TopPiece),
+    write(TopPiece),
+    !,  % red cut avoid crash when play is invalid
+    playableOn(Piece, TopPiece),
+    write('end ').
+
 
 /* EXECUTE TURN ---------------------------------------*/
 % executeTurn(Player, Board, UpdatedBoard)
 executeTurn(Player, Board, UpdatedBoard) :- 
-    inputType(Ret),
-    move(Board, Ret, UpdatedBoard).
+    repeat,
+    inputType(Move),
+    write('enter val '),
+    !,
+    validate(Player,Board, Move),
+    move(Board, Move, UpdatedBoard).
 
 
 move(GameState, Move, NewGameState) :-
