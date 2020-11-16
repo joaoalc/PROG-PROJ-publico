@@ -19,6 +19,11 @@ setNextPlayer :-
     asserta(player(NextID, NextName, NextColor, NextStash, 1)). % set next player turn to 1
 
 
+decrementRingStash :-
+    player(CurrID, CurrName, CurrColor, CurrStash, 1), % get current player
+    retract(player(CurrID, _, _, _, _)),
+    NewSize is CurrStash-1,
+    asserta(player(CurrID, CurrName, CurrColor, NewSize, 1)).
 
 % GETTERS ------------------------------------------
 getPlayerName(ID, Name) :- player(ID, Name,_,_,_).

@@ -6,8 +6,9 @@
 
 
 play :- 
+    write('\33\[2J'),   % clear Screen
     initPlayersPvP, % initialize players
-    initial(Board), % initialize board
+    initial(Board) ,!, % initialize board
     gameLoop(Board, 0). % start game loop
 
 % use this to debug functions
@@ -21,13 +22,14 @@ test :-
 /* EXECUTE TURN ---------------------------------------*/
 % executeTurn(Player, Board, UpdatedBoard)
 executeTurn(Player, Board, UpdatedBoard) :- 
-    repeat,
     inputType(Move),
-    write('enter val '),
     validMoves(Board, Player, MovesList),
     !,
-    isValidMove(Move, MovesList),
-    move(Board, Move, UpdatedBoard).
+    isValidMove(Move, MovesList) ->
+        move(Board, Move, UpdatedBoard)
+        ;
+        nl, write('[i] Invalid Move'), nl, 
+        executeTurn(Player, Board, UpdatedBoard).
 
 
 move(GameState, Move, NewGameState) :-
@@ -41,8 +43,9 @@ executeMove('R',GameState, Move, NewGameState) :-
     getNth(1, Move, Piece),
     getNth(2, Move, Line),
     getNth(3, Move, Col),
-    format('~n ~p ~p  ', [Col, Line]),
-    playPiece(GameState, Line, Col, Piece, NewGameState).
+    % format('~n ~p ~p  ', [Col, Line]),
+    playPiece(GameState, Line, Col, Piece, NewGameState),
+    decrementRingStash.
 
 % move top piece from A to B
 executeMove('M',GameState, Move, NewGameState) :-
@@ -50,7 +53,7 @@ executeMove('M',GameState, Move, NewGameState) :-
     getNth(2, Move, Xsrc),
     getNth(3, Move, Ydest),
     getNth(4, Move, Xdest),
-    format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
+    % format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
     movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
 
 
@@ -60,7 +63,7 @@ gameLoop(_,2) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name
 gameLoop(Board, Winner) :-
     getPlayerTurn(PlayerID, 1), % get current player
     displayGame(Board, PlayerID), !, % display result
-    executeTurn(PlayerID, Board, UpdatedBoard), % execute turn for current player
+    once(executeTurn(PlayerID, Board, UpdatedBoard)), % execute turn for current player
     gameOver(UpdatedBoard, Value),
     setNextPlayer, % switch to next player
     gameLoop(UpdatedBoard, Value).

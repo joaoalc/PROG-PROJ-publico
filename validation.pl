@@ -8,8 +8,8 @@ validMoves(Board, PlayerID, ValidPlays) :-
 
 /*RING PLACEMENT VALIDATION-----------------------*/
 getValidRingMoves(Board, PlayerID, Ret) :-
-    % getStashSize(PlayerID, Size),
-    % Size > 0,
+    getStashSize(PlayerID, Size),
+    Size > 0,
     getPlayerColor(PlayerID, Color),        % get current player s color
     selectPiece('R', Color, Piece),        % select ring with the color of the player
     calcLine(Board, Piece, 0, Ret).
@@ -40,6 +40,8 @@ calcCol(Board, Piece, Line, Col, [Head|Tail]) :-
         append(_, Res, Head),
     C1 is Col+1,
     calcCol(Board, Piece, Line, C1, Tail).
+
+calcCol(_, _, _, _, Ret).
 
 evaluateCell(Board, Piece, Line, Col, Ret) :-
     isValidRingMove(Board, Piece, Line, Col),
