@@ -31,19 +31,45 @@ test :-
         nl, write('[i] Invalid Move'), nl, 
         executeTurn(Player, Board, UpdatedBoard).*/
 
+
 /* EXECUTE TURN ---------------------------------------*/
 % executeTurn(Player, Board, UpdatedBoard)
 executeTurn(Player, Board, UpdatedBoard) :- 
     repeat,
-    once(inputType(Move)),
-    (secondMove ->
-        once(inputType(SecondMove)), move(Board, Move, SecondMove, UpdatedBoard);
-        move(Board, Move, UpdatedBoard)).
+        once(inputType(Move)),
+        getNth(0, Move, MoveType),
+        (isRingMove(MoveType) ->
+            (secondMove(Answer),
+            %(isRingMove(MoveType) ->
+                /*(secondMove(MoveType) ->
+                    once(inputType(SecondMove)), move(Board, Move, UpdatedBoard);
+                    move(Board, Move, UpdatedBoard));
+                move(Board, Move, UpdatedBoard).*/
+            %).
+            %once(secondMove(SecondMoveType, SecondMove)),
 
+            Answer == 'no' ;
+                (
+                once(inputType(SecondMove)),
+                getNth(0, SecondMove, SecondMoveType),
+                (isExit(SecondMove));
+                    (\+isRingMove(SecondMoveType),
+                    write(SecondMove))
+                ));
+        true),
+
+        move(Board, Move, UpdatedBoard),
+        write('End of turn.').
+    /*        once(inputType(SecondMove)), move(Board, Move, UpdatedBoard);
+            move(Board, Move, UpdatedBoard));
+        move(Board, Move, UpdatedBoard).*/
+
+
+move(GameState, ['MB'|_], GameState) :- write('Move was called').
 
 move(GameState, Move, NewGameState) :-
     getNth(0, Move, Type),
-    isValidMove(GameState, Move),
+    %isValidMove(GameState, Move),
     executeMove(Type, GameState, Move, NewGameState).
 
 
@@ -66,6 +92,7 @@ executeMove('R',GameState, Move, NewGameState) :-
 
 % move top piece from A to B
 executeMove('M',GameState, Move, NewGameState) :-
+    fail.
     getNth(1, Move, Ysrc),
     getNth(2, Move, Xsrc),
     getNth(3, Move, Ydest),

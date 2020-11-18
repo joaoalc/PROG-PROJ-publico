@@ -1,6 +1,6 @@
-isValidMove(Move, MovesList) :-
+/*isValidMove(Move, MovesList) :-
     memberchk(Move, MovesList).
-
+*/
 
 validMoves(Board, PlayerPiece, ValidPlays) :-
     getValidTopXY(Board, Line, Col, PlayerPiece, ValidPlays).
@@ -70,16 +70,33 @@ getValidTopXY([First|Rest], Line, Col, PlayerPiece, ValidPlays, ResultList) :-
 
 getValidTopXY(_, _, 5, _, _).
 
-isValidMove(Board, Move) :-
+isValidMove(Player, Board, Move) :-
     getNth(0, Move, Type),
-    getNth(1, Move, Piece),
-    getNth(2, Move, Line),
-    getNth(3, Move, Col),
     Type == 'R' ->
+        getNth(0, Move, Type),
+        getNth(1, Move, Piece),
+        getNth(2, Move, Line),
+        getNth(3, Move, Col),
         isValidRingMove(Board, Piece, Line, Col);
+    Type == 'M' ->
+        write('failing'),
+        fail;
+    /*Type == 'MB' ->
+        isValidBallMove(Board, Player, Move);*/
     true.
 
+/*
+isValidBallMove(Board, Player, Move);
+    getNth(1, Move, Line1),
+    getNth(2, Move, Col1),
+    getNth(3, Move, Line2),
+    getNth(4, Move, Col2),
+    
+    isValidBallMove(Board, Player, Line1, Col1, Line2, Col2).
 
+
+isValidBallMove(Board, Player, Line1, Col1, Line2, Col2) :-
+*/
 
 
 /*

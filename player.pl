@@ -55,23 +55,31 @@ readRest(C,[C|Rest]) :-
 selectPiece('R', white, wr).
 selectPiece('R', black, br).
 
+selectPiece('MB', white, wr).
+selectPiece('MB', black, br).
+
 % get input type to call respective inputMove Funtion
 % values of inputMove are returned in Arg1, Arg2
 
-inputType(Ret) :-   
+isRingMove('R'). %returns true if the piece being moved is a ring
+isRingMove('MR').
+
+isExit(['E']).
+
+inputType(Ret) :- 
     inputString('Type: ', Type),
     !,
     inputMove(Type, Ret).
 
 
-secondMove :-   
+secondMove(Answer) :-
     repeat,
         once(inputString('Move a ball?(yes/no) ', Answer)),
         getAwnser(Answer),
     !,
     ((Answer == 'yes' ; Answer == 'y') ->
         true;
-        fail).
+    true).
 
 getAwnser('yes').
 getAwnser('no').
@@ -84,6 +92,7 @@ getAwnser(Answer) :-
         true;
         fail).
 */
+inputMove('E', ['E']).
 
 % move top element from one cell to the other
 inputMove('MB', ['MB', Line1, Col1, Line2, Col2]) :-
