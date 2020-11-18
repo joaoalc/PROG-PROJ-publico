@@ -21,7 +21,7 @@ test :-
 
 /* EXECUTE TURN ---------------------------------------*/
 % executeTurn(Player, Board, UpdatedBoard)
-executeTurn(Player, Board, UpdatedBoard) :- 
+/*executeTurn(Player, Board, UpdatedBoard) :- 
     inputType(Move),
     validMoves(Board, Player, MovesList),
     !,
@@ -29,13 +29,30 @@ executeTurn(Player, Board, UpdatedBoard) :-
         move(Board, Move, UpdatedBoard)
         ;
         nl, write('[i] Invalid Move'), nl, 
-        executeTurn(Player, Board, UpdatedBoard).
+        executeTurn(Player, Board, UpdatedBoard).*/
+
+/* EXECUTE TURN ---------------------------------------*/
+% executeTurn(Player, Board, UpdatedBoard)
+executeTurn(Player, Board, UpdatedBoard) :- 
+    repeat,
+    once(inputType(Move)),
+    (secondMove ->
+        once(inputType(SecondMove)), move(Board, Move, SecondMove, UpdatedBoard);
+        move(Board, Move, UpdatedBoard)).
 
 
 move(GameState, Move, NewGameState) :-
     getNth(0, Move, Type),
-    % TODO verify valid move
+    isValidMove(GameState, Move),
     executeMove(Type, GameState, Move, NewGameState).
+
+
+
+/*
+move(GameState, Move, NewGameState) :-
+    getNth(0, Move, Type),
+    % TODO verify valid move
+    executeMove(Type, GameState, Move, NewGameState).*/
 
 
 % place ring

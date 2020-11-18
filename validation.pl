@@ -70,8 +70,14 @@ getValidTopXY([First|Rest], Line, Col, PlayerPiece, ValidPlays, ResultList) :-
 
 getValidTopXY(_, _, 5, _, _).
 
-
-
+isValidMove(Board, Move) :-
+    getNth(0, Move, Type),
+    getNth(1, Move, Piece),
+    getNth(2, Move, Line),
+    getNth(3, Move, Col),
+    Type == 'R' ->
+        isValidRingMove(Board, Piece, Line, Col);
+    true.
 
 
 

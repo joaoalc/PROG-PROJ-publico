@@ -64,6 +64,40 @@ inputType(Ret) :-
     inputMove(Type, Ret).
 
 
+secondMove :-   
+    repeat,
+        once(inputString('Move a ball?(yes/no) ', Answer)),
+        getAwnser(Answer),
+    !,
+    ((Answer == 'yes' ; Answer == 'y') ->
+        true;
+        fail).
+
+getAwnser('yes').
+getAwnser('no').
+getAwnser('y').
+getAwnser('n').
+
+/*d
+getAwnser(Answer) :-
+    ((Answer == 'yes' ; Answer == 'no' ; Answer == 'y' ; Answer == 'n') ->
+        true;
+        fail).
+*/
+
+% move top element from one cell to the other
+inputMove('MB', ['MB', Line1, Col1, Line2, Col2]) :-
+    inputString('Line 1 (A-E): ', L1),
+    char_code(L1, Code),
+    Line1 is Code-65,             % starts at 64+1
+    inputString('Col1 (1-5):  ', C1),
+    Col1 is C1-1,
+    inputString('Line2 (A-E): ', L2),
+    char_code(L2, Code2),
+    Line2 is Code2-65,             % starts at 64+1
+    inputString('Col2 (1-5):  ', C2),
+    Col2 is C2-1.
+
 % Place ring from stash
 inputMove('R', ['R', Piece, Line, Col]) :-
     getPlayerTurn(ID, 1),
