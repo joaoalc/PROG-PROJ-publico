@@ -39,7 +39,7 @@ initial([
 
 
 intermediate([
-    [[       ],[     ],[     ],[c         ],[c         ]],
+    [[wr     ],[     ],[     ],[c         ],[c         ]],
     [[       ],[     ],[wb,wr],[wr        ],[bb,br,wr,c]],
     [[       ],[     ],[wb,wr],[br        ],[          ]],
     [[wb,wr,c],[bb,br],[bb,br],[wb,wr     ],[          ]],

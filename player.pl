@@ -54,14 +54,22 @@ readRest(C,[C|Rest]) :-
 % select piece according to player's color 
 selectPiece('R', white, wr).
 selectPiece('R', black, br).
+selectPiece('B', white, wb).
+selectPiece('B', black, bb).
+
+selectRing(white, wr).
+selectRing(black, br).
+selectBall(white, wb).
+selectBall(black, bb).
+
 
 % get input type to call respective inputMove Funtion
 % values of inputMove are returned in Arg1, Arg2
 
-inputType(Ret) :-   
+inputType(Color, Ret) :-   
     inputString('Type: ', Type),
     !,
-    inputMove(Type, Ret).
+    inputMove(Type, Color, Ret).
 
 
 secondMove :-   
@@ -85,24 +93,9 @@ getAwnser(Answer) :-
         fail).
 */
 
-% move top element from one cell to the other
-inputMove('MB', ['MB', Line1, Col1, Line2, Col2]) :-
-    inputString('Line 1 (A-E): ', L1),
-    char_code(L1, Code),
-    Line1 is Code-65,             % starts at 64+1
-    inputString('Col1 (1-5):  ', C1),
-    Col1 is C1-1,
-    inputString('Line2 (A-E): ', L2),
-    char_code(L2, Code2),
-    Line2 is Code2-65,             % starts at 64+1
-    inputString('Col2 (1-5):  ', C2),
-    Col2 is C2-1.
 
 % Place ring from stash
-inputMove('R', ['R', Piece, Line, Col]) :-
-    getPlayerTurn(ID, 1),
-    getPlayerColor(ID, Color),
-    selectPiece('R', Color, Piece),
+inputMove('R', Color, ['R', Color, Line, Col]) :-
     inputString('Line: ', L),
     char_code(L, Code),
     Line is Code-65,             % starts at 64+1
@@ -110,7 +103,7 @@ inputMove('R', ['R', Piece, Line, Col]) :-
     Col is C-1.
 
 % move top element from one cell to the other
-inputMove('M', ['M', Line1, Col1, Line2, Col2]) :-
+inputMove('M', Color, ['M', Color, Line1, Col1, Line2, Col2]) :-
     inputString('Line 1 (A-E): ', L1),
     char_code(L1, Code),
     Line1 is Code-65,             % starts at 64+1
@@ -121,6 +114,9 @@ inputMove('M', ['M', Line1, Col1, Line2, Col2]) :-
     Line2 is Code2-65,             % starts at 64+1
     inputString('Col2 (1-5):  ', C2),
     Col2 is C2-1.
+
+inputMove(_,_,_) :-
+    nl, write('[i] Invalid input type (inputMove)'), nl, fail.
 
 
 

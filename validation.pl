@@ -1,86 +1,51 @@
-isValidMove(Move, MovesList) :-
-    memberchk(Move, MovesList).
 
+%validMoves(Board, PlayerPiece, ValidPlays)
 
-validMoves(Board, PlayerPiece, ValidPlays) :-
-    getValidTopXY(Board, Line, Col, PlayerPiece, ValidPlays).
-
-verifyTopElem([], Line, Col, PlayerPiece, Head) :- write('non'), append(_, ['R', PlayerPiece, Line, Col], Head).
-
-verifyTopElem([Top|_], Line, Col, PlayerPiece, Head) :-
-    write(Top),
-    nl,
-    playableOn(PlayerPiece, Top) ->
-        append(_, ['R', PlayerPiece, Line, Col], Head);
-        fail.
-
-/*
-getValidSpot([First|Rest], Line, Col, PlayerPiece, [Head|ValidPlays]) :-
-    Line < 5,
-    L1 is Line + 1,
-    (verifyTopElem(First, Line, Col, PlayerPiece, NewPlays) ->
-    append(_, NewPlays, Head),
-    getValidSpot(Rest, L1, Col, PlayerPiece, ValidPlays);
-    write('Fail'),
-    getValidSpot(Rest, L1, Col, PlayerPiece, [Head|ValidPlays])
-    ).*/
-tmp :- getValidSpot([[br     ],[br       ],[],[br,wr,c],[br,wr,c]], 0, 0, wr, [Head| List]), write(List).
-
-
-
-app(X, [Head|ValidPlays]) :- append(_, X, Head).
-
-getValidSpot(_, 5, _, _, _).
-
-
-getValidSpot([First|Rest], 4, Col, PlayerPiece, ValidPlays) :-
-    verifyTopElem(First, 4, Col, PlayerPiece, NewPlays) ->
-    app(NewPlays, ValidPlays);
-    true.
-
-
-
-getValidSpot([First|Rest], Line, Col, PlayerPiece, [Head|ValidPlays]) :-
-    Line < 4,
-    L1 is Line + 1,
-    (verifyTopElem(First, Line, Col, PlayerPiece, NewPlays) ->
-    append(_, NewPlays, Head),
-    getValidSpot(Rest, L1, Col, PlayerPiece, ValidPlays);
-    write('Fail'),
-    getValidSpot(Rest, L1, Col, PlayerPiece, [Head| ValidPlays])
-    ),
-    write('List right now: '),
-    write([Head|ValidPlays]),
-    nl,
-    write('Its head'),
-    write(Head),
-    nl,
-    write('The rest'),
-    write(ValidPlays),
-    nl.
-
-getValidTopXY([First|Rest], Line, Col, PlayerPiece, ValidPlays, ResultList) :-
-    Col < 5,
-    /*write(First),
-    nl,*/
-    nl,
-    getValidSpot(First, Line, Col, PlayerPiece, ValidPlays),
-    Col1 is Col+1,
-    getValidTopXY(Rest, Line, Col1, PlayerPiece, ValidPlays).
-
-getValidTopXY(_, _, 5, _, _).
+isBall(wb).
+isBall(bb).
+isRing(wr).
+isRing(br).
 
 isValidMove(Board, Move) :-
     getNth(0, Move, Type),
-    getNth(1, Move, Piece),
+    getNth(1, Move, Color),
+    (Type == 'R' ->                                     % ring placement
+            isValidRingPlacement(Board, Color, Move);
+    Type == 'M' ->                                      % move top piece from a given cell
+            (isValidBallMove(Board, Color, Move);
+            isValidRingMove(Board, Color, Move));
+            nl, write('[i] Invalid Type'), nl, fail
+    ).
+
+
+isValidBallMove(Board, Color, Move) :-
+          getNth(2, Move, SrcLine),
+          getNth(3, Move, SrcCol),
+          getTopXY(Board, SrcCol, SrcLine, Ball), !,   % get Piece at position X Y
+          isBall(Ball), !, selectBall(Color, Ball),       % piece verifications  (ball of the same color of the player)                             
+          getNth(4, Move, DestLine),
+          getNth(5, Move, DestCol),   
+          getTopXY(Board, DestLine, DestCol, Top), !,
+          playableOn(Ball, Top).     
+
+isValidRingPlacement(Board, Color, Move) :-
+    selectRing(Color, Ring),
     getNth(2, Move, Line),
     getNth(3, Move, Col),
-    Type == 'R' ->
-        isValidRingMove(Board, Piece, Line, Col);
-    true.
+    getTopXY(Board, Col, Line, Top),
+    !,
+    playableOn(Ring, Top). % assert if ring is playable on top of stack X Y
 
-
-
+isValidRingMove(Board, Color, Move) :-
+    getNth(2, Move, SrcLine),
+    getNth(3, Move, SrcCol),
+    getTopXY(Board, SrcCol, SrcLine, Ring),
+    isRing(Ring), !, selectRing(Color, Ring),
+    getNth(4, Move, DestLine),
+    getNth(5, Move, DestCol),                                   % verify if selected piece is a player's piece
+    getTopXY(Board, DestCol, DestLine, Top),           % get top piece on destination cell
+    !,
+    playableOn(Ring, Top).                            % assert if ring is playable on top of stack X Y
 
 /*
 getTopElem([], Piece) :- Piece = none.
@@ -115,14 +80,6 @@ getValidRingMoves(Board, PlayerID, Ret) :-
     getPlayerColor(PlayerID, Color),        % get current player s color
     selectPiece('R', Color, Piece),        % select ring with the color of the player
     calcLine(Board, Piece, 0, Ret).
-
-
-
-isValidRingMove(Board, Piece, Line, Col) :-
-    getTopXY(Board, Line, Col, Top),
-    !,
-    playableOn(Piece, Top). % assert if ring is playable on top of stack X Y
-
 
 calcLine(Board, Piece, Line, List) :-
     write(Line),

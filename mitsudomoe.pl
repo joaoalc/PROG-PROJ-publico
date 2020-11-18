@@ -14,9 +14,9 @@ play :-
 % use this to debug functions
 test :- 
     initPlayersPvP, % initialize players
-    initial(Board), % initialize board
-    validMoves(Board, 1, ValidPlays),
-    write(ValidPlays).
+    intermediate(Board), % initialize board
+    executeTurn(1, Board, NewBoard),
+    displayBoard(NewBoard).
 
 
 /* EXECUTE TURN ---------------------------------------*/
@@ -34,11 +34,11 @@ test :-
 /* EXECUTE TURN ---------------------------------------*/
 % executeTurn(Player, Board, UpdatedBoard)
 executeTurn(Player, Board, UpdatedBoard) :- 
+    getPlayerColor(Player, Color),
     repeat,
-    once(inputType(Move)),
-    (secondMove ->
-        once(inputType(SecondMove)), move(Board, Move, SecondMove, UpdatedBoard);
-        move(Board, Move, UpdatedBoard)).
+       once(inputType(Color, Move)),
+       move(Board, Move, UpdatedBoard).
+        
 
 
 move(GameState, Move, NewGameState) :-
@@ -57,19 +57,20 @@ move(GameState, Move, NewGameState) :-
 
 % place ring
 executeMove('R',GameState, Move, NewGameState) :-
-    getNth(1, Move, Piece),
+    getNth(1, Move, Color),     % get player's color
+    selectRing(Color, Ring),    % select respctive ring
     getNth(2, Move, Line),
     getNth(3, Move, Col),
     % format('~n ~p ~p  ', [Col, Line]),
-    playPiece(GameState, Line, Col, Piece, NewGameState),
+    playPiece(GameState, Line, Col, Ring, NewGameState),
     decrementRingStash.
 
 % move top piece from A to B
 executeMove('M',GameState, Move, NewGameState) :-
-    getNth(1, Move, Ysrc),
-    getNth(2, Move, Xsrc),
-    getNth(3, Move, Ydest),
-    getNth(4, Move, Xdest),
+    getNth(2, Move, Ysrc),
+    getNth(3, Move, Xsrc),
+    getNth(4, Move, Ydest),
+    getNth(5, Move, Xdest),
     % format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
     movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
 
