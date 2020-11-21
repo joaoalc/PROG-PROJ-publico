@@ -30,3 +30,13 @@ replace(L, _, _, L).
 
 popTop([Head|Tail], Tail, Head).
 pushTop(Elem, List, [Elem|List]).
+
+/*ABSOLUTE VALUE*/
+
+abs2(X,Y) :- X < 0,
+             Y is -X.
+abs2(X,X).
+
+/*get top*/
+getTop([], none).
+getTop([Head|_], Head).

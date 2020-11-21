@@ -25,9 +25,12 @@ isValidBallMove(Board, Color, Move) :-
           isBall(Ball), !, selectBall(Color, Ball),       % piece verifications  (ball of the same color of the player)                             
           getNth(4, Move, DestLine),
           getNth(5, Move, DestCol), !,  
-          isLinearMove(SrcLine, SrcCol, DestLine, DestCol),   % checks if inputed movement is linear
+          isLinearMove(SrcLine, SrcCol, DestLine, DestCol), !,   % checks if inputed movement is linear
+          vaultVerification(Board, SrcLine, SrcCol, DestLine, DestCol),
           getTopXY(Board, DestCol, DestLine, Top), !,
-          playableOn(Ball, Top).     
+          playableOn(Ball, Top). 
+ 
+isValidBallMove(_, _, _)  :- nl, write('[i] Invalid ball move'), nl, fail.  
 
 isValidRingPlacement(Board, Color, Move) :-
     selectRing(Color, Ring),
@@ -58,9 +61,65 @@ isLinearMove(SrcLine, SrcCol, DestLine, DestCol) :-
 isLinearMove(_,_,_,_) :-
     nl, write('[i] Balls can only move linearly'), nl, fail.
 
-
    
+/*VAULT VERIFICATION*/
+vaultVerification(Board, SrcLine, SrcCol, DestLine, DestCol) :-
+    linearBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol).
+
+vaultVerification(_, _, _, _,_) :- nl, write('[i] Invalid vault'), nl, fail.
+ 
+searchStep(X,Y, Step) :- Y-X >= 0,
+                         Step is 1.
+searchStep(_,_, Step) :- Step is -1.
+                                            
+
+% no need to vault check for moves to adjacent tiles
+linearBallSearch(_, SrcLine, SrcCol, DestLine, DestCol) :-
+    DifLine is SrcLine-DestLine,
+    abs2(DifLine, Y),
+    Y > 1,
+    DifCol is SrcCol-DestCol,
+    abs2(DifCol, X),
+    X > 1.
+
+% horizontal movements
+linearBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol) :-
+    SrcLine =:= DestLine,
+    searchStep(SrcLine, DestLine, Step),
+    horizontalBallSearch(Board, SrcLine, SrcCol, DestCol, Step).
+
+%vertical movements
+linearBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol) :-
+    SrcCol =:= DestCol,
+    searchStep(SrcCol, DestCol, Step),
+    verticalBallSearch(Board, SrcLine, DestLine, SrcCol, Step).
+
+/*horizontal vault verification*/
+% reached target cell
+horizontalBallSearch(_, _, SrcCol, DestCol, Step) :- 
+    SrcCol+Step =:= DestCol.
+
+% horizontal search
+horizontalBallSearch(Board, Line, SrcCol, DestCol, Step) :-
+    Col is SrcCol+Step,
+    getTopXY(Board, Col, Line, Top), !,
+    isBall(Top),
+    horizontalBallSearch(Board, Line, Col, DestCol, Step).
+
+/*vertical vault verification*/
+% reached target cell
+verticalBallSearch(_, SrcLine, DestLine, _, Step) :-
+    SrcLine+Step =:= DestLine.
+
+verticalBallSearch(Board, SrcLine, DestLine, Col, Step) :-
+    Y is SrcLine+Step,
+    selectLine(Board, Y, Line),
+    selectCell(Line, Col, Cell),
+    getTop(Cell, Top), !,
+    isBall(Top),
+    verticalBallSearch(Board, Y, DestLine, Col, Step).
     
+                                 
 /*
 validMoves(Board, PlayerID, ValidPlays) :-
     getValidRingMoves(Board, PlayerID, ValidPlays),
