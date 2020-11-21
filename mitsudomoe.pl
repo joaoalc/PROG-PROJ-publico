@@ -18,7 +18,9 @@ test :-
     executeTurn(2, Board, NewBoard),
     displayBoard(NewBoard).
 
-
+test2 :- 
+    isLinearMove(4,0,2,2).
+                    
 /* EXECUTE TURN ---------------------------------------*/
 % executeTurn(Player, Board, UpdatedBoard)
 /*executeTurn(Player, Board, UpdatedBoard) :- 

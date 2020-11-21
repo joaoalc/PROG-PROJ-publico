@@ -54,15 +54,20 @@ isValidRingMove(Board, Color, Move) :-
 
 /*checks if a ball is being played linearly*/
 isLinearMove(SrcLine, SrcCol, DestLine, DestCol) :-
-    (SrcLine =:= DestLine);
-    (SrcCol =:= DestCol);
-    (SrcLine-DestLine =:= SrcCol-DestCol). 
+    (SrcLine =:= DestLine);     % horizontal
+    (SrcCol =:= DestCol);       %vertical
+    (                           %diagonal
+        M1 is SrcLine-DestLine,
+        M2 is SrcCol-DestCol,
+        M is M1/M2,
+        abs2(M, 1.0)
+     ).
 
 isLinearMove(_,_,_,_) :-
     nl, write('[i] Balls can only move linearly'), nl, fail.
 
    
-/*VAULT VERIFICATION*/
+/*VAULT VERIFICATION -----------------------------------------------------*/
 vaultVerification(Board, SrcLine, SrcCol, DestLine, DestCol) :-
     linearBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol).
 
@@ -86,7 +91,8 @@ linearBallSearch(_, SrcLine, SrcCol, DestLine, DestCol) :-
 linearBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol) :-
     SrcLine =:= DestLine,
     searchStep(SrcLine, DestLine, Step),
-    horizontalBallSearch(Board, SrcLine, SrcCol, DestCol, Step).
+    selectLine(Board, SrcLine, Line),
+    horizontalBallSearch(Line, SrcCol, DestCol, Step).
 
 %vertical movements
 linearBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol) :-
@@ -94,23 +100,28 @@ linearBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol) :-
     searchStep(SrcCol, DestCol, Step),
     verticalBallSearch(Board, SrcLine, DestLine, SrcCol, Step).
 
+linearBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol) :-
+    searchStep(SrcLine, DestLine, Step),
+    diagonalBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol, Step).
+
 /*horizontal vault verification*/
 % reached target cell
-horizontalBallSearch(_, _, SrcCol, DestCol, Step) :- 
+horizontalBallSearch(_, SrcCol, DestCol, Step) :- 
     SrcCol+Step =:= DestCol.
 
 % horizontal search
-horizontalBallSearch(Board, Line, SrcCol, DestCol, Step) :-
+horizontalBallSearch(Line, SrcCol, DestCol, Step) :-
     Col is SrcCol+Step,
-    getTopXY(Board, Col, Line, Top), !,
+    selectCell(Line, Col, Cell),
+    getTop(Cell, Top), !,
     isBall(Top),
-    horizontalBallSearch(Board, Line, Col, DestCol, Step).
+    horizontalBallSearch(Line, Col, DestCol, Step).
 
 /*vertical vault verification*/
 % reached target cell
 verticalBallSearch(_, SrcLine, DestLine, _, Step) :-
     SrcLine+Step =:= DestLine.
-
+% vertical search
 verticalBallSearch(Board, SrcLine, DestLine, Col, Step) :-
     Y is SrcLine+Step,
     selectLine(Board, Y, Line),
@@ -119,13 +130,22 @@ verticalBallSearch(Board, SrcLine, DestLine, Col, Step) :-
     isBall(Top),
     verticalBallSearch(Board, Y, DestLine, Col, Step).
     
-                                 
-/*
-validMoves(Board, PlayerID, ValidPlays) :-
-    getValidRingMoves(Board, PlayerID, ValidPlays),
-    write(ValidPlays).*/
+/*diagonal vault verification*/
+%reached target cell
+diagonalBallSearch(_, SrcLine, _, DestLine, _, Step) :-
+    SrcLine+Step =:= DestLine.
+%diagonal search
+diagonalBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol, Step) :-
+    X is SrcCol+Step,
+    Y is SrcLine+Step,
+    selectLine(Board, Y, Line),
+    selectCell(Line, X, Cell),
+    getTop(Cell, Top),
+    isBall(Top),
+    diagonalBallSearch(Board, Y, X, DestLine, DestCol, Step).
+                                    
 
-    %TODO calculate valid movement plays
+
 
 /*RING PLACEMENT VALIDATION-----------------------*/
 getValidRingMoves(Board, PlayerID, Ret) :-
