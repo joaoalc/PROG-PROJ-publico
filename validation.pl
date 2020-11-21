@@ -69,80 +69,83 @@ isLinearMove(_,_,_,_) :-
    
 /*VAULT VERIFICATION -----------------------------------------------------*/
 vaultVerification(Board, SrcLine, SrcCol, DestLine, DestCol) :-
-    linearBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol).
+    isVault(SrcLine, SrcCol, DestLine, DestCol) ->
+        linearVault(Board, SrcLine, SrcCol, DestLine, DestCol), write(vault).
 
 vaultVerification(_, _, _, _,_) :- nl, write('[i] Invalid vault'), nl, fail.
  
 searchStep(X,Y, Step) :- Y-X >= 0,
                          Step is 1.
 searchStep(_,_, Step) :- Step is -1.
-                                            
+  
 
-% no need to vault check for moves to adjacent tiles
-linearBallSearch(_, SrcLine, SrcCol, DestLine, DestCol) :-
+% no need to vault check for moves to adjacent tiles 
+isVault(SrcLine, SrcCol, DestLine, DestCol) :-
     DifLine is SrcLine-DestLine,
     abs2(DifLine, Y),
     Y > 1,
     DifCol is SrcCol-DestCol,
     abs2(DifCol, X),
-    X > 1.
+    X > 1.                                       
+
 
 % horizontal movements
-linearBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol) :-
+linearVault(Board, SrcLine, SrcCol, DestLine, DestCol) :-
     SrcLine =:= DestLine,
     searchStep(SrcLine, DestLine, Step),
     selectLine(Board, SrcLine, Line),
-    horizontalBallSearch(Line, SrcCol, DestCol, Step).
+    horizontalVault(Line, SrcCol, DestCol, Step).
 
 %vertical movements
-linearBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol) :-
+linearVault(Board, SrcLine, SrcCol, DestLine, DestCol) :-
     SrcCol =:= DestCol,
     searchStep(SrcCol, DestCol, Step),
-    verticalBallSearch(Board, SrcLine, DestLine, SrcCol, Step).
+    verticalVault(Board, SrcLine, DestLine, SrcCol, Step).
 
-linearBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol) :-
-    searchStep(SrcLine, DestLine, Step),
-    diagonalBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol, Step).
+linearVault(Board, SrcLine, SrcCol, DestLine, DestCol) :-
+    searchStep(SrcCol, DestCol ,StepX),
+    searchStep(SrcLine, DestLine, StepY),
+    diagonalVault(Board, SrcLine, SrcCol, DestLine, DestCol, StepY, StepX).
 
 /*horizontal vault verification*/
 % reached target cell
-horizontalBallSearch(_, SrcCol, DestCol, Step) :- 
+horizontalVault(_, SrcCol, DestCol, Step) :- 
     SrcCol+Step =:= DestCol.
 
 % horizontal search
-horizontalBallSearch(Line, SrcCol, DestCol, Step) :-
+horizontalVault(Line, SrcCol, DestCol, Step) :-
     Col is SrcCol+Step,
     selectCell(Line, Col, Cell),
     getTop(Cell, Top), !,
     isBall(Top),
-    horizontalBallSearch(Line, Col, DestCol, Step).
+    horizontalVault(Line, Col, DestCol, Step).
 
 /*vertical vault verification*/
 % reached target cell
-verticalBallSearch(_, SrcLine, DestLine, _, Step) :-
+verticalVault(_, SrcLine, DestLine, _, Step) :-
     SrcLine+Step =:= DestLine.
 % vertical search
-verticalBallSearch(Board, SrcLine, DestLine, Col, Step) :-
+verticalVault(Board, SrcLine, DestLine, Col, Step) :-
     Y is SrcLine+Step,
     selectLine(Board, Y, Line),
     selectCell(Line, Col, Cell),
     getTop(Cell, Top), !,
     isBall(Top),
-    verticalBallSearch(Board, Y, DestLine, Col, Step).
+    verticalVault(Board, Y, DestLine, Col, Step).
     
 /*diagonal vault verification*/
 %reached target cell
-diagonalBallSearch(_, SrcLine, _, DestLine, _, Step) :-
-    SrcLine+Step =:= DestLine.
+diagonalVault(_, SrcLine, _, DestLine, _, StepY, _) :-
+    SrcLine+StepY =:= DestLine.
 %diagonal search
-diagonalBallSearch(Board, SrcLine, SrcCol, DestLine, DestCol, Step) :-
-    X is SrcCol+Step,
-    Y is SrcLine+Step,
+diagonalVault(Board, SrcLine, SrcCol, DestLine, DestCol, StepY, StepX) :-
+    X is SrcCol+StepX,
+    Y is SrcLine+StepY,
     selectLine(Board, Y, Line),
     selectCell(Line, X, Cell),
-    getTop(Cell, Top),
+    getTop(Cell, Top), !,
     isBall(Top),
-    diagonalBallSearch(Board, Y, X, DestLine, DestCol, Step).
+    diagonalVault(Board, Y, X, DestLine, DestCol, StepY, StepX).
                                     
 
 

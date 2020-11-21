@@ -21,17 +21,6 @@ test :-
 test2 :- 
     isLinearMove(4,0,2,2).
                     
-/* EXECUTE TURN ---------------------------------------*/
-% executeTurn(Player, Board, UpdatedBoard)
-/*executeTurn(Player, Board, UpdatedBoard) :- 
-    inputType(Move),
-    validMoves(Board, Player, MovesList),
-    !,
-    isValidMove(Move, MovesList) ->
-        move(Board, Move, UpdatedBoard)
-        ;
-        nl, write('[i] Invalid Move'), nl, 
-        executeTurn(Player, Board, UpdatedBoard).*/
 
 /* EXECUTE TURN ---------------------------------------*/
 % executeTurn(Player, Board, UpdatedBoard)
@@ -40,6 +29,8 @@ executeTurn(Player, Board, UpdatedBoard) :-
     repeat,
        once(inputType(Color, Move)),
        move(Board, Move, UpdatedBoard).
+       
+       
         
 
 
@@ -80,7 +71,7 @@ executeMove('M',GameState, Move, NewGameState) :-
 /*GAME LOOP ---------------------------------------------*/
 gameLoop(_,1) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
 gameLoop(_,2) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
-gameLoop(Board, Winner) :-
+gameLoop(Board, _) :-
     getPlayerTurn(PlayerID, 1), % get current player
     displayGame(Board, PlayerID), !, % display result
     once(executeTurn(PlayerID, Board, UpdatedBoard)), % execute turn for current player
