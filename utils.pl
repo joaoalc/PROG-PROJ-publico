@@ -1,6 +1,7 @@
 % Get nth element in list
 getNth(0, [Head|_], Head).
 getNth(N, [_|Tail], Ret) :-
+    N > -1,
     N1 is N-1,
     getNth(N1, Tail, Ret).
 

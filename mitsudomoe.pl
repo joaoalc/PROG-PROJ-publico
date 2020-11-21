@@ -14,8 +14,8 @@ play :-
 % use this to debug functions
 test :- 
     initPlayersPvP, % initialize players
-    intermediate(Board), % initialize board
-    executeTurn(1, Board, NewBoard),
+    initial2(Board), % initialize board
+    executeTurn(2, Board, NewBoard),
     displayBoard(NewBoard).
 
 

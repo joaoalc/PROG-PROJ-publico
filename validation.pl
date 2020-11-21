@@ -24,8 +24,9 @@ isValidBallMove(Board, Color, Move) :-
           getTopXY(Board, SrcCol, SrcLine, Ball), !,   % get Piece at position X Y
           isBall(Ball), !, selectBall(Color, Ball),       % piece verifications  (ball of the same color of the player)                             
           getNth(4, Move, DestLine),
-          getNth(5, Move, DestCol),   
-          getTopXY(Board, DestLine, DestCol, Top), !,
+          getNth(5, Move, DestCol), !,  
+          isLinearMove(SrcLine, SrcCol, DestLine, DestCol),   % checks if inputed movement is linear
+          getTopXY(Board, DestCol, DestLine, Top), !,
           playableOn(Ball, Top).     
 
 isValidRingPlacement(Board, Color, Move) :-
@@ -47,25 +48,19 @@ isValidRingMove(Board, Color, Move) :-
     !,
     playableOn(Ring, Top).                            % assert if ring is playable on top of stack X Y
 
-/*
-getTopElem([], Piece) :- Piece = none.
-getTopElem([First|_], Piece) :- Piece = First.
 
-getCell([First|_], 0, Piece) :-
-    getTopElem(First, Piece).
+/*checks if a ball is being played linearly*/
+isLinearMove(SrcLine, SrcCol, DestLine, DestCol) :-
+    (SrcLine =:= DestLine);
+    (SrcCol =:= DestCol);
+    (SrcLine-DestLine =:= SrcCol-DestCol). 
 
-getCell([First|Rest], X, Piece) :-
-    X1 is X-1,
-    getCell(Rest, X1, Piece).
+isLinearMove(_,_,_,_) :-
+    nl, write('[i] Balls can only move linearly'), nl, fail.
 
-getTopXY([First|_], X, 0, Piece) :-
-    getCell(First, X, Piece).
 
-getTopXY([First|Rest], X, Y, Piece) :-
-    Y1 is Y-1,
-    getTopXY(Rest, X, Y1, Piece).
-*/
-
+   
+    
 /*
 validMoves(Board, PlayerID, ValidPlays) :-
     getValidRingMoves(Board, PlayerID, ValidPlays),

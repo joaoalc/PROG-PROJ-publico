@@ -38,8 +38,17 @@ initial([
 ]).
 
 
+initial2([
+    [[br     ],[       ],[],[wb,wr,c],[wb,wr,c]],
+    [[       ],[       ],[],[       ],[wb,wr,c]],
+    [[       ],[br       ],[],[       ],[       ]],
+    [[bb,br,c],[br       ],[],[       ],[       ]],
+    [[bb,br,c],[bb,br,c],[],[       ],[       ]]
+]).
+
+
 intermediate([
-    [[wr     ],[     ],[     ],[c         ],[c         ]],
+    [[br     ],[     ],[     ],[c         ],[c         ]],
     [[       ],[     ],[wb,wr],[wr        ],[bb,br,wr,c]],
     [[       ],[     ],[wb,wr],[br        ],[          ]],
     [[wb,wr,c],[bb,br],[bb,br],[wb,wr     ],[          ]],
@@ -112,6 +121,7 @@ getCell([First|_], 0, Piece) :-
     getTopElem(First, Piece).
 
 getCell([First|Rest], X, Piece) :-
+    X > -1,
     X1 is X-1,
     getCell(Rest, X1, Piece).
 
@@ -119,6 +129,7 @@ getTopXY([First|_], X, 0, Piece) :-
     getCell(First, X, Piece).
 
 getTopXY([First|Rest], X, Y, Piece) :-
+    Y > -1,
     Y1 is Y-1,
     getTopXY(Rest, X, Y1, Piece).
     
