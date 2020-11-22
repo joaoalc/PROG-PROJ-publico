@@ -69,15 +69,17 @@ isLinearMove(_,_,_,_) :-
 
    
 /*VAULT VERIFICATION -----------------------------------------------------*/
+% checking if move is not a vault
 vaultVerification(_, SrcLine, SrcCol, DestLine, DestCol) :-
-    \+isVault(SrcLine, SrcCol, DestLine, DestCol),
-    nl, write('not a vault').
+    \+isVault(SrcLine, SrcCol, DestLine, DestCol).
 
+% in case it is a vault, the linear verifications are performed
 vaultVerification(Board, SrcLine, SrcCol, DestLine, DestCol) :-
     linearVault(Board, SrcLine, SrcCol, DestLine, DestCol), write(vault).
 
 vaultVerification(_, _, _, _,_) :- nl, write('[i] Invalid vault'), nl, fail.
- 
+
+% calculate step direction 
 searchStep(X,Y, Step) :- Y-X >= 0,
                          Step is 1.
 searchStep(_,_, Step) :- Step is -1.
@@ -102,14 +104,14 @@ isVault(_,_,_,_) :- nl, write('not a vault'), fail.
 % horizontal movements
 linearVault(Board, SrcLine, SrcCol, DestLine, DestCol) :-
     SrcLine =:= DestLine,
-    searchStep(SrcLine, DestLine, Step),
+    searchStep(SrcCol, DestCol, Step),
     selectLine(Board, SrcLine, Line),
     horizontalVault(Line, SrcCol, DestCol, Step).
 
 %vertical movements
 linearVault(Board, SrcLine, SrcCol, DestLine, DestCol) :-
     SrcCol =:= DestCol,
-    searchStep(SrcCol, DestCol, Step),
+    searchStep(SrcLine, DestLine, Step),
     verticalVault(Board, SrcLine, DestLine, SrcCol, Step).
 
 linearVault(Board, SrcLine, SrcCol, DestLine, DestCol) :-

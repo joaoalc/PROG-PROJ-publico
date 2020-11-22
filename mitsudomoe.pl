@@ -16,8 +16,8 @@ play :-
 test :- 
     initPlayersPvP, % initialize players
     initial2(Board), % initialize board
-    executePlayerTurn(Board, 1, NewBoard),
-    displayBoard(NewBoard).
+    executeVault(Board, white, ['MB', white, 0, 4, 3, 1],  List),
+    write(List).
 
 test2 :- 
     isLinearMove(4,0,2,2).
