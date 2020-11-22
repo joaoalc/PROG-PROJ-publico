@@ -33,6 +33,14 @@ isValidBallMove(Board, Color, Move) :-
  
 isValidBallMove(_, _, _)  :- nl, write('[i] Invalid ball move'), nl, fail.  
 
+% check if a ball can be relocated after a vaulting operation
+isValidBallRelocation(Board, Move) :-
+    getNth(1, Move, Ball),
+    getNth(4, Move, DestLine),
+    getNth(5, Move, DestCol),
+    getTopXY(Board, DestCol, DestLine, Top), !,
+    playableOn(Ball, Top).
+
 isValidRingPlacement(Board, Color, Move) :-
     selectRing(Color, Ring),
     getNth(2, Move, Line),
@@ -75,7 +83,7 @@ vaultVerification(_, SrcLine, SrcCol, DestLine, DestCol) :-
 
 % in case it is a vault, the linear verifications are performed
 vaultVerification(Board, SrcLine, SrcCol, DestLine, DestCol) :-
-    linearVault(Board, SrcLine, SrcCol, DestLine, DestCol), write(vault).
+    linearVault(Board, SrcLine, SrcCol, DestLine, DestCol).
 
 vaultVerification(_, _, _, _,_) :- nl, write('[i] Invalid vault'), nl, fail.
 
@@ -98,7 +106,6 @@ isVault(SrcLine, SrcCol, DestLine, DestCol) :-
          abs2(DifCol, X),
         X > 1
     ).
-isVault(_,_,_,_) :- nl, write('not a vault'), fail.                                     
 
 
 % horizontal movements

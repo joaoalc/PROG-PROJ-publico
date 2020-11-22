@@ -1,18 +1,24 @@
+
+
 executePlayerTurn(Board, Player, UpdatedBoard) :-
         getPlayerColor(Player, Color),
-        executeMoves(Board, Color, UpdatedBoard).
-
-executeMoves(Board, Color, UpdatedBoard) :-
         repeat,
                 once(inputType(Color, Move)),   % input first move
                 move(Board, Move, TmpBoard),
                 getNth(0, Move, Type),
-                isRingMove(Type) ->     % if first move was a ring move, the player can move one of his balls
+                (isRingMove(Type) ->     % if first move was a ring move, the player can move one of his balls
                  (
                     repeat,
-                        moveBall(TmpBoard, Move, Color, UpdatedBoard)
+                        moveBallAfterRing(TmpBoard, Move, Color, UpdatedBoard)
      
-                 ).
+                 );
+                isBallMove(Type) ->
+                 (
+                     moveBall(Board, Color, Move, UpdatedBoard)
+                     
+                 )).
+
+        
                                 
 /* SECOND MOVE --------------------------------------*/                             
                                              
@@ -30,7 +36,7 @@ getRingDestCoords(RingMove, DestLine, DestCol) :-
         getNth(5, RingMove, DestCol).
 
 % choose and move a ball to the cell with the previously placed ring                               
-moveBall(Board, RingMove, Color, NewBoard) :-
+moveBallAfterRing(Board, RingMove, Color, NewBoard) :-
         (askForSecondMove ->
                 ( % execute second move
                     (
@@ -55,6 +61,7 @@ moveBall(Board, RingMove, Color, NewBoard) :-
                                         
 isRingMove('MR').
 isRingMove('R').
+isBallMove('MB').
 
 validAnswer('yes', y).
 validAnswer('no', n).
@@ -82,17 +89,65 @@ getAllCoords(Move, SrcLine, SrcCol, DestLine, DestCol) :-
         getNth(5, Move, DestCol).
 
 % verify if vault call is necessary                    
-executeVault(_,_, Move, ListOfMoves) :-
-        once(getAllCoords(Move, SrcLine, SrcCol, DestLine, DestCol)),
-        \+isVault(SrcLine, SrcCol, DestLine, DestCol), % if not a vault, list of moves is the move itself
-        append(_, [Move], ListOfMoves).
+moveBall(Board,_, Move, UpdatedBoard) :-
+        once((
+                 getAllCoords(Move, SrcLine, SrcCol, DestLine, DestCol),
+                \+isVault(SrcLine, SrcCol, DestLine, DestCol))
+         ), % if not a vault, list of moves is the move itself
+        move(Board, Move, UpdatedBoard).
 
 % in case it is a vault
-executeVault(Board, Color, Move, ListOfMoves) :-
-        nl, write('Movement requires vault'),nl,
-        getAllCoords(Move, SrcLine, SrcCol, DestLine, DestCol),
-        fetchVaultedBalls(Board, Color, SrcLine, SrcCol, DestLine, DestCol, ListOfMoves).
+moveBall(Board, Color, Move, UpdatedBoard) :-
+        once(
+                (  
+                nl, write(' [i] Movement requires vault'),nl,
+                getAllCoords(Move, SrcLine, SrcCol, DestLine, DestCol),
+                fetchVaultedBalls(Board, Color, SrcLine, SrcCol, DestLine, DestCol, CoordsList) 
+                )
+            ),
+        copy_term(Board, TmpBoard),
+        executeVaultMoves(TmpBoard, CoordsList, Move, UpdatedBoard).
+
+printVaultList([]).
+printVaultList([Head|Rest]) :-
+        getNth(0, Head, Line),
+        getNth(1, Head, Col),
+        C is Col+1,
+        getAlpha(Line, Letter),
+        format('| ~p~p ', [Letter, C]),
+        printVaultList(Rest).
+
+getBallAt(Board, List, Index, SrcLine, SrcCol, Ball) :-
+        getNth(Index, List, Coords),
+        getNth(0, Coords, SrcLine),
+        getNth(1, Coords, SrcCol),
+        getTopXY(Board, SrcCol, SrcLine, Ball).
+
+pickRelocation(Board, CoordsList, UpdatedCoordsList, UpdatedBoard) :-
+
+    length(CoordsList, L),
+    inputListIndex(L, Index),
+    getBallAt(Board, CoordsList, Index, SrcLine, SrcCol, Ball),
+    inputMove('RB', _, Destination),
+    append(['RB', Ball, SrcLine, SrcCol], Destination, Relocate),   % build relocate move
+    isValidBallRelocation(Board, Relocate),                         % validate player relocation input
+    executeMove('RB', Board, Relocate,  UpdatedBoard),
+    deleteNth(Index, CoordsList, UpdatedCoordsList).
  
+       
+% if the vaulted balls list is empty then no vault is performed
+executeVaultMoves(UpdatedList, List, _, UpdatedList) :- length(List,0).
+
+% the initial ball move is only called at the end of all the intermidiate vaults
+executeVaultMoves(Board, CoordsList, Move, UpdatedBoard) :-
+        nl, write(' [i] You must relocate each of the balls listed bellow'), nl,
+        printVaultList(CoordsList), nl,
+        copy_term(CoordsList, TmpList),
+        pickRelocation(Board, TmpList, NewList, TmpBoard),
+        executeVaultMoves(TmpBoard, NewList, Move, UpdatedBoard).
+        % TODO Vault cicle until vaults list is empty
+        
+            
 
 /* fetch vaulted balls*/             
 % horizontal vaults

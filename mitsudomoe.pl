@@ -16,8 +16,7 @@ play :-
 test :- 
     initPlayersPvP, % initialize players
     initial2(Board), % initialize board
-    executeVault(Board, white, ['MB', white, 0, 4, 3, 1],  List),
-    write(List).
+    gameLoop(Board, 0).
 
 test2 :- 
     isLinearMove(4,0,2,2).
@@ -76,6 +75,14 @@ executeMove('MR',GameState, Move, NewGameState) :-
     getNth(5, Move, Xdest),
     % format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
     movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
+
+% relocate ball on vaulting operation
+executeMove('RB', GameState, Move, NewGameState) :-
+    getNth(2, Move, SrcLine),
+    getNth(3, Move, SrcCol),
+    getNth(4, Move, DestLine),
+    getNth(5, Move, DestCol),
+    movePiece(GameState, SrcLine, SrcCol, DestLine, DestCol, NewGameState).
 
 
 
@@ -141,7 +148,7 @@ printHeader(PlayerID) :-
     format('~n Rings:  ~p ~n', Size),
     write('=======================================').
 
-/* MOVE PIECE ---------------------------------------------*/   %TODO verify invalid moves
+/* MOVE PIECE ---------------------------------------------*/  
 movePiece(BoardIn, Ysrc, Xsrc, Ydest, Xdest, BoardOut) :- 
     popTopXY(BoardIn,Ysrc, Xsrc,  TmpB, Piece),
     playPiece(TmpB, Ydest, Xdest, Piece, BoardOut).

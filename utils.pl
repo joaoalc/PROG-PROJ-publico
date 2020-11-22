@@ -40,3 +40,12 @@ abs2(X,X).
 /*get top*/
 getTop([], none).
 getTop([Head|_], Head).
+
+/*Convert index to letter*/
+getAlpha(Index, Letter) :-
+        Code is Index+65,
+        char_code(Letter, Code).
+
+% delete 
+deleteNth(0,[H|T],T).
+deleteNth(X,[H|T],[H|S]) :- X1 is X-1, delete(X1,T,S).

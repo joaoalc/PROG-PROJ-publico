@@ -76,12 +76,13 @@ inputBallMove(Color, Ret) :-
     nl, write('Choose the ball you wish to displace'), nl,
     inputMove('MB2', Color, Ret).
 
-/*d
-getAwnser(Answer) :-
-    ((Answer == 'yes' ; Answer == 'no' ; Answer == 'y' ; Answer == 'n') ->
-        true;
-        fail).
-*/
+inputListIndex(Length, Index) :-
+    repeat,
+        once((
+         inputString('Index (starts at 0): ', Index),
+         number(Index))),
+         Index < Length.
+    
 
 
 % Place ring from stash
@@ -119,6 +120,14 @@ inputMove('MB', Color, ['MB', Color, Line1, Col1, Line2, Col2]) :-
 
 % input for second moves
 inputMove('MB2', Color, ['MB', Color, Line1, Col1]) :-
+    inputString('Line 1 (A-E): ', L1),
+    char_code(L1, Code),
+    Line1 is Code-65,             % starts at 64+1
+    inputString('Col1 (1-5):  ', C1),
+    Col1 is C1-1.
+
+% input for ball relocation
+inputMove('RB', _, [Line1, Col1]) :-
     inputString('Line 1 (A-E): ', L1),
     char_code(L1, Code),
     Line1 is Code-65,             % starts at 64+1
