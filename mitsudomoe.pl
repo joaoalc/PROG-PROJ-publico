@@ -3,6 +3,7 @@
 :-consult('board.pl').
 :-consult('validation.pl').
 :-consult('player.pl').
+:-consult('move.pl').
 
 
 play :- 
@@ -15,7 +16,7 @@ play :-
 test :- 
     initPlayersPvP, % initialize players
     initial2(Board), % initialize board
-    executeTurn(2, Board, NewBoard),
+    executePlayerTurn(Board, 1, NewBoard),
     displayBoard(NewBoard).
 
 test2 :- 
@@ -24,12 +25,13 @@ test2 :-
 
 /* EXECUTE TURN ---------------------------------------*/
 % executeTurn(Player, Board, UpdatedBoard)
+/*
 executeTurn(Player, Board, UpdatedBoard) :- 
     getPlayerColor(Player, Color),
     repeat,
        once(inputType(Color, Move)),
        move(Board, Move, UpdatedBoard).
-       
+       */
        
         
 
@@ -59,7 +61,15 @@ executeMove('R',GameState, Move, NewGameState) :-
     decrementRingStash.
 
 % move top piece from A to B
-executeMove('M',GameState, Move, NewGameState) :-
+executeMove('MB',GameState, Move, NewGameState) :-
+    getNth(2, Move, Ysrc),
+    getNth(3, Move, Xsrc),
+    getNth(4, Move, Ydest),
+    getNth(5, Move, Xdest),
+    % format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
+    movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
+
+executeMove('MR',GameState, Move, NewGameState) :-
     getNth(2, Move, Ysrc),
     getNth(3, Move, Xsrc),
     getNth(4, Move, Ydest),
@@ -68,13 +78,14 @@ executeMove('M',GameState, Move, NewGameState) :-
     movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
 
 
+
 /*GAME LOOP ---------------------------------------------*/
 gameLoop(_,1) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
 gameLoop(_,2) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
 gameLoop(Board, _) :-
     getPlayerTurn(PlayerID, 1), % get current player
     displayGame(Board, PlayerID), !, % display result
-    once(executeTurn(PlayerID, Board, UpdatedBoard)), % execute turn for current player
+    once(executePlayerTurn(Board, PlayerID, UpdatedBoard)), % execute turn for current player
     gameOver(UpdatedBoard, Value),
     setNextPlayer, % switch to next player
     gameLoop(UpdatedBoard, Value).

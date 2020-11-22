@@ -71,20 +71,10 @@ inputType(Color, Ret) :-
     !,
     inputMove(Type, Color, Ret).
 
-
-secondMove :-   
-    repeat,
-        once(inputString('Move a ball?(yes/no) ', Answer)),
-        getAwnser(Answer),
-    !,
-    ((Answer == 'yes' ; Answer == 'y') ->
-        true;
-        fail).
-
-getAwnser('yes').
-getAwnser('no').
-getAwnser('y').
-getAwnser('n').
+% for second moves
+inputBallMove(Color, Ret) :-
+    nl, write('Choose the ball you wish to displace'), nl,
+    inputMove('MB2', Color, Ret).
 
 /*d
 getAwnser(Answer) :-
@@ -103,7 +93,7 @@ inputMove('R', Color, ['R', Color, Line, Col]) :-
     Col is C-1.
 
 % move top element from one cell to the other
-inputMove('M', Color, ['M', Color, Line1, Col1, Line2, Col2]) :-
+inputMove('MR', Color, ['MR', Color, Line1, Col1, Line2, Col2]) :-
     inputString('Line 1 (A-E): ', L1),
     char_code(L1, Code),
     Line1 is Code-65,             % starts at 64+1
@@ -114,6 +104,26 @@ inputMove('M', Color, ['M', Color, Line1, Col1, Line2, Col2]) :-
     Line2 is Code2-65,             % starts at 64+1
     inputString('Col2 (1-5):  ', C2),
     Col2 is C2-1.
+
+inputMove('MB', Color, ['MB', Color, Line1, Col1, Line2, Col2]) :-
+    inputString('Line 1 (A-E): ', L1),
+    char_code(L1, Code),
+    Line1 is Code-65,             % starts at 64+1
+    inputString('Col1 (1-5):  ', C1),
+    Col1 is C1-1,
+    inputString('Line2 (A-E): ', L2),
+    char_code(L2, Code2),
+    Line2 is Code2-65,             % starts at 64+1
+    inputString('Col2 (1-5):  ', C2),
+    Col2 is C2-1.
+
+% input for second moves
+inputMove('MB2', Color, ['MB', Color, Line1, Col1]) :-
+    inputString('Line 1 (A-E): ', L1),
+    char_code(L1, Code),
+    Line1 is Code-65,             % starts at 64+1
+    inputString('Col1 (1-5):  ', C1),
+    Col1 is C1-1.
 
 inputMove(_,_,_) :-
     nl, write('[i] Invalid input type (inputMove)'), nl, fail.

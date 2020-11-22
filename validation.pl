@@ -11,9 +11,10 @@ isValidMove(Board, Move) :-
     getNth(1, Move, Color),
     (Type == 'R' ->                                     % ring placement
             isValidRingPlacement(Board, Color, Move);
-    Type == 'M' ->                                      % move top piece from a given cell
-            (isValidBallMove(Board, Color, Move);
-            isValidRingMove(Board, Color, Move));
+    Type == 'MB' ->                                      % move top piece from a given cell
+            isValidBallMove(Board, Color, Move);
+    Type == 'MR' ->
+            isValidRingMove(Board, Color, Move);
             nl, write('[i] Invalid Type'), nl, fail
     ).
 
@@ -68,9 +69,12 @@ isLinearMove(_,_,_,_) :-
 
    
 /*VAULT VERIFICATION -----------------------------------------------------*/
+vaultVerification(_, SrcLine, SrcCol, DestLine, DestCol) :-
+    \+isVault(SrcLine, SrcCol, DestLine, DestCol),
+    nl, write('not a vault').
+
 vaultVerification(Board, SrcLine, SrcCol, DestLine, DestCol) :-
-    isVault(SrcLine, SrcCol, DestLine, DestCol) ->
-        linearVault(Board, SrcLine, SrcCol, DestLine, DestCol), write(vault).
+    linearVault(Board, SrcLine, SrcCol, DestLine, DestCol), write(vault).
 
 vaultVerification(_, _, _, _,_) :- nl, write('[i] Invalid vault'), nl, fail.
  
@@ -80,13 +84,19 @@ searchStep(_,_, Step) :- Step is -1.
   
 
 % no need to vault check for moves to adjacent tiles 
+% true when the number of travelled cells in each direction is greatter then 1
 isVault(SrcLine, SrcCol, DestLine, DestCol) :-
-    DifLine is SrcLine-DestLine,
-    abs2(DifLine, Y),
-    Y > 1,
-    DifCol is SrcCol-DestCol,
-    abs2(DifCol, X),
-    X > 1.                                       
+    (
+            DifLine is SrcLine-DestLine,
+            abs2(DifLine, Y),
+            Y > 1
+    );
+    (
+        DifCol is SrcCol-DestCol,
+         abs2(DifCol, X),
+        X > 1
+    ).
+isVault(_,_,_,_) :- nl, write('not a vault'), fail.                                     
 
 
 % horizontal movements
@@ -147,51 +157,6 @@ diagonalVault(Board, SrcLine, SrcCol, DestLine, DestCol, StepY, StepX) :-
     isBall(Top),
     diagonalVault(Board, Y, X, DestLine, DestCol, StepY, StepX).
                                     
-
-
-
-/*RING PLACEMENT VALIDATION-----------------------*/
-getValidRingMoves(Board, PlayerID, Ret) :-
-    getStashSize(PlayerID, Size),
-    Size > 0,
-    getPlayerColor(PlayerID, Color),        % get current player s color
-    selectPiece('R', Color, Piece),        % select ring with the color of the player
-    calcLine(Board, Piece, 0, Ret).
-
-calcLine(Board, Piece, Line, List) :-
-    write(Line),
-    Line < 5,
-    calcCol(Board, Piece, Line, 0, New),
-    write('List of accepted elements on line '), write(Line), write('is '), write(New), nl,
-    append(_, New, List),
-    L1 is Line+1,
-    calcLine(Board, Piece, L1, List).
-
-calcLine(_,_,_,Ret).
-/*
-calcCol(Board, Piece, Line, 4, [Head]) :- 
-    evaluateCell(Board, Piece, Line, 4, Res) ->
-        append(_, Res, Head).*/
-calcCol(Board, Piece, Line, Col, [Head|Tail]) :-
-    Col < 5,
-    write(Line),
-    write(Col),
-    nl,
-    (evaluateCell(Board, Piece, Line, Col, Res) ->
-        append(_, Res, Head);
-    true),
-    C1 is Col+1,
-    calcCol(Board, Piece, Line, C1, Tail).
-
-calcCol(_, _, _, _, Ret).
-
-evaluateCell(Board, Piece, Line, Col, Ret) :-
-    isValidRingMove(Board, Piece, Line, Col),
-    append(_, ['R', Piece, Line, Col], Ret).
-
-% evaluateCell(_,_,_,_,[]).
-
-
 
 
 
