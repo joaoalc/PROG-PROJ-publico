@@ -18,24 +18,25 @@ isValidMove(Board, Move) :-
             nl, write('[X] Invalid Type'), nl, fail
     ).
 
-goalCell(white, 3, 0).  % D1
-goalCell(white, 4, 0).  % E1
-goalCell(white, 4, 1).  % E2
+goalCell(white, wb, 3, 0).  % D1
+goalCell(white, wb, 4, 0).  % E1
+goalCell(white, wb, 4, 1).  % E2
 
-goalCell(black, 0, 3).   % A4
-goalCell(black, 0, 4).   % A5
-goalCell(black, 1, 4).   % B5
+goalCell(black, bb, 0, 3).   % A4
+goalCell(black, bb, 0, 4).   % A5
+goalCell(black, bb, 1, 4).   % B5
 
 % checks if a ball is at it's goal cell (can't move)
-enemyIsAtGoal(white, Line,Col) :- goalCell(black, Line, Col).
-enemyIsAtGoal(black, Line,Col) :- goalCell(white, Line, Col).
+enemyIsAtGoal(white, Top, Line,Col) :- goalCell(black, Top, Line, Col).
+enemyIsAtGoal(black, Top, Line,Col) :- goalCell(white, Top, Line, Col).
 
-ballIsAtGoal(Color, Line, Col) :- goalCell(Color, Line,Col).
+ballIsAtGoal(Color, Top, Line, Col) :- goalCell(Color, Top, Line,Col).
     
 isValidBallMove(Board, Color, [_,_,SrcLine,SrcCol,DestLine,DestCol]) :-
-          \+ballIsAtGoal(Color, SrcLine, SrcCol),       % can't move balls that have reached their goal
+
           getTopXY(Board, SrcCol, SrcLine, Ball), !,   % get Piece at position X Y
-          isBall(Ball), !, selectBall(Color, Ball), !,      % piece verifications  (ball of the same color of the player)                             
+          isBall(Ball), !, selectBall(Color, Ball), !,      % piece verifications  (ball of the same color of the player)  
+          \+ballIsAtGoal(Color, Ball, SrcLine, SrcCol),       % can't move balls that have reached their goal                           
           isLinearMove(SrcLine, SrcCol, DestLine, DestCol), !,   % checks if inputed movement is linear
           vaultVerification(Board, Color, SrcLine, SrcCol, DestLine, DestCol),
           getTopXY(Board, DestCol, DestLine, Top), !,
@@ -144,7 +145,7 @@ horizontalVault(Line, LineIndex, Color, SrcCol, DestCol, Step) :-
     selectCell(Line, Col, Cell),
     getTop(Cell, Top), !,
     isBall(Top), !,
-    \+enemyIsAtGoal(Color, LineIndex, Col),       %can't relocate balls that have reached their goal
+    \+enemyIsAtGoal(Color, Top, LineIndex, Col),       %can't relocate balls that have reached their goal
     horizontalVault(Line, LineIndex, Color, Col, DestCol, Step).
 
 /*vertical vault verification*/
@@ -158,7 +159,7 @@ verticalVault(Board, Color, SrcLine, DestLine, Col, Step) :-
     selectCell(Line, Col, Cell),
     getTop(Cell, Top), !,
     isBall(Top), !,
-    \+enemyIsAtGoal(Color, Y, Col),
+    \+enemyIsAtGoal(Color, Top, Y, Col),
     verticalVault(Board, Color, Y, DestLine, Col, Step).
     
 /*diagonal vault verification*/
@@ -173,7 +174,7 @@ diagonalVault(Board, Color, SrcLine, SrcCol, DestLine, DestCol, StepY, StepX) :-
     selectCell(Line, X, Cell),
     getTop(Cell, Top), !,
     isBall(Top), !,
-    \+enemyIsAtGoal(Color, Y, X),
+    \+enemyIsAtGoal(Color, Top, Y, X),
     diagonalVault(Board, Color, Y, X, DestLine, DestCol, StepY, StepX).
                                     
 
