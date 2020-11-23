@@ -7,7 +7,7 @@ allBallMoves(Line, Board, Move, NewGameState) :-
     !,
 
     isValidBallMove(Board, Color, Move),
-    executeMoveAI(Type, Board, Move, NewGameState).
+    once(executeMoveAI(Type, Board, Move, NewGameState)),
     /*getNth(2, Move, LineSrc),
     getNth(3, Move, ColSrc),
     getNth(4, Move, LineDest),
@@ -16,6 +16,8 @@ allBallMoves(Line, Board, Move, NewGameState) :-
     write(ColSrc),
     write(LineDest),
     write(ColDest),
+    nl, nl.
+    
     !,
     displayBoard(NewGameState)*/
 
@@ -29,14 +31,7 @@ findBallBallMovesAfterRing([], [], _).
 
 findBallBallMovesAfterRing([First|Rest], [FirstRes|RestRes], Color) :-
     findall(NewBallGameState, (between(0, 4, LineSrc), between(0, 4, ColSrc), between(0, 4, LineDest), between(0, 4, ColDest), allBallMoves(Line, First, ['MB', Color, LineSrc, ColSrc, LineDest, ColDest], NewBallGameState)), FirstRes),
-    nl, nl,
-    write('A'),
-    write(FirstRes),
-    nl, nl,
-    findBallBallMovesAfterRing(Rest, RestRes, Color),
-    write(FirstRes),
-    nl, 
-    nl.
+    findBallBallMovesAfterRing(Rest, RestRes, Color).
 
 
 
@@ -63,8 +58,6 @@ getPossiblePlays(Board, AllBoards, Color) :-
     %temp(Line, Board, ['MB', Color, 0, 3, 0, 2], NewGameState),
     %write(AllBoardsMoveBall),
     findall(NewGameState, (between(0, 4, Line), between(0, 4, Col), allRingMoves(Line, Board, ['R', Color, Line, Col], NewGameState)), AllBoardsRingPlace2),
-    write(AllBoardsRingPlace2),
-    nl,
     findBallBallMovesAfterRing(AllBoardsRingPlace2, AllBoardsRingPlaceBallMove, Color),
     %%write(AllBoardsRingPlaceBallMove),
     %write(AllBoardsRingPlaceBallMove),
