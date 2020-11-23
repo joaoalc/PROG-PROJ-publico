@@ -15,41 +15,48 @@ isValidMove(Board, Move) :-
             isValidBallMove(Board, Color, Move);
     Type == 'MR' ->
             isValidRingMove(Board, Color, Move);
-            nl, write('[i] Invalid Type'), nl, fail
+            nl, write('[X] Invalid Type'), nl, fail
     ).
 
+goalCell(white, 3, 0).  % D1
+goalCell(white, 4, 0).  % E1
+goalCell(white, 4, 1).  % E2
 
-isValidBallMove(Board, Color, Move) :-
-          getNth(2, Move, SrcLine),
-          getNth(3, Move, SrcCol),
+goalCell(black, 0, 3).   % A4
+goalCell(black, 0, 4).   % A5
+goalCell(black, 1, 4).   % B5
+
+% checks if a ball is at it's goal cell (can't move)
+enemyIsAtGoal(white, Line,Col) :- goalCell(black, Line, Col).
+enemyIsAtGoal(black, Line,Col) :- goalCell(white, Line, Col).
+
+ballIsAtGoal(Color, Line, Col) :- goalCell(Color, Line,Col).
+    
+isValidBallMove(Board, Color, [_,_,SrcLine,SrcCol,DestLine,DestCol]) :-
+          \+ballIsAtGoal(Color, SrcLine, SrcCol),       % can't move balls that have reached their goal
           getTopXY(Board, SrcCol, SrcLine, Ball), !,   % get Piece at position X Y
-          isBall(Ball), !, selectBall(Color, Ball),       % piece verifications  (ball of the same color of the player)                             
-          getNth(4, Move, DestLine),
-          getNth(5, Move, DestCol), !,  
+          isBall(Ball), !, selectBall(Color, Ball), !,      % piece verifications  (ball of the same color of the player)                             
           isLinearMove(SrcLine, SrcCol, DestLine, DestCol), !,   % checks if inputed movement is linear
-          vaultVerification(Board, SrcLine, SrcCol, DestLine, DestCol),
+          vaultVerification(Board, Color, SrcLine, SrcCol, DestLine, DestCol),
           getTopXY(Board, DestCol, DestLine, Top), !,
           playableOn(Ball, Top). 
  
-isValidBallMove(_, _, _)  :- nl, write('[i] Invalid ball move'), nl, fail.  
+isValidBallMove(_, _, _)  :- nl, write('[X] Invalid ball move'), nl, fail.  
 
 % check if a ball can be relocated after a vaulting operation
-isValidBallRelocation(Board, Move) :-
-    getNth(1, Move, Ball),
-    getNth(4, Move, DestLine),
-    getNth(5, Move, DestCol),
-    getTopXY(Board, DestCol, DestLine, Top), !,
+isValidBallRelocation(Board, [_,Ball,_,_,DestLine,DestCol]) :-
+    once(getTopXY(Board, DestCol, DestLine, Top)),
     playableOn(Ball, Top).
 
-isValidRingPlacement(Board, Color, Move) :-
+isValidBallRelocation(_, _) :- nl, write('[X] Invalid Relocation'), nl, fail.
+
+isValidRingPlacement(Board, Color, [_,_,Line,Col]) :-
     selectRing(Color, Ring),
-    getNth(2, Move, Line),
-    getNth(3, Move, Col),
     getTopXY(Board, Col, Line, Top),
     !,
     playableOn(Ring, Top). % assert if ring is playable on top of stack X Y
 
-isValidRingMove(Board, Color, Move) :-
+isValidRingMove(Board, Color, [_,_,SrcLine,SrcCol,DestLine,DestCol]) :-
     getNth(2, Move, SrcLine),
     getNth(3, Move, SrcCol),
     getTopXY(Board, SrcCol, SrcLine, Ring),
@@ -73,19 +80,19 @@ isLinearMove(SrcLine, SrcCol, DestLine, DestCol) :-
      ).
 
 isLinearMove(_,_,_,_) :-
-    nl, write('[i] Balls can only move linearly'), nl, fail.
+    nl, write('[X] Balls can only move linearly'), nl, fail.
 
    
 /*VAULT VERIFICATION -----------------------------------------------------*/
 % checking if move is not a vault
-vaultVerification(_, SrcLine, SrcCol, DestLine, DestCol) :-
+vaultVerification(_, _, SrcLine, SrcCol, DestLine, DestCol) :-
     \+isVault(SrcLine, SrcCol, DestLine, DestCol).
 
 % in case it is a vault, the linear verifications are performed
-vaultVerification(Board, SrcLine, SrcCol, DestLine, DestCol) :-
-    linearVault(Board, SrcLine, SrcCol, DestLine, DestCol).
+vaultVerification(Board, Color, SrcLine, SrcCol, DestLine, DestCol) :-
+    linearVault(Board, Color, SrcLine, SrcCol, DestLine, DestCol).
 
-vaultVerification(_, _, _, _,_) :- nl, write('[i] Invalid vault'), nl, fail.
+vaultVerification(_, _, _, _, _,_) :- nl, write('[X] Invalid vault'), nl, fail.
 
 % calculate step direction 
 searchStep(X,Y, Step) :- Y-X >= 0,
@@ -109,62 +116,65 @@ isVault(SrcLine, SrcCol, DestLine, DestCol) :-
 
 
 % horizontal movements
-linearVault(Board, SrcLine, SrcCol, DestLine, DestCol) :-
+linearVault(Board, Color, SrcLine, SrcCol, DestLine, DestCol) :-
     SrcLine =:= DestLine,
     searchStep(SrcCol, DestCol, Step),
-    selectLine(Board, SrcLine, Line),
-    horizontalVault(Line, SrcCol, DestCol, Step).
+    selectLine(Board, SrcLine, Line), !,
+    horizontalVault(Line, SrcLine, Color, SrcCol, DestCol, Step).
 
 %vertical movements
-linearVault(Board, SrcLine, SrcCol, DestLine, DestCol) :-
+linearVault(Board, Color, SrcLine, SrcCol, DestLine, DestCol) :-
     SrcCol =:= DestCol,
-    searchStep(SrcLine, DestLine, Step),
-    verticalVault(Board, SrcLine, DestLine, SrcCol, Step).
+    searchStep(SrcLine, DestLine, Step), !,
+    verticalVault(Board, Color, SrcLine, DestLine, SrcCol, Step).
 
-linearVault(Board, SrcLine, SrcCol, DestLine, DestCol) :-
+linearVault(Board, Color, SrcLine, SrcCol, DestLine, DestCol) :-
     searchStep(SrcCol, DestCol ,StepX),
-    searchStep(SrcLine, DestLine, StepY),
-    diagonalVault(Board, SrcLine, SrcCol, DestLine, DestCol, StepY, StepX).
+    searchStep(SrcLine, DestLine, StepY), !,
+    diagonalVault(Board, Color, SrcLine, SrcCol, DestLine, DestCol, StepY, StepX).
 
 /*horizontal vault verification*/
 % reached target cell
-horizontalVault(_, SrcCol, DestCol, Step) :- 
+horizontalVault(_,_,_, SrcCol, DestCol, Step) :- 
     SrcCol+Step =:= DestCol.
 
 % horizontal search
-horizontalVault(Line, SrcCol, DestCol, Step) :-
+horizontalVault(Line, LineIndex, Color, SrcCol, DestCol, Step) :-
     Col is SrcCol+Step,
     selectCell(Line, Col, Cell),
     getTop(Cell, Top), !,
-    isBall(Top),
-    horizontalVault(Line, Col, DestCol, Step).
+    isBall(Top), !,
+    \+enemyIsAtGoal(Color, LineIndex, Col),       %can't relocate balls that have reached their goal
+    horizontalVault(Line, LineIndex, Color, Col, DestCol, Step).
 
 /*vertical vault verification*/
 % reached target cell
-verticalVault(_, SrcLine, DestLine, _, Step) :-
+verticalVault(_, _, SrcLine, DestLine, _, Step) :-
     SrcLine+Step =:= DestLine.
 % vertical search
-verticalVault(Board, SrcLine, DestLine, Col, Step) :-
+verticalVault(Board, Color, SrcLine, DestLine, Col, Step) :-
     Y is SrcLine+Step,
     selectLine(Board, Y, Line),
     selectCell(Line, Col, Cell),
     getTop(Cell, Top), !,
-    isBall(Top),
-    verticalVault(Board, Y, DestLine, Col, Step).
+    isBall(Top), !,
+    \+enemyIsAtGoal(Color, Y, Col),
+    verticalVault(Board, Color, Y, DestLine, Col, Step).
     
 /*diagonal vault verification*/
 %reached target cell
-diagonalVault(_, SrcLine, _, DestLine, _, StepY, _) :-
+diagonalVault(_, _, SrcLine, _, DestLine, _, StepY, _) :-
     SrcLine+StepY =:= DestLine.
 %diagonal search
-diagonalVault(Board, SrcLine, SrcCol, DestLine, DestCol, StepY, StepX) :-
+diagonalVault(Board, Color, SrcLine, SrcCol, DestLine, DestCol, StepY, StepX) :-
     X is SrcCol+StepX,
     Y is SrcLine+StepY,
     selectLine(Board, Y, Line),
     selectCell(Line, X, Cell),
     getTop(Cell, Top), !,
-    isBall(Top),
-    diagonalVault(Board, Y, X, DestLine, DestCol, StepY, StepX).
+    isBall(Top), !,
+    \+enemyIsAtGoal(Color, Y, X),
+    diagonalVault(Board, Color, Y, X, DestLine, DestCol, StepY, StepX).
                                     
 
 

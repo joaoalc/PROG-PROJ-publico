@@ -6,7 +6,7 @@ player(ID, Name, PlayerColor, stash, playerTurn).
 initPlayersPvP :-
     inputString('Player #1: ', Name1),
     inputString('Player #2: ',Name2),
-    retractall(player(_,_,_,_)),
+    retractall(player(_,_,_,_,_)),
     asserta(player(1, Name1, white, 5, 1)),
     asserta(player(2, Name2, black, 5, 0)).
 
@@ -77,11 +77,11 @@ inputBallMove(Color, Ret) :-
     inputMove('MB2', Color, Ret).
 
 inputListIndex(Length, Index) :-
-    repeat,
-        once((
-         inputString('Index (starts at 0): ', Index),
-         number(Index))),
-         Index < Length.
+   once(inputString('Index (starts at 0): ', Index)),
+   Index < Length.
+
+inputListIndex(_, _) :- nl, write('[X] Invalid list index'), nl, fail.
+
     
 
 
@@ -137,6 +137,17 @@ inputMove('RB', _, [Line1, Col1]) :-
 inputMove(_,_,_) :-
     nl, write('[i] Invalid input type (inputMove)'), nl, fail.
 
+inputCoords4(SrcLine, SrcCol, DestLine,DestCol) :-
+    inputString('Source Line (A-E): ', L1),
+    char_code(L1, Code),
+    SrcLine is Code-65,             % starts at 64+1
+    inputString('Source Col (1-5):  ', C1),
+    SrcCol is C1-1,
+    inputString('Dest Line (A-E): ', L2),
+    char_code(L2, Code2),
+    DestLine is Code2-65,             % starts at 64+1
+    inputString('Dest Col (1-5):  ', C2),
+    DestCol is C2-1.
 
 
 

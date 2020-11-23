@@ -50,38 +50,23 @@ move(GameState, Move, NewGameState) :-
 
 
 % place ring
-executeMove('R',GameState, Move, NewGameState) :-
-    getNth(1, Move, Color),     % get player's color
+executeMove('R',GameState, [_,Color,Line,Col], NewGameState) :-
     selectRing(Color, Ring),    % select respctive ring
-    getNth(2, Move, Line),
-    getNth(3, Move, Col),
     % format('~n ~p ~p  ', [Col, Line]),
     playPiece(GameState, Line, Col, Ring, NewGameState),
     decrementRingStash.
 
 % move top piece from A to B
-executeMove('MB',GameState, Move, NewGameState) :-
-    getNth(2, Move, Ysrc),
-    getNth(3, Move, Xsrc),
-    getNth(4, Move, Ydest),
-    getNth(5, Move, Xdest),
+executeMove('MB',GameState, [_,_,Ysrc,Xsrc,Ydest,Xdest], NewGameState) :-
     % format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
     movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
 
-executeMove('MR',GameState, Move, NewGameState) :-
-    getNth(2, Move, Ysrc),
-    getNth(3, Move, Xsrc),
-    getNth(4, Move, Ydest),
-    getNth(5, Move, Xdest),
+executeMove('MR',GameState, [_,_,Ysrc,Xsrc,Ydest,Xdest], NewGameState) :-
     % format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
     movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
 
 % relocate ball on vaulting operation
-executeMove('RB', GameState, Move, NewGameState) :-
-    getNth(2, Move, SrcLine),
-    getNth(3, Move, SrcCol),
-    getNth(4, Move, DestLine),
-    getNth(5, Move, DestCol),
+executeMove('RB', GameState, [_,_,SrcLine,SrcCol,DestLine,DestCol], NewGameState) :-
     movePiece(GameState, SrcLine, SrcCol, DestLine, DestCol, NewGameState).
 
 
