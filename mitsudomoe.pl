@@ -4,6 +4,7 @@
 :-consult('validation.pl').
 :-consult('player.pl').
 :-consult('move.pl').
+:-consult('bot.pl').
 
 
 play :- 
@@ -21,6 +22,10 @@ test :-
 test2 :- 
     isLinearMove(4,0,2,2).
                     
+test3 :-
+    initial(Board),
+    getPossiblePlays(Board, NewBoard, white).
+
 
 /* EXECUTE TURN ---------------------------------------*/
 % executeTurn(Player, Board, UpdatedBoard)
@@ -33,7 +38,6 @@ executeTurn(Player, Board, UpdatedBoard) :-
        */
        
         
-
 
 move(GameState, Move, NewGameState) :-
     getNth(0, Move, Type),
@@ -48,6 +52,13 @@ move(GameState, Move, NewGameState) :-
     % TODO verify valid move
     executeMove(Type, GameState, Move, NewGameState).*/
 
+executeMoveTemp('R',GameState, Move, NewGameState) :-
+    getNth(1, Move, Color),     % get player's color
+    selectRing(Color, Ring),    % select respctive ring
+    getNth(2, Move, Line),
+    getNth(3, Move, Col),
+    %format('~n ~p ~p  ', [Col, Line]),
+    playPiece(GameState, Line, Col, Ring, NewGameState).
 
 % place ring
 executeMove('R',GameState, [_,Color,Line,Col], NewGameState) :-
