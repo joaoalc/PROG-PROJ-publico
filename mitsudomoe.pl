@@ -17,7 +17,8 @@ play :-
 test :- 
     initPlayersPvP, % initialize players
     initial2(Board), % initialize board
-    gameLoop(Board, 0).
+    gameOver(Board, Winner),
+    write(Winner).
 
 test2 :- 
     isLinearMove(4,0,2,2).
@@ -96,37 +97,36 @@ gameLoop(Board, _) :-
 /*END GAME ----------------------------------------------*/
 % asserts if the game has been won
 gameOver(Board, Winner) :-
-    value(Board, PlayerID, Winner).
-
-value(Board, PlayerID, Value) :-
-    getPlayerColor(PlayerID, Color),
-    !,
-    isEndGame(Board) -> 
-        Value is PlayerID % game over
+    isEndGame(Board, Value) -> 
+        Winner is Value % game over
         ; 
-        Value is 0, nl, write('[!] Next Turn'), nl.  % game continues
+        Winner is 0, nl, write('[!] Next Turn'), nl.  % game continues
+    
 
 % verify is white or black pieces have reached their goals
-isEndGame(Board) :- 
-    (   % true when right top corners have all white balls (white pieces win)
+isEndGame(Board, Winner) :- 
+    % true when left bottom corners have all white balls (white pieces win)
+    once((
         getTopXY(Board, 0, 3, D1),  
         getTopXY(Board, 0, 4, E1),
-        getTopXY(Board, 1, 4, E2),
-        !,
-        equalTo(D1, wb),
-        equalTo(E1, wb),
-        equalTo(E2, wb)
-    );
-    (    % true when left bottom corners have all black balls (black pieces win)
+        getTopXY(Board, 1, 4, E2))
+    ),
+    D1 == wb,
+    E1 == wb,
+    E2 == wb,
+    getPlayerColor(Winner, white).
+
+% true when right top corners have all black balls (black pieces win)
+isEndGame(Board, Winner) :- 
+    once((
         getTopXY(Board, 3, 0, A4),  
         getTopXY(Board, 4, 0, A5),
-        getTopXY(Board, 4, 1, B5),
-        !,
-        equalTo(A4, bb),
-        equalTo(A5, bb),
-        equalTo(B5, bb)
-    ).
-
+        getTopXY(Board, 4, 1, B5))
+    ),
+    A4 == bb,
+    A5 == bb, 
+    B5 == bb, 
+    getPlayerColor(Winner, black).
 
 /*DISPLAY GAME ------------------------------------------*/
 displayGame(GameState, PlayerID) :-  
