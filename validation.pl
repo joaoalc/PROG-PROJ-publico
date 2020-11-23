@@ -36,7 +36,7 @@ isValidBallMove(Board, Color, [_,_,SrcLine,SrcCol,DestLine,DestCol]) :-
 
           getTopXY(Board, SrcCol, SrcLine, Ball), !,   % get Piece at position X Y
           isBall(Ball), !, selectBall(Color, Ball), !,      % piece verifications  (ball of the same color of the player)  
-          \+ballIsAtGoal(Color, Ball, SrcLine, SrcCol),       % can't move balls that have reached their goal                           
+          \+ballIsAtGoal(Color, Ball, SrcLine, SrcCol), !,       % can't move balls that have reached their goal                           
           isLinearMove(SrcLine, SrcCol, DestLine, DestCol), !,   % checks if inputed movement is linear
           vaultVerification(Board, Color, SrcLine, SrcCol, DestLine, DestCol),
           getTopXY(Board, DestCol, DestLine, Top), !,

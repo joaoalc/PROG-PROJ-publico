@@ -15,10 +15,10 @@ play :-
 
 % use this to debug functions
 test :- 
+     write('\33\[2J'),   % clear Screen
     initPlayersPvP, % initialize players
-    initial2(Board), % initialize board
-    gameOver(Board, Winner),
-    write(Winner).
+    initial2(Board) ,!, % initialize board
+    gameLoop(Board, 0). % start game loop
 
 test2 :- 
     isLinearMove(4,0,2,2).

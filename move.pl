@@ -3,22 +3,21 @@
 executePlayerTurn(Board, Player, UpdatedBoard) :-
         getPlayerColor(Player, Color),
         repeat,
-                once(
-                        (once(inputType(Color, Move)),   % input first move
-                        move(Board, Move, TmpBoard))
-                    ),
+                once( inputType(Color, Move)),   % input first move),
                 getNth(0, Move, Type),
                 (isRingMove(Type) ->     % if first move was a ring move, the player can move one of his balls
                  (
+                    move(Board, Move, TmpBoard),
                     repeat,
                         moveBallAfterRing(TmpBoard, Move, Color, UpdatedBoard)
      
                  );
                 isBallMove(Type) ->
                  (
-                        moveBall(TmpBoard, Color, Move, UpdatedBoard)
+                        moveBall(Board, Color, Move, UpdatedBoard)
                      
                  )).
+                 
 
         
                                 

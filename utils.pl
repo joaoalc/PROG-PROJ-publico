@@ -33,8 +33,8 @@ pushTop(Elem, List, [Elem|List]).
 
 /*ABSOLUTE VALUE*/
 
-abs2(X,Y) :- X < 0,
-             Y is -X.
+abs2(X,Y) :- X < 0, 
+             Y is (-X).
 abs2(X,X).
 
 /*get top*/
