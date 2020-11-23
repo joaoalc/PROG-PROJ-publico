@@ -37,6 +37,14 @@ initial([
     [[bb,br,c],[bb,br,c],[],[       ],[       ]]
 ]).
 
+testBoard([
+    [[bb     ],[bb       ],[wr],[wb,wr,c],[wb,wr,c]],
+    [[bb     ],[bb     ],[bb],[wr     ],[wb,wr,c]],
+    [[bb     ],[bb     ],[bb],[bb     ],[bb     ]],
+    [[bb,br,c],[bb     ],[bb],[bb     ],[bb     ]],
+    [[bb,br,c],[bb,br,c],[bb],[bb     ],[bb     ]]
+]).
+
 initial2([
      [[       ],[       ],[],[bb,wr,c],[bb,wr,c]],
     [[       ],[       ],[],[       ],[bb,wr,c]],

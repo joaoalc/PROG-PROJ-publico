@@ -41,7 +41,8 @@ isValidBallMove(Board, Color, [_,_,SrcLine,SrcCol,DestLine,DestCol]) :-
           getTopXY(Board, DestCol, DestLine, Top), !,
           playableOn(Ball, Top). 
  
-isValidBallMove(_, _, _)  :- nl, write('[X] Invalid ball move'), nl, fail.  
+isValidBallMove(_, _, _)  :- nl, write('[X] Invalid ball move'), nl, 
+fail.  
 
 % check if a ball can be relocated after a vaulting operation
 isValidBallRelocation(Board, [_,Ball,_,_,DestLine,DestCol]) :-
@@ -80,7 +81,8 @@ isLinearMove(SrcLine, SrcCol, DestLine, DestCol) :-
      ).
 
 isLinearMove(_,_,_,_) :-
-    nl, write('[X] Balls can only move linearly'), nl, fail.
+    nl, write('[X] Balls can only move linearly'), nl,
+     fail.
 
    
 /*VAULT VERIFICATION -----------------------------------------------------*/
@@ -92,7 +94,8 @@ vaultVerification(_, _, SrcLine, SrcCol, DestLine, DestCol) :-
 vaultVerification(Board, Color, SrcLine, SrcCol, DestLine, DestCol) :-
     linearVault(Board, Color, SrcLine, SrcCol, DestLine, DestCol).
 
-vaultVerification(_, _, _, _, _,_) :- nl, write('[X] Invalid vault'), nl, fail.
+vaultVerification(_, _, _, _, _,_) :- nl, write('[X] Invalid vault'), nl,
+    fail.
 
 % calculate step direction 
 searchStep(X,Y, Step) :- Y-X >= 0,

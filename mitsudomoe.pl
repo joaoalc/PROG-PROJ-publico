@@ -24,7 +24,7 @@ test2 :-
     isLinearMove(4,0,2,2).
                     
 test3 :-
-    initial(Board),
+    testBoard(Board),
     getPossiblePlays(Board, NewBoard, white).
 
 
@@ -53,13 +53,51 @@ move(GameState, Move, NewGameState) :-
     % TODO verify valid move
     executeMove(Type, GameState, Move, NewGameState).*/
 
-executeMoveTemp('R',GameState, Move, NewGameState) :-
+executeMoveAI('R',GameState, Move, NewGameState) :-
     getNth(1, Move, Color),     % get player's color
     selectRing(Color, Ring),    % select respctive ring
     getNth(2, Move, Line),
     getNth(3, Move, Col),
     %format('~n ~p ~p  ', [Col, Line]),
     playPiece(GameState, Line, Col, Ring, NewGameState).
+
+
+% move top piece from A to B
+executeMoveAI('MB',GameState, [_,_,Ysrc,Xsrc,Ydest,Xdest], NewGameState) :-
+    % format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
+    movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
+
+/*
+% move top piece from A to B
+executeMoveAI('MB',GameState, Move, NewGameState) :-
+    getNth(2, Move, Ysrc),
+    getNth(3, Move, Xsrc),
+    getNth(4, Move, Ydest),
+    getNth(5, Move, Xdest),
+    % format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
+    movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
+*/
+
+executeMoveAI('MR',GameState, Move, NewGameState) :-
+    getNth(2, Move, Ysrc),
+    getNth(3, Move, Xsrc),
+    getNth(4, Move, Ydest),
+    getNth(5, Move, Xdest),
+    % format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
+    movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
+/*
+% relocate ball on vaulting operation
+executeMoveAI('RB', GameState, Move, NewGameState) :-
+    getNth(2, Move, SrcLine),
+    getNth(3, Move, SrcCol),
+    getNth(4, Move, DestLine),
+    getNth(5, Move, DestCol),
+    movePiece(GameState, SrcLine, SrcCol, DestLine, DestCol, NewGameState).
+*/
+% move top piece from A to B
+executeMove('MB',GameState, [_,_,Ysrc,Xsrc,Ydest,Xdest], NewGameState) :-
+    % format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
+    movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
 
 % place ring
 executeMove('R',GameState, [_,Color,Line,Col], NewGameState) :-
