@@ -48,4 +48,4 @@ getAlpha(Index, Letter) :-
 
 % delete 
 deleteNth(0,[H|T],T).
-deleteNth(X,[H|T],[H|S]) :- X1 is X-1, delete(X1,T,S).
+deleteNth(X,[H|T],[H|S]) :- X1 is X-1, deleteNth(X1,T,S).

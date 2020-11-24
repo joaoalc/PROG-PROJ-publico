@@ -24,8 +24,8 @@ test2 :-
     isLinearMove(4,0,2,2).
                     
 test3 :-
-    testBoard(Board),
-    getPossiblePlays(Board, NewBoard, white).
+    initial(Board),
+    getPossiblePlays(Board, Boards, white).
 
 
 /* EXECUTE TURN ---------------------------------------*/
@@ -41,7 +41,7 @@ executeTurn(Player, Board, UpdatedBoard) :-
         
 
 move(GameState, Move, NewGameState) :-
-    getNth(0, Move, Type),
+    once(getNth(0, Move, Type)),
     isValidMove(GameState, Move),
     executeMove(Type, GameState, Move, NewGameState).
 

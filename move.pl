@@ -1,5 +1,4 @@
 
-
 executePlayerTurn(Board, Player, UpdatedBoard) :-
         getPlayerColor(Player, Color),
         repeat,
