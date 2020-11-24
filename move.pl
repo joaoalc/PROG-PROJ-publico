@@ -89,11 +89,12 @@ moveBall(Board, Color, Move, UpdatedBoard) :-
         nl, write(' [i] Movement requires vault'),nl,
         getAllCoords(Move, SrcLine, SrcCol, DestLine, DestCol),
         fetchVaultedBalls(Board, Color, SrcLine, SrcCol, DestLine, DestCol, CoordsList),
-        copy_term(Board, TmpBoard),
         !,
+        write(CoordsList),
         (length(CoordsList, 0) ->       % only call vaul assistant is there are balls to displace
-                move(Board, Move, UpdatedBoard);
-                executeVaultMoves(TmpBoard, CoordsList, Move, UpdatedBoard)).
+                (move(Board, Move, UpdatedBoard));
+                (move(Board, Move, TmpBoard),
+                executeVaultMoves(TmpBoard, CoordsList, Move, UpdatedBoard))).
 
 printVaultList([]).
 printVaultList([Head|Rest]) :-
