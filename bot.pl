@@ -15,7 +15,6 @@ moveBallBot(Board,_, Move, UpdatedBoard) :-
 
 % in case it is a vault
 moveBallBot(Board, Color, Move, UpdatedBoard) :-
-        nl, write(' [i] Movement requires vault'),nl,
         getAllCoords(Move, SrcLine, SrcCol, DestLine, DestCol),
         fetchVaultedBalls(Board, Color, SrcLine, SrcCol, DestLine, DestCol, CoordsList),
         !,
@@ -32,7 +31,6 @@ executeVaultMovesBot(UpdatedList, List, _, UpdatedList) :- length(List,0).
 executeVaultMovesBot(Board, CoordsList, Move, UpdatedBoard) :-
         once((copy_term(CoordsList, TmpList),
         getNth(0, CoordsList, First))),
-        write(CoordsList),
         relocateBallsBot(Board, First, Move, TmpBoard),
         deleteNth(0, CoordsList, NewList),
         executeVaultMovesBot(TmpBoard, NewList, Move, UpdatedBoard).  
@@ -70,7 +68,7 @@ moveGenerator('SM',In, Out) :-
     once(move(In, ['R', white, Line, Col], Tmp)),
     between(0,4,SrcLine), between(0,4,SrcCol),
     between(0,4,DestLine), between(0,4,DestCol),
-    once(move(Tmp, ['MB', white, SrcLine, SrcCol, DestLine, DestCol], Out)).
+    once(executeBallMove(Tmp, ['MB', white, SrcLine, SrcCol, DestLine, DestCol], Out)).
 
 
 flatten([], []).
@@ -90,10 +88,11 @@ getPossiblePlays(Board, AllBoards, Color) :-
     % get all possible moves
     findall(NewGameState,   % TODO put in valid_moves predicate 
     (moveGenerator(Type,Board, NewGameState)), 
-    RingBoards),
+    AllMoves),
     nl,
-    length(RingBoards, L),
-    printAll(RingBoards, L).
+    length(AllMoves, L),
+    format('~n generated  ~p moves', L).
+    % printAll(RingBoards,K L).
 
 printAll(Board, 0).
 printAll([Head|Rest], Ind) :-
