@@ -30,7 +30,7 @@ equalTo(wr, wr).  % white ring
 equalTo(br, br).  % black ring
 
 initial([
-    [[       ],[       ],[wr],[wb,wr,c],[wb,wr,c]],
+    [[       ],[       ],[],[wb,wr,c],[wb,wr,c]],
     [[       ],[       ],[],[       ],[wb,wr,c]],
     [[       ],[       ],[],[       ],[       ]],
     [[bb,br,c],[       ],[],[       ],[       ]],
@@ -46,10 +46,10 @@ testBoard([
 ]).
 
 initial2([
-     [[       ],[       ],[],[bb,wr,c],[bb,wr,c]],
-    [[       ],[       ],[],[       ],[bb,wr,c]],
-    [[       ],[       ],[],[       ],[       ]],
-    [[bb,br,c],[       ],[],[       ],[       ]],
+     [[       ],[    wr   ],[wr],[wb,wr,c],[wb,wr,c]],
+    [[       ],[ br      ],[],[    bb   ],[wb,wr,c]],
+    [[       ],[       ],[wb],[       ],[       ]],
+    [[bb,br,c],[    wr   ],[],[       ],[ br      ]],
     [[wb,br,c],[wb,br,c],[],[       ],[       ]]
 ]).
 
