@@ -43,56 +43,43 @@ relocateBallsBot(Board, [SrcLine, SrcCol], Move, UpdatedBoard) :-
     executeMove('RB', Board, [_,_,SrcLine,SrcCol,DestLine,DestCol], UpdatedBoard).
 
 
-
 %generate second moves
-moveGenerator('MB', In, Out) :-
+moveGenerator('MB', Color, In, Out) :-
     between(0,4,SrcLine), between(0,4,SrcCol),
     between(0,4,DestLine), between(0,4,DestCol),
-    once(executeBallMove(In, ['MB', white, SrcLine, SrcCol, DestLine, DestCol], Out)).
+    once(executeBallMove(In, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], Out)).
 
 
 % generate ring movements
-moveGenerator('MR',In, Out) :-
+moveGenerator('MR', Color, In, Out) :-
     between(0,4,SrcLine), between(0,4,SrcCol),
     between(0,4,DestLine), between(0,4,DestCol),
-    once(move(In, ['MR', white, SrcLine, SrcCol, DestLine, DestCol], Out)).
+    once(move(In, ['MR', Color, SrcLine, SrcCol, DestLine, DestCol], Out)).
 
 % % generate ring placement moves
-moveGenerator('R',In, Out) :-
+moveGenerator('R', Color, In, Out) :-
     between(0,4,Line), between(0,4,Col),
-    once(move(In, ['R', white, Line, Col], Out)).
+    once(move(In, ['R', Color, Line, Col], Out)).
 
 % %generate moves with 
-moveGenerator('SM',In, Out) :-
+moveGenerator('SM', Color, In, Out) :-
     between(0,4,Line), between(0,4,Col),
-    once(move(In, ['R', white, Line, Col], Tmp)),
+    once(move(In, ['R', Color, Line, Col], Tmp)),
     between(0,4,SrcLine), between(0,4,SrcCol),
     between(0,4,DestLine), between(0,4,DestCol),
-    once(executeBallMove(Tmp, ['MB', white, SrcLine, SrcCol, DestLine, DestCol], Out)).
-
-
-flatten([], []).
-
-flatten([A|B],L) :- 
-    is_list(A),
-    flatten(B,B1), 
-    !,
-    append(A,B1,L).
-
-flatten([A|B], [A|B1]) :- 
-    flatten(B, B1).
+    once(executeBallMove(Tmp, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], Out)).
 
 %To get every possible move, you need to:
 getPossiblePlays(Board, AllBoards, Color) :-
     initBot, % TODO remove this (put in ai gameLoop)
     % get all possible moves
     findall(NewGameState,   % TODO put in valid_moves predicate 
-    (moveGenerator(Type,Board, NewGameState)), 
+    (moveGenerator(Type, Color, Board, NewGameState)), 
     AllMoves),
     nl,
     length(AllMoves, L),
-    format('~n generated  ~p moves', L).
-    % printAll(RingBoards,K L).
+    format('~n generated  ~p moves', L),
+    printAll(AllMoves, L).
 
 printAll(Board, 0).
 printAll([Head|Rest], Ind) :-
