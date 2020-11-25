@@ -11,7 +11,18 @@ play :-
     write('\33\[2J'),   % clear Screen
     initPlayersPvP, % initialize players
     initial(Board) ,!, % initialize board
-    gameLoop(Board, 0). % start game loop
+    selectGamemode(N), !,
+    gameLoop(Board, 0, N). % start game loop
+
+gamemode(0).
+gamemode(1).
+gamemode(2).
+
+% selects if it's Player vs Player (Result = 0), Player vs Bot (Result = 1) or Bot vs Bot (Result = 2)
+selectGamemode(Result) :-
+    repeat,
+        once(inputString('Insert 0 for PvP: ' , Result)),
+        gamemode(Result).
 
 % use this to debug functions
 test :- 
@@ -122,15 +133,30 @@ executeMove('RB', GameState, [_,_,SrcLine,SrcCol,DestLine,DestCol], NewGameState
 
 
 /*GAME LOOP ---------------------------------------------*/
-gameLoop(_,1) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
-gameLoop(_,2) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
-gameLoop(Board, _) :-
+gameLoop(_,1, _) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
+gameLoop(_,2, _) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
+gameLoop(Board, _, 0) :-
     getPlayerTurn(PlayerID, 1), % get current player
     displayGame(Board, PlayerID), !, % display result
     once(executePlayerTurn(Board, PlayerID, UpdatedBoard)), % execute turn for current player
     gameOver(UpdatedBoard, Value),
     setNextPlayer, % switch to next player
-    gameLoop(UpdatedBoard, Value).
+    gameLoop(UpdatedBoard, Value, 0).
+
+gameLoop(Board, _, 1) :-
+    getPlayerTurn(PlayerID, 1), % get current player
+    displayGame(Board, PlayerID), !, % display result
+    once(executePlayerTurn(Board, PlayerID, UpdatedBoard)),
+    gameOver(UpdatedBoard, Value),
+    setNextPlayer, % switch to next player
+    getPlayerTurn(PlID, 1), % get current player
+    displayGame(UpdatedBoard, PlID), !,
+    %getPlayerColor(PlayerID, Color),
+    pickPlay(UpdatedBoard, ReUpdatedBoard, black),
+    gameOver(ReUpdatedBoard, Value),
+    setNextPlayer, % switch to next player
+    write('Temp'),
+    gameLoop(ReUpdatedBoard, Value, 1).
 
 /*END GAME ----------------------------------------------*/
 % asserts if the game has been won

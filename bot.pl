@@ -75,11 +75,15 @@ getPossiblePlays(Board, AllBoards, Color) :-
     % get all possible moves
     findall(NewGameState,   % TODO put in valid_moves predicate 
     (moveGenerator(Type, Color, Board, NewGameState)), 
-    AllMoves),
+    AllBoards),
     nl,
-    length(AllMoves, L),
-    format('~n generated  ~p moves', L),
-    printAll(AllMoves, L).
+    length(AllBoards, L),
+    format('~n generated  ~p moves', L).
+    % printAll(RingBoards,K L).
+
+pickPlay(Board, UpdatedBoard, Color) :-
+    getPossiblePlays(Board, AllBoards, Color),
+    random_member(UpdatedBoard, AllBoards).
 
 printAll(Board, 0).
 printAll([Head|Rest], Ind) :-
