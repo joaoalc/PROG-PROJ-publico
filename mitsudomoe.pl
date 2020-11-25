@@ -24,42 +24,22 @@ test2 :-
     isLinearMove(4,0,2,2).
                     
 test3 :-
-    initial(Board),
-    getPossiblePlays(Board, NewBoard, white).
+    initial2(Board),
+    getPossiblePlays(Board, Boards, white).
 
-
-/* EXECUTE TURN ---------------------------------------*/
-% executeTurn(Player, Board, UpdatedBoard)
-/*
-executeTurn(Player, Board, UpdatedBoard) :- 
-    getPlayerColor(Player, Color),
-    repeat,
-       once(inputType(Color, Move)),
-       move(Board, Move, UpdatedBoard).
-       */
        
         
 
 move(GameState, Move, NewGameState) :-
-    getNth(0, Move, Type),
+    once(getNth(0, Move, Type)),
     isValidMove(GameState, Move),
     executeMove(Type, GameState, Move, NewGameState).
 
 
-
-/*
-move(GameState, Move, NewGameState) :-
-    getNth(0, Move, Type),
-    % TODO verify valid move
-    executeMove(Type, GameState, Move, NewGameState).*/
-
-executeMoveTemp('R',GameState, Move, NewGameState) :-
-    getNth(1, Move, Color),     % get player's color
-    selectRing(Color, Ring),    % select respctive ring
-    getNth(2, Move, Line),
-    getNth(3, Move, Col),
-    %format('~n ~p ~p  ', [Col, Line]),
-    playPiece(GameState, Line, Col, Ring, NewGameState).
+% move top piece from A to B
+executeMove('MB',GameState, [_,_,Ysrc,Xsrc,Ydest,Xdest], NewGameState) :-
+    % format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
+    movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
 
 % place ring
 executeMove('R',GameState, [_,Color,Line,Col], NewGameState) :-

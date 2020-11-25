@@ -8,9 +8,9 @@ isRing(br).
 
 isValidMove(Board, Move) :-
     getNth(0, Move, Type),
-    getNth(1, Move, Color),
+    getNth(1, Move, Color), !,
     (Type == 'R' ->                                     % ring placement
-            isValidRingPlacement(Board, Color, Move);
+            isValidRingPlacement(Board, Move);
     Type == 'MB' ->                                      % move top piece from a given cell
             isValidBallMove(Board, Color, Move);
     Type == 'MR' ->
@@ -42,16 +42,17 @@ isValidBallMove(Board, Color, [_,_,SrcLine,SrcCol,DestLine,DestCol]) :-
           getTopXY(Board, DestCol, DestLine, Top), !,
           playableOn(Ball, Top). 
  
-isValidBallMove(_, _, _)  :- nl, write('[X] Invalid ball move'), nl, fail.  
+isValidBallMove(_, _, _)  :- %nl, write('[X] Invalid ball move'), nl, 
+fail.  
 
 % check if a ball can be relocated after a vaulting operation
 isValidBallRelocation(Board, [_,Ball,_,_,DestLine,DestCol]) :-
     once(getTopXY(Board, DestCol, DestLine, Top)),
     playableOn(Ball, Top).
 
-isValidBallRelocation(_, _) :- nl, write('[X] Invalid Relocation'), nl, fail.
+% isValidBallRelocation(_, _) :- %nl, write('[X] Invalid Relocation'), nl, fail.
 
-isValidRingPlacement(Board, Color, [_,_,Line,Col]) :-
+isValidRingPlacement(Board, [_,Color,Line,Col]) :-
     selectRing(Color, Ring),
     getTopXY(Board, Col, Line, Top),
     !,
@@ -81,7 +82,8 @@ isLinearMove(SrcLine, SrcCol, DestLine, DestCol) :-
      ).
 
 isLinearMove(_,_,_,_) :-
-    nl, write('[X] Balls can only move linearly'), nl, fail.
+    %nl, write('[X] Balls can only move linearly'), nl,
+     fail.
 
    
 /*VAULT VERIFICATION -----------------------------------------------------*/
@@ -93,7 +95,8 @@ vaultVerification(_, _, SrcLine, SrcCol, DestLine, DestCol) :-
 vaultVerification(Board, Color, SrcLine, SrcCol, DestLine, DestCol) :-
     linearVault(Board, Color, SrcLine, SrcCol, DestLine, DestCol).
 
-vaultVerification(_, _, _, _, _,_) :- nl, write('[X] Invalid vault'), nl, fail.
+vaultVerification(_, _, _, _, _,_) :- %nl, write('[X] Invalid vault'), nl,
+    fail.
 
 % calculate step direction 
 searchStep(X,Y, Step) :- Y-X >= 0,

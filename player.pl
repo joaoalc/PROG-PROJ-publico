@@ -10,6 +10,9 @@ initPlayersPvP :-
     asserta(player(1, Name1, white, 5, 1)),
     asserta(player(2, Name2, black, 5, 0)).
 
+initBot :-
+    asserta(player(3, 'BOT', black, 5, 1)).
+
 % switch from current player to the next
 setNextPlayer :- 
     player(NextID, NextName, NextColor, NextStash, 0), % get next player
