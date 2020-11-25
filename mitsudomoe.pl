@@ -29,8 +29,9 @@ test2 :-
     isLinearMove(4,0,2,2).
                     
 test3 :-
+    initBot,
     initial2(Board),
-    getPossiblePlays(Board, white, Boards).
+    valid_moves(Board, white, Boards).
 
        
         

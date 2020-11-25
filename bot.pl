@@ -3,47 +3,45 @@
 
 % moves balls for AI
 executeBallMove(In, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], Out) :-
-    once(isValidBallMove(In, Color, [_,_,SrcLine,SrcCol,DestLine,DestCol])),
-    moveBallBot(In, Color, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], Out).
+    once(isValidBallMove(In, [_,Color,SrcLine,SrcCol,DestLine,DestCol])),
+    moveBallBot(In, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], Out).
 
 % move is not a vault (move ball)
-moveBallBot(Board,_, Move, UpdatedBoard) :-
-         once(getAllCoords(Move, SrcLine, SrcCol, DestLine, DestCol)),
+moveBallBot(Board,['MB', Color, SrcLine, SrcCol, DestLine, DestCol], UpdatedBoard) :-
         \+isVault(SrcLine, SrcCol, DestLine, DestCol),
         !, % if not a vault, list of moves is the move itself
-        move(Board, Move, UpdatedBoard).
+        move(Board, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], UpdatedBoard).
 
 % in case it is a vault
-moveBallBot(Board, Color, Move, UpdatedBoard) :-
-        getAllCoords(Move, SrcLine, SrcCol, DestLine, DestCol),
+moveBallBot(Board, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], UpdatedBoard) :-
         fetchVaultedBalls(Board, Color, SrcLine, SrcCol, DestLine, DestCol, CoordsList),
         !,
         (length(CoordsList, 0) ->       % only call vault assistant is there are balls to displace
-                (move(Board, Move, UpdatedBoard));
-                (move(Board, Move, TmpBoard), % perform vault move
-                executeVaultMovesBot(TmpBoard, CoordsList, Move, UpdatedBoard)) % relocate opponent's balls
+                (move(Board, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], UpdatedBoard));
+                (move(Board, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], TmpBoard), % perform vault move
+                executeVaultMovesBot(TmpBoard, CoordsList, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], UpdatedBoard)) % relocate opponent's balls
         ).
 
 % if the vaulted balls list is empty then no vault is performed
 executeVaultMovesBot(UpdatedList, List, _, UpdatedList) :- length(List,0).
 
 % the initial ball move is only called at the end of all the intermidiate vaults
-executeVaultMovesBot(Board, CoordsList, Move, UpdatedBoard) :-
+executeVaultMovesBot(Board, CoordsList, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], UpdatedBoard) :-
         once((copy_term(CoordsList, TmpList),
         getNth(0, CoordsList, First))),
-        relocateBallsBot(Board, First, Move, TmpBoard),
+        relocateBallsBot(Board, First, TmpBoard),
         deleteNth(0, CoordsList, NewList),
-        executeVaultMovesBot(TmpBoard, NewList, Move, UpdatedBoard).  
+        executeVaultMovesBot(TmpBoard, NewList, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], UpdatedBoard).  
 
 % relocates all opponent's vaulted balls
-relocateBallsBot(Board, [SrcLine, SrcCol], Move, UpdatedBoard) :-
+relocateBallsBot(Board, [SrcLine, SrcCol], UpdatedBoard) :-
     between(0,4, DestLine), between(0,4, DestCol),
     once(getTopXY(Board, SrcCol, SrcLine, Ball)),
     isValidBallRelocation(Board, [_,Ball,_,_,DestLine,DestCol]),
     executeMove('RB', Board, [_,_,SrcLine,SrcCol,DestLine,DestCol], UpdatedBoard).
 
 
-%generate second moves
+% generate second moves
 moveGenerator('MB', Color, In, Out) :-
     between(0,4,SrcLine), between(0,4,SrcCol),
     between(0,4,DestLine), between(0,4,DestCol),
@@ -56,7 +54,7 @@ moveGenerator('MR', Color, In, Out) :-
     between(0,4,DestLine), between(0,4,DestCol),
     once(move(In, ['MR', Color, SrcLine, SrcCol, DestLine, DestCol], Out)).
 
-% % generate ring placement moves
+% generate ring placement moves
 moveGenerator('R', Color, In, Out) :-
     between(0,4,Line), between(0,4,Col),
     once(move(In, ['R', Color, Line, Col], Out)).
@@ -73,18 +71,15 @@ moveGenerator('SM', Color, In, Out) :-
 % get all bot's valid moves
 valid_moves(GameState, Player, LitsOfMoves) :-
     getPlayerColor(Player, Color),
-    getPOssiblePlayes(GameState, Color, ListOfMoves).
-   
-getPossiblePlays(Board, Color, ListOfMoves) :-
-    % TODO remove this (put in ai gameLoop)
-    % get all possible moves
     findall(NewGameState,   % TODO put in valid_moves predicate 
-    (moveGenerator(Type, Color, Board, NewGameState)), 
-    AllMoves),
+    (moveGenerator(Type, Color, GameState, NewGameState)), 
+    ListOfMoves),
     nl,
-    length(AllMoves, L),
+    length(ListOfMoves, L),
     format('~n generated  ~p moves', L),
-    printAll(AllMoves, L).
+    printAll(ListOfMoves, L).
+   
+    
 
 printAll(Board, 0).
 printAll([Head|Rest], Ind) :-

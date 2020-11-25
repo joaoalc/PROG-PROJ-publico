@@ -12,7 +12,7 @@ isValidMove(Board, Move) :-
     (Type == 'R' ->                                     % ring placement
             isValidRingPlacement(Board, Move);
     Type == 'MB' ->                                      % move top piece from a given cell
-            isValidBallMove(Board, Color, Move);
+            isValidBallMove(Board, Move);
     Type == 'MR' ->
             isValidRingMove(Board, Color, Move);
             nl, write('[X] Invalid Type'), nl, fail
@@ -32,8 +32,7 @@ enemyIsAtGoal(black, Top, Line,Col) :- goalCell(white, Top, Line, Col).
 
 ballIsAtGoal(Color, Top, Line, Col) :- goalCell(Color, Top, Line,Col).
     
-isValidBallMove(Board, Color, [_,_,SrcLine,SrcCol,DestLine,DestCol]) :-
-
+isValidBallMove(Board, [_,Color,SrcLine,SrcCol,DestLine,DestCol]) :-
           getTopXY(Board, SrcCol, SrcLine, Ball), !,   % get Piece at position X Y
           isBall(Ball), !, selectBall(Color, Ball), !,      % piece verifications  (ball of the same color of the player)  
           \+ballIsAtGoal(Color, Ball, SrcLine, SrcCol), !,       % can't move balls that have reached their goal                           
@@ -42,7 +41,7 @@ isValidBallMove(Board, Color, [_,_,SrcLine,SrcCol,DestLine,DestCol]) :-
           getTopXY(Board, DestCol, DestLine, Top), !,
           playableOn(Ball, Top). 
  
-isValidBallMove(_, _, _)  :- %nl, write('[X] Invalid ball move'), nl, 
+isValidBallMove(_, _)  :- %nl, write('[X] Invalid ball move'), nl, 
 fail.  
 
 % check if a ball can be relocated after a vaulting operation
