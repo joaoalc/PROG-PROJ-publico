@@ -61,7 +61,7 @@ moveGenerator('R', Color, In, Out) :-
     between(0,4,Line), between(0,4,Col),
     once(move(In, ['R', Color, Line, Col], Out)).
 
-% %generate moves with 
+%generate moves with 
 moveGenerator('SM', Color, In, Out) :-
     between(0,4,Line), between(0,4,Col),
     once(move(In, ['R', Color, Line, Col], Tmp)),
@@ -69,9 +69,14 @@ moveGenerator('SM', Color, In, Out) :-
     between(0,4,DestLine), between(0,4,DestCol),
     once(executeBallMove(Tmp, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], Out)).
 
-%To get every possible move, you need to:
-getPossiblePlays(Board, AllBoards, Color) :-
-    initBot, % TODO remove this (put in ai gameLoop)
+/* --------------------------------- VALID MOVES ------------------------- */
+% get all bot's valid moves
+valid_moves(GameState, Player, LitsOfMoves) :-
+    getPlayerColor(Player, Color),
+    getPOssiblePlayes(GameState, Color, ListOfMoves).
+   
+getPossiblePlays(Board, Color, ListOfMoves) :-
+    % TODO remove this (put in ai gameLoop)
     % get all possible moves
     findall(NewGameState,   % TODO put in valid_moves predicate 
     (moveGenerator(Type, Color, Board, NewGameState)), 

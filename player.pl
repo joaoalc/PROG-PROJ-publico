@@ -13,6 +13,13 @@ initPlayersPvP :-
 initBot :-
     asserta(player(3, 'BOT', black, 5, 1)).
 
+% initialize Player vs Bot
+initPvB :-
+    inputString('Player: ', Name),
+    retractall(player(_,_,_,_,_)),
+    asserta(player(1, Name, white, 5, 1)),
+    asserta(player(3, 'BOT', black, 5, 0)).
+
 % switch from current player to the next
 setNextPlayer :- 
     player(NextID, NextName, NextColor, NextStash, 0), % get next player

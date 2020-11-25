@@ -13,6 +13,11 @@ play :-
     initial(Board) ,!, % initialize board
     gameLoop(Board, 0). % start game loop
 
+playSinglePlayer :-
+    initPvB,
+    initial(Board), !,
+    gameLoop(Board, 0).
+
 % use this to debug functions
 test :- 
      write('\33\[2J'),   % clear Screen
@@ -25,7 +30,7 @@ test2 :-
                     
 test3 :-
     initial2(Board),
-    getPossiblePlays(Board, Boards, white).
+    getPossiblePlays(Board, white, Boards).
 
        
         
@@ -73,6 +78,12 @@ gameLoop(Board, _) :-
     gameOver(UpdatedBoard, Value),
     setNextPlayer, % switch to next player
     gameLoop(UpdatedBoard, Value).
+
+% gameLoopSinglePlayer(Board, Winner) :-
+%     getPlayerTurn(PlayerID, 1),
+%     displayGame(Board, PlayerID),
+%     once(executePlayerTurn(Board, PlayerID, UpdatedBoard)) % human player is allways the first to play
+
 
 /*END GAME ----------------------------------------------*/
 % asserts if the game has been won
