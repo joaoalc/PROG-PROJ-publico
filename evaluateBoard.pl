@@ -8,7 +8,12 @@ getRingColor(br, black).
 max2(Max, Num1, Num2) :-
     (Num1 > Num2 ->
     Max is Num1;
-    Max is Num2).
+    Num1 =:= Num2 ->
+    Max is Num1 + 0.5;
+    Num1 < Num2 ->
+    Max is Num2;
+    true).
+
 
 min2(Min, Num1, Num2) :-
     (Num1 < Num2 ->
@@ -68,7 +73,7 @@ calculatePointsCell([First|Rest], Line, Col, Color, Total) :-
         Total is Resul;
         calcPoints(First, Line, Col, Color, Result),
         calculatePointsCell(Rest, Line, Col, Color, Resu),
-        Total is Resu + Result * 2
+        Total is Resu + Result * 3
     ).
 
 calculatePointLine([], _, _, Total, _) :- Total is 0.
@@ -106,7 +111,7 @@ getBestBoards(AllBoards, Scores, SelectedBoard) :-
     random_member(SelectedBoard, BestBoards).
 
 
-filterBestBoards([], _, [], _) :- write('Reached the end').
+filterBestBoards([], _, [], _).
 
 
 filterBestBoards([CurBo|AllBoards], [CurSco|Scores], [CurBestBo|BestBoards], Max) :-

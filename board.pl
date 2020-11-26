@@ -3,6 +3,8 @@
 %Facts that indicate that piece A can be placed on piece B. Rings can also be played on nothing, but 
 playableOn(wr, br).
 playableOn(wr, wr).
+playableOn(wr, c).
+playableOn(br, c).
 playableOn(br, wr).
 playableOn(br, br).
 playableOn(wb, wr).

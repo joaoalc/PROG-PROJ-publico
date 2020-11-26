@@ -96,6 +96,5 @@ chooseMove(GameState, Player, 0, Move) :-
     getPlayerColor(Player, Color),
     getPossiblePlays(GameState, AllBoards, Color),
     calcValueBoards(AllBoards, Player, Scores),
-    write(Scores),
     getBestBoards(AllBoards, Scores, Move).
     %calculateValues(AllBoards, Player, Values).

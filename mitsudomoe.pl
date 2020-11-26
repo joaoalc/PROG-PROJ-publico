@@ -154,11 +154,10 @@ gameLoop(Board, _, 1) :-
     setNextPlayer, % switch to next player
     getPlayerTurn(PlID, 1), % get current player
     displayGame(UpdatedBoard, PlID), !,
-    %getPlayerColor(PlayerID, Color),
-    pickPlay(UpdatedBoard, ReUpdatedBoard, black),
-    gameOver(ReUpdatedBoard, Value),
+    chooseMove(UpdatedBoard, PlID, 0, Move),
+    gameOver(Move, Value),
     setNextPlayer, % switch to next player
-    gameLoop(ReUpdatedBoard, Value, 1).
+    gameLoop(Move, Value, 1).
 
 gameLoop(Board, _, 2) :-
     getPlayerTurn(PlayerID, 1), % get current player
@@ -169,11 +168,11 @@ gameLoop(Board, _, 2) :-
     setNextPlayer, % switch to next player
     getPlayerTurn(PlID, 1), % get current player
     displayGame(UpdatedBoard, PlID), !,
+    chooseMove(UpdatedBoard, PlID, 0, Move),
     %getPlayerColor(PlayerID, Color),
-    pickPlay(UpdatedBoard, ReUpdatedBoard, black),
-    gameOver(ReUpdatedBoard, Value),
+    gameOver(Move, Value),
     setNextPlayer, % switch to next player
-    gameLoop(ReUpdatedBoard, Value, 2).
+    gameLoop(Move, Value, 2).
 
 /*END GAME ----------------------------------------------*/
 % asserts if the game has been won
