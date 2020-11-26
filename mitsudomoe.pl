@@ -5,6 +5,7 @@
 :-consult('player.pl').
 :-consult('move.pl').
 :-consult('bot.pl').
+:-consult('evaluateBoard.pl').
 
 
 play :- 
@@ -27,9 +28,10 @@ selectGamemode(Result) :-
 % use this to debug functions
 test :- 
     initPlayersPvP, % initialize players
-    initial2(Board), % initialize board
-    gameOver(Board, Winner),
-    write(Winner).
+    initial(Board), % initialize board
+    !,
+    chooseMove(Board, 1, 0, Move).
+    %value(Board, 1, Value).
 
 test2 :- 
     isLinearMove(4,0,2,2).
@@ -155,8 +157,22 @@ gameLoop(Board, _, 1) :-
     pickPlay(UpdatedBoard, ReUpdatedBoard, black),
     gameOver(ReUpdatedBoard, Value),
     setNextPlayer, % switch to next player
-    write('Temp'),
     gameLoop(ReUpdatedBoard, Value, 1).
+
+gameLoop(Board, _, 2) :-
+    getPlayerTurn(PlayerID, 1), % get current player
+    displayGame(Board, PlayerID), !, % display result
+    value(Board, PlayerID, BoardValue),
+    pickPlay(Board, UpdatedBoard, white),
+    gameOver(UpdatedBoard, Value),
+    setNextPlayer, % switch to next player
+    getPlayerTurn(PlID, 1), % get current player
+    displayGame(UpdatedBoard, PlID), !,
+    %getPlayerColor(PlayerID, Color),
+    pickPlay(UpdatedBoard, ReUpdatedBoard, black),
+    gameOver(ReUpdatedBoard, Value),
+    setNextPlayer, % switch to next player
+    gameLoop(ReUpdatedBoard, Value, 2).
 
 /*END GAME ----------------------------------------------*/
 % asserts if the game has been won

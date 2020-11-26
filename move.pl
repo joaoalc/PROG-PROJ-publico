@@ -71,6 +71,11 @@ askForSecondMove :-
 
 /*--------------------------------------------- VAULTS ---------------------------------------*/ 
 
+%isOwnBall is used for board evaluation
+isOwnBall(white, wb).
+isOwnBall(black, bb).
+%
+
 isEnemyBall(white, bb).
 isEnemyBall(black, wb).
 

@@ -90,3 +90,12 @@ printAll([Head|Rest], Ind) :-
     displayBoard(Head),
     I is Ind-1,
     printAll(Rest, I).
+
+
+
+chooseMove(GameState, Player, 0, Move) :-
+    getPlayerColor(Player, Color),
+    getPossiblePlays(GameState, AllBoards, Color),
+    calcValueBoards(AllBoards, Player, Scores),
+    random_member(Move, AllBoards).
+    %calculateValues(AllBoards, Player, Values).

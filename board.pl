@@ -38,11 +38,11 @@ initial([
 ]).
 
 testBoard([
-    [[bb     ],[bb       ],[wr],[wb,wr,c],[wb,wr,c]],
-    [[bb     ],[bb     ],[bb],[     ],[wb,wr,c]],
-    [[bb     ],[bb     ],[bb],[bb     ],[bb     ]],
-    [[bb,br,c],[     ],[bb],[bb     ],[bb     ]],
-    [[bb,br,c],[bb,br,c],[bb],[bb     ],[bb     ]]
+    [[       ],[       ],[br],[wb,wr,c],[wb,wr,c]],
+    [[       ],[       ],[],[wb,wr  ],[c]],
+    [[       ],[br     ],[],[       ],[       ]],
+    [[bb,br,c],[       ],[bb, br],[wr       ],[       ]],
+    [[bb,br,c],[br,c],[],[wr, wr       ],[       ]]
 ]).
 
 initial2([
