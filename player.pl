@@ -76,10 +76,10 @@ selectBall(black, bb).
 % get input type to call respective inputMove Funtion
 % values of inputMove are returned in Arg1, Arg2
 
-inputType(Color, Ret) :-   
-    inputString('Type: ', Type),
-    !,
-    inputMove(Type, Color, Ret).
+inputType(Color, Ret) :- 
+    repeat,
+        once(inputString('Type: ', Type)),
+        inputMove(Type, Color, Ret).
 
 % for second moves
 inputBallMove(Color, Ret) :-
@@ -93,71 +93,52 @@ inputListIndex(Length, Index) :-
 inputListIndex(_, _) :- nl, write('[X] Invalid list index'), nl, fail.
 
     
+inputCoords2(Line, Col) :-
+    inputString('Line (A-E): ', L), !,
+    char_code(L, Code),
+    Line is Code-65,             % starts at 64+1
+    Line >= 0, Line =< 4,
+    inputString('Col (1-5):  ', C), !,
+    number(C),
+    Col is C-1.
+
+inputCoords4(SrcLine, SrcCol, DestLine,DestCol) :-
+    inputString('Source Line (A-E): ', L1), !,
+    char_code(L1, Code),
+    SrcLine is Code-65,             % starts at 64+1
+    inputString('Source Col (1-5):  ', C1), !,
+    SrcCol is C1-1,
+    inputString('Dest Line (A-E): ', L2), !,
+    char_code(L2, Code2),
+    DestLine is Code2-65,             % starts at 64+1
+    inputString('Dest Col (1-5):  ', C2), !,
+    DestCol is C2-1.
 
 
 % Place ring from stash
 inputMove('R', Color, ['R', Color, Line, Col]) :-
-    inputString('Line: ', L),
-    char_code(L, Code),
-    Line is Code-65,             % starts at 64+1
-    inputString('Col:  ', C),
-    Col is C-1.
+    inputCoords2(Line, Col).
+
+
 
 % move top element from one cell to the other
 inputMove('MR', Color, ['MR', Color, Line1, Col1, Line2, Col2]) :-
-    inputString('Line 1 (A-E): ', L1),
-    char_code(L1, Code),
-    Line1 is Code-65,             % starts at 64+1
-    inputString('Col1 (1-5):  ', C1),
-    Col1 is C1-1,
-    inputString('Line2 (A-E): ', L2),
-    char_code(L2, Code2),
-    Line2 is Code2-65,             % starts at 64+1
-    inputString('Col2 (1-5):  ', C2),
-    Col2 is C2-1.
+    inputCoords4(Line1, Col1, Line2, Col2).
 
 inputMove('MB', Color, ['MB', Color, Line1, Col1, Line2, Col2]) :-
-    inputString('Line 1 (A-E): ', L1),
-    char_code(L1, Code),
-    Line1 is Code-65,             % starts at 64+1
-    inputString('Col1 (1-5):  ', C1),
-    Col1 is C1-1,
-    inputString('Line2 (A-E): ', L2),
-    char_code(L2, Code2),
-    Line2 is Code2-65,             % starts at 64+1
-    inputString('Col2 (1-5):  ', C2),
-    Col2 is C2-1.
+    inputCoords4(Line1, Col1, Line2, Col2).
 
 % input for second moves
 inputMove('MB2', Color, ['MB', Color, Line1, Col1]) :-
-    inputString('Line 1 (A-E): ', L1),
-    char_code(L1, Code),
-    Line1 is Code-65,             % starts at 64+1
-    inputString('Col1 (1-5):  ', C1),
-    Col1 is C1-1.
+    inputCoords2(Line1, Col1).
 
 % input for ball relocation
 inputMove('RB', _, [Line1, Col1]) :-
-    inputString('Line 1 (A-E): ', L1),
-    char_code(L1, Code),
-    Line1 is Code-65,             % starts at 64+1
-    inputString('Col1 (1-5):  ', C1),
-    Col1 is C1-1.
+    inputCoords2(Line1, Col1).
 
 inputMove(_,_,_) :-
-    nl, write('[i] Invalid input type (inputMove)'), nl, fail.
+    nl, write('[X] Invalid input (inputMove)'), nl, fail.
 
-inputCoords4(SrcLine, SrcCol, DestLine,DestCol) :-
-    inputString('Source Line (A-E): ', L1),
-    char_code(L1, Code),
-    SrcLine is Code-65,             % starts at 64+1
-    inputString('Source Col (1-5):  ', C1),
-    SrcCol is C1-1,
-    inputString('Dest Line (A-E): ', L2),
-    char_code(L2, Code2),
-    DestLine is Code2-65,             % starts at 64+1
-    inputString('Dest Col (1-5):  ', C2),
-    DestCol is C2-1.
 
 
 

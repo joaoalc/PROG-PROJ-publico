@@ -6,6 +6,7 @@ executePlayerTurn(Board, Player, UpdatedBoard) :-
                 getNth(0, Move, Type),
                 (isRingMove(Type) ->     % if first move was a ring move, the player can move one of his balls
                  (
+                    checkRingStash(Type, Player),
                     move(Board, Move, TmpBoard),
                     repeat,
                         moveBallAfterRing(TmpBoard, Move, Color, UpdatedBoard)
@@ -16,9 +17,13 @@ executePlayerTurn(Board, Player, UpdatedBoard) :-
                         moveBall(Board, Color, Move, UpdatedBoard)
                      
                  )).
-                 
-% executeBotTurn(Board, Player, UpdatedBoard) :-
 
+checkRingStash('MR',_).              
+checkRingStash('R', Player) :-
+    getStashSize(Player, Size),
+    Size > 0.
+
+checkRingStash(_) :- nl, write('[X] No available rings'), nl, fail.
         
                                 
 /* SECOND MOVE --------------------------------------*/                             
@@ -93,7 +98,7 @@ moveBall(Board, Color, Move, UpdatedBoard) :-
         write(CoordsList),
         (length(CoordsList, 0) ->       % only call vaul assistant is there are balls to displace
                 (move(Board, Move, UpdatedBoard));
-                (move(Board, Move, TmpBoard),
+                (move(Board, Move, TmpBoard), !,
                 executeVaultMoves(TmpBoard, CoordsList, Move, UpdatedBoard))).
 
 printVaultList([]).
