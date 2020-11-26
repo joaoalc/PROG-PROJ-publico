@@ -30,7 +30,8 @@ test :-
     initPlayersPvP, % initialize players
     initial(Board), % initialize board
     !,
-    chooseMove(Board, 1, 0, Move).
+    chooseMove(Board, 1, 0, Move),
+    displayBoard(Move).
     %value(Board, 1, Value).
 
 test2 :- 

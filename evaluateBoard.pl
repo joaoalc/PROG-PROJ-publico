@@ -98,3 +98,21 @@ calcValueBoards([], Color, []).
 calcValueBoards([CurBo|AllBoards], PlayerID, [CurSco|Scores]) :-
     value(CurBo, PlayerID, CurSco),
     calcValueBoards(AllBoards, PlayerID, Scores).
+
+
+getBestBoards(AllBoards, Scores, SelectedBoard) :-
+    my_max(Scores, R),
+    filterBestBoards(AllBoards, Scores, BestBoards, R),
+    random_member(SelectedBoard, BestBoards).
+
+
+filterBestBoards([], _, [], _) :- write('Reached the end').
+
+
+filterBestBoards([CurBo|AllBoards], [CurSco|Scores], [CurBestBo|BestBoards], Max) :-
+    CurSco =:= Max,
+    filterBestBoards(AllBoards, Scores, BestBoards, Max),
+    copy_term(CurBo, CurBestBo).
+    
+filterBestBoards([CurBo|AllBoards], [CurSco|Scores], BestBoards, Max) :-
+    filterBestBoards(AllBoards, Scores, BestBoards, Max).
