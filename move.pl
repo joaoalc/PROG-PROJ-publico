@@ -95,7 +95,6 @@ moveBall(Board, Color, Move, UpdatedBoard) :-
         getAllCoords(Move, SrcLine, SrcCol, DestLine, DestCol),
         fetchVaultedBalls(Board, Color, SrcLine, SrcCol, DestLine, DestCol, CoordsList),
         !,
-        write(CoordsList),
         (length(CoordsList, 0) ->       % only call vaul assistant is there are balls to displace
                 (move(Board, Move, UpdatedBoard));
                 (move(Board, Move, TmpBoard), !,
