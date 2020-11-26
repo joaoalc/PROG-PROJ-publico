@@ -2,6 +2,9 @@
 :- dynamic player/5.
 player(ID, Name, PlayerColor, stash, playerTurn).
 
+isBot(3).
+isBot(4).
+
 % initialize Player vs Player game
 initPlayersPvP :-
     inputString('Player #1: ', Name1),
@@ -10,8 +13,18 @@ initPlayersPvP :-
     asserta(player(1, Name1, white, 5, 1)),
     asserta(player(2, Name2, black, 5, 0)).
 
-initBot :-
-    asserta(player(3, 'BOT', black, 5, 1)).
+% init player vs bot
+initPlayersPvB :-
+    inputString('Player: ', Name1),
+    retractall(player(_,_,_,_,_)),
+    asserta(player(1, Name1, white, 5, 1)),
+    asserta(player(3, 'BOT', black, 5, 0)).
+
+initPlayersBvB :-
+    retractall(player(_,_,_,_,_)),
+    asserta(player(3, 'BOT#1', white, 5, 1)),
+    asserta(player(4, 'BOT#2', black, 5, 0)).
+
 
 % initialize Player vs Bot
 initPvB :-
@@ -28,6 +41,9 @@ setNextPlayer :-
     asserta(player(CurrID, CurrName, CurrColor, CurrStash, 0)), % set previous player turn to 0
     asserta(player(NextID, NextName, NextColor, NextStash, 1)). % set next player turn to 1
 
+decrementRingStash :-
+    player(3, _, _, _, _);
+    player(4,_,_,_,_).
 
 decrementRingStash :-
     player(CurrID, CurrName, CurrColor, CurrStash, 1), % get current player

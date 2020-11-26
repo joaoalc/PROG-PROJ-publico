@@ -59,7 +59,7 @@ moveGenerator('R', Color, In, Out) :-
     between(0,4,Line), between(0,4,Col),
     once(move(In, ['R', Color, Line, Col], Out)).
 
-%generate moves with 
+% generate moves starting with ring placements
 moveGenerator('SM', Color, In, Out) :-
     between(0,4,Line), between(0,4,Col),
     once(move(In, ['R', Color, Line, Col], Tmp)),
@@ -67,17 +67,25 @@ moveGenerator('SM', Color, In, Out) :-
     between(0,4,DestLine), between(0,4,DestCol),
     once(executeBallMove(Tmp, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], Out)).
 
+% generate second moves starting with a ring movements
+moveGenerator('SM2', Color, In, Out) :-
+    between(0,4,SrcLineR), between(0,4,SrcColR),
+    between(0,4,DestLineR), between(0,4,DestColR),
+    once(move(In, ['MR', Color, SrcLineR, SrcColR, DestLineR, DestColR], Tmp)),
+    between(0,4,SrcLine), between(0,4,SrcCol),
+    between(0,4,DestLine), between(0,4,DestCol),
+    once(executeBallMove(Tmp, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], Out)).
+
 /* --------------------------------- VALID MOVES ------------------------- */
 % get all bot's valid moves
-valid_moves(GameState, Player, LitsOfMoves) :-
+valid_moves(GameState, Player, ListOfMoves) :-
     getPlayerColor(Player, Color),
     findall(NewGameState,   % TODO put in valid_moves predicate 
     (moveGenerator(Type, Color, GameState, NewGameState)), 
     ListOfMoves),
     nl,
     length(ListOfMoves, L),
-    format('~n generated  ~p moves', L),
-    printAll(ListOfMoves, L).
+    format('~n generated  ~p moves', L).
    
     
 
@@ -86,3 +94,10 @@ printAll([Head|Rest], Ind) :-
     displayBoard(Head),
     I is Ind-1,
     printAll(Rest, I).
+
+
+
+chooseMove(GameState, Player, _, Move) :-
+    valid_moves(GameState, Player, ListOfMoves),
+    calcValueBoards(ListOfMoves, Player, Scores),
+    getBestBoards(ListOfMoves, Scores, Move).

@@ -5,18 +5,39 @@
 :-consult('player.pl').
 :-consult('move.pl').
 :-consult('bot.pl').
+:-consult('evaluateBoard.pl').
 
 
 play :- 
+    selectGamemode(N),
     write('\33\[2J'),   % clear Screen
-    initPlayersPvP, % initialize players
-    initial(Board) ,!, % initialize board
-    gameLoop(Board, 0). % start game loop
+    startGame(N).
 
-playSinglePlayer :-
-    initPvB,
-    initial(Board), !,
-    gameLoop(Board, 0).
+startGame(0) :-
+    initPlayersPvP,
+    initial(Board),
+    gameLoop(Board, _, 0).
+
+startGame(1) :-
+    initPlayersPvB,
+    initial(Board),
+    gameLoop(Board, 1, 0).
+
+startGame(2) :-
+    initPlayersBvB,
+    initial(Board),
+    gameLoopBvB(Board, 0, 2).
+
+gamemode(0).
+gamemode(1).
+gamemode(2).
+
+% selects if it's Player vs Player (Result = 0), Player vs Bot (Result = 1) or Bot vs Bot (Result = 2)
+selectGamemode(Result) :-
+    repeat,
+        once(inputString('Insert 0 for PvP: ' , Result)),
+        gamemode(Result).
+
 
 % use this to debug functions
 test :- 
@@ -30,7 +51,7 @@ test2 :-
                     
 test3 :-
     initBot,
-    initial2(Board),
+    initial(Board),
     valid_moves(Board, white, Boards).
 
        
@@ -70,20 +91,46 @@ executeMove('RB', GameState, [_,_,SrcLine,SrcCol,DestLine,DestCol], NewGameState
 
 
 /*GAME LOOP ---------------------------------------------*/
-gameLoop(_,1) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
-gameLoop(_,2) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
-gameLoop(Board, _) :-
+% player vs player
+gameLoop(_,_,1) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
+gameLoop(_,_,2) :- getPlayerName(2,Name), format('~n Congrats ~s, you win!!', Name), !.
+gameLoop(_,_,3) :- getPlayerName(3,Name), format('~n Congrats ~s, you win!!', Name), !.
+gameLoop(_,_,4) :- getPlayerName(4,Name), format('~n Congrats ~s, you win!!', Name), !.
+gameLoop(Board, Lvl, Winner) :-
     getPlayerTurn(PlayerID, 1), % get current player
-    displayGame(Board, PlayerID), !, % display result
-    once(executePlayerTurn(Board, PlayerID, UpdatedBoard)), % execute turn for current player
-    gameOver(UpdatedBoard, Value),
+    executeTurn(Board, PlayerID,Lvl, UpdatedBoard),
+    gameOver(UpdatedBoard, Winner),
     setNextPlayer, % switch to next player
-    gameLoop(UpdatedBoard, Value).
+    gameLoop(UpdatedBoard, Lvl, Winner).
 
-% gameLoopSinglePlayer(Board, Winner) :-
-%     getPlayerTurn(PlayerID, 1),
-%     displayGame(Board, PlayerID),
-%     once(executePlayerTurn(Board, PlayerID, UpdatedBoard)) % human player is allways the first to play
+% player vs bot
+% gameLoop(_,_,1) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
+% gameLoopPvB(_,_,3) :- getPlayerName(3,Name), format('~n Congrats ~s, you win!!', Name), !.
+% gameLoopPvB(Board, Lvl, Winner) :-
+%     getPlayerTurn(PlayerID, 1), % get current player
+%     executeTurn(Board, PlayerID, Lvl, UpdatedBoard),
+%     gameOver(UpdatedBoard, Winner),
+%     setNextPlayer, % switch to next player
+%     gameLoopPvB(UpdatedBoard, Lvl, Winner).
+
+% bot vs bot
+gameLoopBvB(_,_,3) :- getPlayerName(3,Name), format('~n Congrats ~s, you win!!', Name), !.
+gameLoopBvB(_,_,4) :- getPlayerName(4,Name), format('~n Congrats ~s, you win!!', Name), !.
+gameLoopBvB(Board, Lvl, _) :-
+    getPlayerTurn(BotID, 1), % get current player
+    executeTurn(Board, BotID, Lvl, UpdatedBoard),
+    gameOver(UpdatedBoard, Winner),
+    setNextPlayer, % switch to next player
+    gameLoopBvB(UpdatedBoard, Value, Winner).
+
+executeTurn(Board, BotID, Lvl, UpdatedBoard) :-
+    isBot(BotID),
+    chooseMove(Board, BotID, 0, UpdatedBoard),
+    displayGame(UpdatedBoard, BotID).
+
+executeTurn(Board, PlayerID, _, UpdatedBoard) :-
+    displayGame(Board, PlayerID), !,
+    executePlayerTurn(Board, PlayerID, UpdatedBoard).
 
 
 /*END GAME ----------------------------------------------*/

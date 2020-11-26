@@ -49,3 +49,9 @@ getAlpha(Index, Letter) :-
 % delete 
 deleteNth(0,[H|T],T).
 deleteNth(X,[H|T],[H|S]) :- X1 is X-1, deleteNth(X1,T,S).
+
+%Find max value in list
+my_max([], R, R). %end
+my_max([X|Xs], WK, R):- X >  WK, my_max(Xs, X, R). %WK is Carry about
+my_max([X|Xs], WK, R):- X =< WK, my_max(Xs, WK, R).
+my_max([X|Xs], R):- my_max(Xs, X, R). %start

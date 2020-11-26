@@ -3,6 +3,8 @@
 %Facts that indicate that piece A can be placed on piece B. Rings can also be played on nothing, but 
 playableOn(wr, br).
 playableOn(wr, wr).
+playableOn(wr, c).
+playableOn(br, c).
 playableOn(br, wr).
 playableOn(br, br).
 playableOn(wb, wr).
@@ -31,18 +33,18 @@ equalTo(br, br).  % black ring
 
 initial([
     [[       ],[       ],[],[wb,wr,c],[wb,wr,c]],
-    [[       ],[       ],[],[       ],[wb,wr,c]],
+    [[       ],[  br     ],[],[       ],[wb,wr,c]],
     [[       ],[       ],[],[       ],[       ]],
     [[bb,br,c],[       ],[],[       ],[       ]],
     [[bb,br,c],[bb,br,c],[],[       ],[       ]]
 ]).
 
 testBoard([
-    [[bb     ],[bb       ],[wr],[wb,wr,c],[wb,wr,c]],
-    [[bb     ],[bb     ],[bb],[     ],[wb,wr,c]],
-    [[bb     ],[bb     ],[bb],[bb     ],[bb     ]],
-    [[bb,br,c],[     ],[bb],[bb     ],[bb     ]],
-    [[bb,br,c],[bb,br,c],[bb],[bb     ],[bb     ]]
+    [[       ],[       ],[br],[wb,wr,c],[wb,wr,c]],
+    [[       ],[       ],[],[wb,wr  ],[c]],
+    [[       ],[br     ],[],[       ],[       ]],
+    [[bb,br,c],[       ],[bb, br],[wr       ],[       ]],
+    [[bb,br,c],[br,c],[],[wr, wr       ],[       ]]
 ]).
 
 initial2([
