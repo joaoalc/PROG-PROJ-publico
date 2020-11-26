@@ -95,6 +95,8 @@ inputListIndex(_, _) :- nl, write('[X] Invalid list index'), nl, fail.
     
 inputCoords2(Line, Col) :-
     inputString('Line (A-E): ', L), !,
+    \+number(L),
+    L \== '',
     char_code(L, Code),
     Line is Code-65,             % starts at 64+1
     Line >= 0, Line =< 4,
@@ -104,14 +106,20 @@ inputCoords2(Line, Col) :-
 
 inputCoords4(SrcLine, SrcCol, DestLine,DestCol) :-
     inputString('Source Line (A-E): ', L1), !,
+    \+number(L1),
+    L1 \== '',
     char_code(L1, Code),
     SrcLine is Code-65,             % starts at 64+1
     inputString('Source Col (1-5):  ', C1), !,
+    number(C1),
     SrcCol is C1-1,
     inputString('Dest Line (A-E): ', L2), !,
+    \+number(L2),
+    L2 \== '',
     char_code(L2, Code2),
     DestLine is Code2-65,             % starts at 64+1
     inputString('Dest Col (1-5):  ', C2), !,
+    number(C2),
     DestCol is C2-1.
 
 
