@@ -79,7 +79,6 @@ getPossiblePlays(Board, AllBoards, Color) :-
     nl,
     length(AllBoards, L),
     format('~n generated  ~p moves', L).
-    % printAll(RingBoards,K L).
 
 pickPlay(Board, UpdatedBoard, Color) :-
     getPossiblePlays(Board, AllBoards, Color),

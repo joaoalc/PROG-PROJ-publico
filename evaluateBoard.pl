@@ -29,7 +29,6 @@ calcPoints(First, Line, Col, Color, Result) :-
     (isEnemyBall(Color, First) ->
         getEnemyColor(Color, EneColor),
         getMoveDistance(Line, Col, EneColor, MoveScore),
-        write(MoveScore),
         Result is MoveScore;
     isOwnBall(Color, First) ->
         getMoveDistance(Line, Col, Color, MoveScore),
@@ -69,7 +68,6 @@ calculatePointsCell([First|Rest], Line, Col, Color, Total) :-
         Total is Resul;
         calcPoints(First, Line, Col, Color, Result),
         calculatePointsCell(Rest, Line, Col, Color, Resu),
-        nl,
         Total is Resu + Result * 2
     ).
 
@@ -92,18 +90,11 @@ calculatePointsBoard([First|Rest], Color, Total, N) :-
 
 
 value(Board, Player, Value) :-
-    write(Player),
-    write('2qadjawoijdoaw'),
     getPlayerColor(Player, Color),
-    write(Color),
-    calculatePointsBoard(Board, Color, Value, 0),
-    write(Value).
+    calculatePointsBoard(Board, Color, Value, 0).
 
 calcValueBoards([], Color, []).
 
 calcValueBoards([CurBo|AllBoards], PlayerID, [CurSco|Scores]) :-
     value(CurBo, PlayerID, CurSco),
-    calcValueBoards(AllBoards, Color, Scores),
-    displayBoard(CurBo),
-    write(CurSco), 
-    write(' ').
+    calcValueBoards(AllBoards, PlayerID, Scores).
