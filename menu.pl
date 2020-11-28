@@ -16,12 +16,12 @@ options([
     ['+----------------------------+']
 ]).
 
-printMenu([]).
-printMenu([Head|Rest]) :-
-    printLine(Head),
-    printMenu(Rest).
+printElement([]).
+printElement([Head|Rest]) :-
+    printElementLine(Head),
+    printElement(Rest).
 
-printLine([Line|_]) :-
+printElementLine([Line|_]) :-
     nl,
     write(Line).
 
@@ -29,12 +29,12 @@ printSeparator :-
     write('-----------------------------------------------------------------').
 
 
-printTitle :-
+printMenu :-
     write('\33\[2J'),   % clear Screen
     header(X),
     printSeparator,
-    printMenu(X),
+    printElement(X),
     options(Y),
-    printMenu(Y),
+    printElement(Y),
     nl, nl, 
     printSeparator.

@@ -96,7 +96,7 @@ valid_moves(GameState, Player, ListOfMoves) :-
     ListOfMoves),
     nl,
     length(ListOfMoves, L),
-    format('~n generated  ~p moves', L).
+    format('[i] Generated  ~p moves', L).
    
     
 
@@ -108,12 +108,18 @@ printAll([Head|Rest], Ind) :-
 
 
 
-chooseMove(GameState, Player, _, Move) :-
+% best move Lvl 1 
+chooseMove(GameState, Player, 1, Move) :-
     valid_moves(GameState, Player, ListOfMoves),
     calcValueBoards(ListOfMoves, Player, Scores),
     getBestBoards(ListOfMoves, Scores, Move),
     checkStashChange(Player, Move).
-    
+
+% random moves Lvl 0
+chooseMove(GameState, Player, 0, Move) :-
+    valid_moves(GameState, Player, ListOfMoves),
+    random_member(Move, ListOfMoves),
+    checkStashChange(Player, Move).   
 
 checkStashChange(Player, GameState) :-
     checkStash,
