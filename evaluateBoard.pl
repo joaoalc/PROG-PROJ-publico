@@ -34,7 +34,7 @@ calcPoints(First, Line, Col, Color, Result) :-
     (isEnemyBall(Color, First) ->
         getEnemyColor(Color, EneColor),
         getMoveDistance(Line, Col, EneColor, MoveScore),
-        Result is MoveScore;
+        Result is MoveScore*0.4;
     isOwnBall(Color, First) ->
         getMoveDistance(Line, Col, Color, MoveScore),
         Result is -MoveScore;
@@ -54,8 +54,8 @@ calculatePointsSunkRings([Head|Rest], Color, RingColor, Result) :-
             );
 
             (getRingColor(Head, Color) ->
-                Resu is -1; 
-                Resu is 1 
+                Resu is -0.5; 
+                Resu is 0.5
             )
         );
         Resu is 0
@@ -93,13 +93,15 @@ calculatePointsBoard([First|Rest], Color, Total, N) :-
     calculatePointLine(First, N, Color, Result, 0),
     Total is Totl + Result.
 
+value(Board, Player, Value) :-
+    isEndGame(Board, _),
+    Value is 100.
 
 value(Board, Player, Value) :-
     getPlayerColor(Player, Color),
     calculatePointsBoard(Board, Color, Value, 0).
 
 calcValueBoards([], Color, []).
-
 calcValueBoards([CurBo|AllBoards], PlayerID, [CurSco|Scores]) :-
     value(CurBo, PlayerID, CurSco),
     calcValueBoards(AllBoards, PlayerID, Scores).

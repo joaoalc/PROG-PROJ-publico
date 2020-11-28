@@ -112,7 +112,7 @@ chooseMove(GameState, Player, _, Move) :-
     valid_moves(GameState, Player, ListOfMoves),
     calcValueBoards(ListOfMoves, Player, Scores),
     getBestBoards(ListOfMoves, Scores, Move),
-    checkStashChange(Player, GameState).
+    checkStashChange(Player, Move).
     
 
 checkStashChange(Player, GameState) :-
@@ -150,8 +150,3 @@ countRingsCell([Top|Rest], Ring, N) :-
     countRingsCell(Rest, Ring, N1),
     N is N1+1.
 countRingsCell([_|Rest], Ring, N) :- countRingsCell(Rest, Ring, N).
-
-
-
-
-    
