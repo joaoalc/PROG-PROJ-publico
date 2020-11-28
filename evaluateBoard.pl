@@ -10,19 +10,13 @@ max2(Max, 1, 0) :-
 max2(Max, 1, 0) :-
     Max is 0.
 
+max2(Num1, Num1, Num1).
+
 max2(Max, Num1, Num2) :-
     (Num1 > Num2 ->
     Max is Num1;
-    Num1 =:= Num2 ->
-    Max is Num1;
     Num1 < Num2 ->
     Max is Num2).
-
-
-min2(Min, Num1, Num2) :-
-    (Num1 < Num2 ->
-    Min is Num1;
-    Min is Num2).
 
 getMoveDistance(Line, Col, Color, Result) :-
     (Color == black ->
@@ -38,7 +32,7 @@ calcPoints(First, Line, Col, Color, Result) :-
     (isEnemyBall(Color, First) ->
         getEnemyColor(Color, EneColor),
         getMoveDistance(Line, Col, EneColor, MoveScore),
-        Result is MoveScore*0.4;
+        Result is MoveScore*0.5;
     isOwnBall(Color, First) ->
         getMoveDistance(Line, Col, Color, MoveScore),
         Result is -MoveScore;
@@ -53,8 +47,8 @@ calculatePointsSunkRings([Head|Rest], Color, RingColor, Result) :-
     (isRing(Head) ->
         (getRingColor(Head, RingColor) ->
             (getRingColor(Head, Color) ->
-                Resu is -0.5; 
-                Resu is 0.5 
+                Resu is -0.6; 
+                Resu is 0.6 
             );
 
             (getRingColor(Head, Color) ->
@@ -100,6 +94,10 @@ calculatePointsBoard([First|Rest], Color, Total, N) :-
 value(Board, Player, Value) :-
     isEndGame(Board, _),
     Value is 100.
+
+value(Board, Player, Value) :-
+    isEndGame(Board, Val),
+    Value is 99999.
 
 value(Board, Player, Value) :-
     getPlayerColor(Player, Color),
