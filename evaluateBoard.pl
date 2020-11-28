@@ -32,7 +32,7 @@ calcPoints(First, Line, Col, Color, Result) :-
     (isEnemyBall(Color, First) ->
         getEnemyColor(Color, EneColor),
         getMoveDistance(Line, Col, EneColor, MoveScore),
-        Result is MoveScore*0.5;
+        Result is MoveScore*0.4;
     isOwnBall(Color, First) ->
         getMoveDistance(Line, Col, Color, MoveScore),
         Result is -MoveScore;
@@ -91,13 +91,10 @@ calculatePointsBoard([First|Rest], Color, Total, N) :-
     calculatePointLine(First, N, Color, Result, 0),
     Total is Totl + Result.
 
-value(Board, Player, Value) :-
-    isEndGame(Board, _),
-    Value is 100.
 
 value(Board, Player, Value) :-
-    isEndGame(Board, Val),
-    Value is 99999.
+    isEndGame(Board, _),
+    Value is 200.
 
 value(Board, Player, Value) :-
     getPlayerColor(Player, Color),
