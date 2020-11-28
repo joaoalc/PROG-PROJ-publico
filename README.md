@@ -112,6 +112,18 @@ In the final state the player with the black pieces reached the goal spaces with
 ### **Game Over**
 
 ### **Bot Moves**
+We have 2 pickable difficulties for out bots to use.
+The lowest level selects a random move from the list of valid moves.
+The highest level uses the value(+GameState, +Player, -Value) predicate to obtain the values of each move. Then it randomly selects one of the moves that had the highest value.
+
+## **Board Evaluation**
+The value(+GameState, +Player, -Value) predicate determines the value of a valid move. The higher the result, the better the board is for that bot.
+The result returned from the predicate does not last move, it just depends on the resulting board.
+The result is calculated as follows:
+	-Each ball of the current bot's color reduces the result by 3.
+	-Each ball of the enemy bot's color increases the result by 1.2. The significantly lower value of this relative to the value decremented is meant to avoid infinite loops.
+	-Placing a ring in the same cell there is a ring of the same color reduces the result by 0.5 for each ring of that color in that cell previously.
+	-Placing a ring in the same cell there is a ring of the other player's color increases the result by 0.5 for each ring of that color in that cell previously.
 
 ## **Conclusions**
 
