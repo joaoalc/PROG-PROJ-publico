@@ -1,8 +1,8 @@
 
 :- dynamic player/5.
-player(ID, Name, PlayerColor, stash, playerTurn).
+player(ID, Name, PlayerColor, Stash, PlayerTurn).
 
-
+% id 3 and 4 are reserved to bot players
 isBot(3).
 isBot(4).
 
@@ -44,14 +44,14 @@ setNextPlayer :-
 
 
 decrementRingStash :-
-    player(3, _, _, _, _);
-    player(4,_,_,_,_).
-
-decrementRingStash :-
     player(CurrID, CurrName, CurrColor, CurrStash, 1), % get current player
+    \+isBot(CurrID),
+    write('new'), nl, write(CurrID),
     retract(player(CurrID, _, _, _, _)),
     NewSize is CurrStash-1,
     asserta(player(CurrID, CurrName, CurrColor, NewSize, 1)).
+
+decrementRingStash.
 
 % GETTERS ------------------------------------------
 getPlayerName(ID, Name) :- player(ID, Name,_,_,_).

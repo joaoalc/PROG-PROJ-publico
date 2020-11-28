@@ -4,15 +4,19 @@ getEnemyColor(black, white).
 getRingColor(wr, white).
 getRingColor(br, black).
 
+max2(Max, 1, 0) :-
+    Max is 0.
+
+max2(Max, 1, 0) :-
+    Max is 0.
 
 max2(Max, Num1, Num2) :-
     (Num1 > Num2 ->
     Max is Num1;
     Num1 =:= Num2 ->
-    Max is Num1 + 0.5;
+    Max is Num1;
     Num1 < Num2 ->
-    Max is Num2;
-    true).
+    Max is Num2).
 
 
 min2(Min, Num1, Num2) :-
