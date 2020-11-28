@@ -73,7 +73,7 @@ calculatePointsCell([First|Rest], Line, Col, Color, Total) :-
         Total is Resul;
         calcPoints(First, Line, Col, Color, Result),
         calculatePointsCell(Rest, Line, Col, Color, Resu),
-        Total is Resu + Result * 3
+        Total is Resu + Result*3
     ).
 
 calculatePointLine([], _, _, Total, _) :- Total is 0.

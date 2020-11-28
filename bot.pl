@@ -1,6 +1,12 @@
 :- use_module(library(between)).
 :- use_module(library(random)).
 
+decrementBotStash(BotID) :-
+    player(BotID, CurrName, CurrColor, CurrStash, 1), % get current player
+    retract(player(BotID, _, _, _, _)),
+    NewSize is CurrStash-1,
+    asserta(player(BotID, CurrName, CurrColor, NewSize, 1)).
+
 % moves balls for AI
 executeBallMove(In, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], Out) :-
     once(isValidBallMove(In, [_,Color,SrcLine,SrcCol,DestLine,DestCol])),
@@ -21,6 +27,11 @@ moveBallBot(Board, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], UpdatedBoa
                 (move(Board, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], TmpBoard), % perform vault move
                 executeVaultMovesBot(TmpBoard, CoordsList, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], UpdatedBoard)) % relocate opponent's balls
         ).
+
+checkStash :-
+    getPlayerTurn(ID, 1),
+    getStashSize(ID, Size), !,
+    Size > 0.
 
 % if the vaulted balls list is empty then no vault is performed
 executeVaultMovesBot(UpdatedList, List, _, UpdatedList) :- length(List,0).
@@ -53,9 +64,9 @@ moveGenerator('MR', Color, In, Out) :-
     between(0,4,SrcLine), between(0,4,SrcCol),
     between(0,4,DestLine), between(0,4,DestCol),
     once(move(In, ['MR', Color, SrcLine, SrcCol, DestLine, DestCol], Out)).
-
-% generate ring placement moves
+    
 moveGenerator('R', Color, In, Out) :-
+    checkStash,
     between(0,4,Line), between(0,4,Col),
     once(move(In, ['R', Color, Line, Col], Out)).
 
@@ -100,4 +111,47 @@ printAll([Head|Rest], Ind) :-
 chooseMove(GameState, Player, _, Move) :-
     valid_moves(GameState, Player, ListOfMoves),
     calcValueBoards(ListOfMoves, Player, Scores),
-    getBestBoards(ListOfMoves, Scores, Move).
+    getBestBoards(ListOfMoves, Scores, Move),
+    checkStashChange(Player, GameState).
+    
+
+checkStashChange(Player, GameState) :-
+    checkStash,
+    once(countRings(GameState, Player, N)),
+    getStashSize(Player, Size),
+    Size + N > 8,
+    decrementBotStash(Player).
+
+checkStashChange(_,_).
+    
+    
+
+
+countRings(GameState, Player, N) :-
+    getPlayerColor(Player, Color),
+    selectRing(Color, Ring),
+    countRingsBoard(GameState, Ring, N).
+
+countRingsBoard([], _, 0).
+countRingsBoard([First|Rest], Ring, N) :-
+    countLines(First, Ring, N1),
+    countRingsBoard(Rest, Ring, N2),
+    N is N1+N2.
+
+countLines([], _, 0).
+countLines([First|Rest], Ring, N) :-
+    countRingsCell(First, Ring, NC),
+    countLines(Rest, Ring, NL),
+    N is NC+NL.
+
+countRingsCell([], _,0).
+countRingsCell([Top|Rest], Ring, N) :-
+    Top == Ring,
+    countRingsCell(Rest, Ring, N1),
+    N is N1+1.
+countRingsCell([_|Rest], Ring, N) :- countRingsCell(Rest, Ring, N).
+
+
+
+
+    

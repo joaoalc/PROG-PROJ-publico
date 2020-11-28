@@ -33,18 +33,18 @@ equalTo(br, br).  % black ring
 
 initial([
     [[       ],[       ],[],[wb,wr,c],[wb,wr,c]],
-    [[       ],[  br     ],[],[       ],[wb,wr,c]],
+    [[       ],[      ],[],[       ],[wb,wr,c]],
     [[       ],[       ],[],[       ],[       ]],
     [[bb,br,c],[       ],[],[       ],[       ]],
     [[bb,br,c],[bb,br,c],[],[       ],[       ]]
 ]).
 
 testBoard([
-    [[       ],[       ],[br],[wb,wr,c],[wb,wr,c]],
-    [[       ],[       ],[],[wb,wr  ],[c]],
-    [[       ],[br     ],[],[       ],[       ]],
-    [[bb,br,c],[       ],[bb, br],[wr       ],[       ]],
-    [[bb,br,c],[br,c],[],[wr, wr       ],[       ]]
+    [[   br    ],[       ],[],[wb,wr,c],[wb,wr,c, br]],
+    [[       ],[  br    ],[],[       ],[wb,wr,c]],
+    [[       ],[       ],[],[  br     ],[       ]],
+    [[bb,c],[       ],[],[       ],[       ]],
+    [[bb,br,c],[bb,br,c],[],[       ],[   br    ]]
 ]).
 
 initial2([
