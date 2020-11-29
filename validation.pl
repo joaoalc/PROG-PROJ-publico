@@ -58,12 +58,8 @@ isValidRingPlacement(Board, [_,Color,Line,Col]) :-
     playableOn(Ring, Top). % assert if ring is playable on top of stack X Y
 
 isValidRingMove(Board, Color, [_,_,SrcLine,SrcCol,DestLine,DestCol]) :-
-    getNth(2, Move, SrcLine),
-    getNth(3, Move, SrcCol),
     getTopXY(Board, SrcCol, SrcLine, Ring),
-    isRing(Ring), !, selectRing(Color, Ring),
-    getNth(4, Move, DestLine),
-    getNth(5, Move, DestCol),                                   % verify if selected piece is a player's piece
+    isRing(Ring), !, selectRing(Color, Ring),        % verify if selected piece is a player's piece
     getTopXY(Board, DestCol, DestLine, Top),           % get top piece on destination cell
     !,
     playableOn(Ring, Top).                            % assert if ring is playable on top of stack X Y

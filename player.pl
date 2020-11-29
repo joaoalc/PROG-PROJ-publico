@@ -46,7 +46,6 @@ setNextPlayer :-
 decrementRingStash :-
     player(CurrID, CurrName, CurrColor, CurrStash, 1), % get current player
     \+isBot(CurrID),
-    write('new'), nl, write(CurrID),
     retract(player(CurrID, _, _, _, _)),
     NewSize is CurrStash-1,
     asserta(player(CurrID, CurrName, CurrColor, NewSize, 1)).
@@ -144,8 +143,6 @@ inputCoords4(SrcLine, SrcCol, DestLine,DestCol) :-
 % Place ring from stash
 inputMove('R', Color, ['R', Color, Line, Col]) :-
     inputCoords2(Line, Col).
-
-
 
 % move top element from one cell to the other
 inputMove('MR', Color, ['MR', Color, Line1, Col1, Line2, Col2]) :-
