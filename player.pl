@@ -143,7 +143,7 @@ inputCoords4(SrcLine, SrcCol, DestLine,DestCol) :-
     number(C2),
     DestCol is C2-1.
 
-%inputMove(MoveLetter, Color, TypeOfMove)
+%inputMove(+Type, +Color, -Move)
 % Place ring from stash
 inputMove('R', Color, ['R', Color, Line, Col]) :-
     inputCoords2(Line, Col).

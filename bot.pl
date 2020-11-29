@@ -1,5 +1,6 @@
 :- use_module(library(between)).
 :- use_module(library(random)).
+
 % decrementBotStash(BotID)
 % Decrements the number of rings the current bot/AI has
 decrementBotStash(BotID) :-
