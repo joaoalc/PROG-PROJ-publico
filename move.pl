@@ -111,7 +111,7 @@ printVaultList([Head|Rest]) :-
         getNth(1, Head, Col),
         C is Col+1,
         getAlpha(Line, Letter),
-        format('| ~p~p ', [Letter, C]),
+        format('| ~p~p |', [Letter, C]),
         printVaultList(Rest).
 
 getBallAt(Board, List, Index, SrcLine, SrcCol, Ball) :-

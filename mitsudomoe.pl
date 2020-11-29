@@ -17,7 +17,7 @@ play :-
 % selects if it's Player vs Player (Result = 0), Player vs Bot (Result = 1) or Bot vs Bot (Result = 2)
 selectGamemode(Result) :-
     repeat,
-        once(inputString('Options: ' , Result)),
+        once(inputString('Option: ' , Result)),
         gamemode(Result).
 
 selectLevel(Lvl) :-

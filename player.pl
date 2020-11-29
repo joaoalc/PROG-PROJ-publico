@@ -144,8 +144,6 @@ inputCoords4(SrcLine, SrcCol, DestLine,DestCol) :-
 inputMove('R', Color, ['R', Color, Line, Col]) :-
     inputCoords2(Line, Col).
 
-
-
 % move top element from one cell to the other
 inputMove('MR', Color, ['MR', Color, Line1, Col1, Line2, Col2]) :-
     inputCoords4(Line1, Col1, Line2, Col2).
