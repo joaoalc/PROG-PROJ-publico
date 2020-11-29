@@ -35,8 +35,7 @@ The player can place a new ring from the supply, or move one of his exposed ring
 The destination can be any cell that does not have a ball on top, and if that space already has a ring on it then the player must place his ring on top. After a ring movement the player can also move one of his balls if he desires.
 
 #### **2- Ball Movement**
-At his turn the player can move one of his balls that has not reached the goal spaces, either by moving it to an adjacent ring or by vaulting over 
-other adjacent balls.
+At his turn the player can move one of his balls that has not reached the goal spaces, either by moving it to an adjacent ring or by vaulting over other adjacent balls.
 When the player vaults over another player's ball, then he must relocate it to a space of his choosing (as long as it has a ring with the same color as the ball being relocated). If there is no valid vault then the player cannot perform the movement which leads to the vault.
 
 #### **End Game**

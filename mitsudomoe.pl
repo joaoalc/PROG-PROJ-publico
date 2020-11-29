@@ -10,73 +10,46 @@
 
 play :- 
     printMenu,
-    selectGamemode(N),
+    selectOption(N),
     write('\33\[2J'),   % clear Screen
     startGame(N).
 
-% selects if it's Player vs Player (Result = 0), Player vs Bot (Result = 1) or Bot vs Bot (Result = 2)
-selectGamemode(Result) :-
-    repeat,
-        once(inputString('Option: ' , Result)),
-        gamemode(Result).
 
-selectLevel(Lvl) :-
-    write(' Level 0 - Random Moves'), nl,
-    write(' Level 1 - Calculated Moves'), nl,
-    repeat,
-    once(inputString('Game Level: ', Lvl)),
-    number(Lvl),
-    Lvl >= 0, Lvl =< 1.
-
-
+% startGame(+Option)
+% start game Multiplayer
 startGame(0) :-
     initPlayersPvP,
     initial(Board),
     gameLoop(Board, _, 0).
 
+% start game Singleplayer
 startGame(1) :-
     selectLevel(Lvl),
     initPlayersPvB,
     initial(Board),
     gameLoop(Board, Lvl, 0).
 
+% start game Computer vs Computer
 startGame(2) :-
     selectLevel(Lvl),
     initPlayersBvB,
     initial(Board),
     gameLoopBvB(Board, Lvl, 2).
 
-gamemode(0).
-gamemode(1).
-gamemode(2).
-
-
-
-% use this to debug functions
-test :- 
-     write('\33\[2J'),   % clear Screen
-    initPlayersPvP, % initialize players
-    initial2(Board) ,!, % initialize board
-    gameLoop(Board, 0). % start game loop
-
-test2 :- 
-    isLinearMove(4,0,2,2).
-                    
-test3 :-
-    initBot,
-    initial(Board),
-    valid_moves(Board, white, Boards).
+startGame(3). % quit
 
        
         
-
+/* MOVE -----------------------------------------------------------*/
+% move(+GameState, +Move, -NewGameState)
+% validates and executes a movement
 move(GameState, Move, NewGameState) :-
     once(getNth(0, Move, Type)),
     isValidMove(GameState, Move),
     executeMove(Type, GameState, Move, NewGameState).
 
-
-% move top piece from A to B
+% executeMove(+Type, +GameState, +Move, -NewGameState)
+% move top ball from A to B
 executeMove('MB',GameState, [_,_,Ysrc,Xsrc,Ydest,Xdest], NewGameState) :-
     % format('~n y ~p  x ~p | y ~p x ~p ', [ Ysrc,Xsrc, Ydest, Xdest]),
     movePiece(GameState, Ysrc,Xsrc, Ydest, Xdest,  NewGameState).
@@ -104,6 +77,7 @@ executeMove('RB', GameState, [_,_,SrcLine,SrcCol,DestLine,DestCol], NewGameState
 
 
 /*GAME LOOP ---------------------------------------------*/
+% gameLoop(+GameState, +Lvl, -Winner)
 % player vs player
 gameLoop(_,_,1) :- getPlayerName(1,Name), format('~n Congrats ~s, you win!!', Name), !.
 gameLoop(_,_,2) :- getPlayerName(2,Name), format('~n Congrats ~s, you win!!', Name), !.
@@ -112,7 +86,7 @@ gameLoop(_,_,4) :- getPlayerName(4,Name), format('~n Congrats ~s, you win!!', Na
 gameLoop(Board, Lvl, Winner) :-
     getPlayerTurn(PlayerID, 1), % get current player
     executeTurn(Board, PlayerID,Lvl, UpdatedBoard),
-    gameOver(UpdatedBoard, Winner),
+    gameOver(UpdatedBoard, Winner), % check for game over
     setNextPlayer, % switch to next player
     gameLoop(UpdatedBoard, Lvl, Winner).
 
@@ -126,25 +100,29 @@ gameLoopBvB(Board, Lvl, _) :-
     setNextPlayer, % switch to next player
     gameLoopBvB(UpdatedBoard, Lvl, Winner).
 
+% executeTurn(+GameState, +PlayerID, +Lvl, -NewGameState)
+% execute bot turn
 executeTurn(Board, BotID, Lvl, UpdatedBoard) :-
     isBot(BotID),
     chooseMove(Board, BotID, Lvl, UpdatedBoard),
     displayGame(UpdatedBoard, BotID).
 
+% execute player turn
 executeTurn(Board, PlayerID, _, UpdatedBoard) :-
     displayGame(Board, PlayerID), !,
     executePlayerTurn(Board, PlayerID, UpdatedBoard).
 
 
 /*END GAME ----------------------------------------------*/
+% gameOver(+GameState, -Winner)
 % asserts if the game has been won
 gameOver(Board, Winner) :-
-    isEndGame(Board, Value) -> 
-        Winner is Value % game over
-        ; 
-        Winner is 0, nl, write('[!] Next Turn'), nl.  % game continues
-    
+    isEndGame(Board, Value),
+    Winner is Value. % game over
 
+gameOver(_, 0) :- nl, write('[!] Next Turn'), nl.  % game continues
+    
+% isEndGame(+GameState, -Winner)
 % verify is white or black pieces have reached their goals
 isEndGame(Board, Winner) :- 
     % true when left bottom corners have all white balls (white pieces win)
@@ -171,14 +149,17 @@ isEndGame(Board, Winner) :-
     getPlayerColor(Winner, black).
 
 /*DISPLAY GAME ------------------------------------------*/
+% displayGame(+GameState, +Player)
+% print board
 displayGame(GameState, PlayerID) :-  
     printHeader(PlayerID),
     displayBoard(GameState).
 
+% print player information
 printHeader(PlayerID) :-
     getPlayerName(PlayerID, Name),
     getPlayerColor(PlayerID, Color),
-    getStashSize(PlayerID, Size),
+    getStashSize(PlayerID, Size), % get available rings
     nl,
     write('======================================='),
     format('~n Player: ~p   ', Name),
@@ -187,16 +168,19 @@ printHeader(PlayerID) :-
     write('=======================================').
 
 /* MOVE PIECE ---------------------------------------------*/  
+% movePiece(+GameState, +SourceLine, +SourceCol, +DestLine, +DestCol, -NewGameState)
+% moves a piece from (Xsrc, Ysrc) to (Xdest, Ydest)
 movePiece(BoardIn, Ysrc, Xsrc, Ydest, Xdest, BoardOut) :- 
     popTopXY(BoardIn,Ysrc, Xsrc,  TmpB, Piece),
     playPiece(TmpB, Ydest, Xdest, Piece, BoardOut).
 
 
 /*PIECE PLACEMENT----------------------------------------*/
-playPiece(BoardIn, Line, Col, Piece, BoardOut) :-                      %TODO line indexes are letters
+% playPiece(+GameState, +Line, +Col, +Piece, -NewGameState)
+% plays a given piece on (Col, Line)
+playPiece(BoardIn, Line, Col, Piece, BoardOut) :-                    
     playLine(Line, BoardIn, Col, Piece, BoardOut).
 
- %TabOut=tabuleiro com  a peça
 playLine(0, [Line | Rest], Col, Piece, [NewLine | Rest]) :- 
     playCol(Col, Line, Piece, NewLine). 
 
@@ -204,12 +188,10 @@ playLine(Lindex, [Line | Rest], Col , Piece, [Line | NewLines]) :-
     M is Lindex-1,
     playLine(M, Rest, Col, Piece, NewLines).
 
-%M is N -1
-
+% push element to the top of the stack
 pushFront(Piece, List, [Piece|List]).
 
 playCol(0, [Stack | MoreStacks], Piece, [Res|MoreStacks]) :-
-    %playableOn(Piece, Stack), %playableOn only works if it's supposed to place a piece there. If it isn't, (probably backtracking issues) cause it to crash
     pushFront(Piece, Stack, Res).
 
 playCol(N, [P | MoreCols], Piece, [P | NewPieces]) :-
