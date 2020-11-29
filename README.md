@@ -7,8 +7,7 @@
 | Ivo Saavedra     | 201707093 |
 
 ## **Description**
-The objective of this game is to lay stepping stones (rings) for the player's trio (balls) in order to 
-to walk and vault their way onto the opposite corner of the board.
+The objective of this game is for each player to traverse the board with all his three balls by placing rings on it, with the end goal of reaching the opposite corner (goal corner) of the board with all of his balls.
 
 The game consists of one gameboard depicting a 5x5 grid, 6 balls (3 white and 3 black) and 16 rings (8 in white and the other 8 in black).
 
@@ -17,9 +16,9 @@ There are no necessary steps for running this game. One only needs to have SICSt
 
 ## **Rules**
 + Each player has access to 3 balls and 8 rings of the color they choose.
-+ Once a component - ring or ball - is at play it may never leave the board.
++ Once an element - ring or ball - is at play it may never leave the board.
 + A ball can only sit directly on a ring of the same color.
-+ A component is only allowed to move to adjacent (orthogonally or diagonally adjacent) tiles.
++ An element is only allowed to move to adjacent (orthogonally or diagonally adjacent) tiles.
     - If an adjacent tile has another ball the player can vault over it.
     - The player must relocate every opponent's balls wich he has vaulted over.
 + Once a ball reaches one of it's goal spaces, it never leaves that space.
@@ -33,9 +32,9 @@ If the player is unable to perform any of these steps, then the game ends and th
 
 #### **1- Ring Placement**
 The player can place a new ring from the supply, or move one of his exposed rings (the ring cannot have a ball or another ring on top).
-The destination can be any space that does not have ball on top, and if that space already has a ring on it then the player must place his ring on top.
+The destination can be any cell that does not have a ball on top, and if that space already has a ring on it then the player must place his ring on top. After a ring movement the player can also move one of his balls if he desires.
 
-#### **2- Ball Placement**
+#### **2- Ball Movement**
 At his turn the player can move one of his balls that has not reached the goal spaces, either by moving it to an adjacent ring or by vaulting over 
 other adjacent balls.
 When the player vaults over another player's ball, then he must relocate it to a space of his choosing (as long as it has a ring with the same color as the ball being relocated). If there is no valid vault then the player cannot perform the movement which leads to the vault.
