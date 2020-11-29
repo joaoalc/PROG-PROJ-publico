@@ -46,7 +46,6 @@ setNextPlayer :-
 decrementRingStash :-
     player(CurrID, CurrName, CurrColor, CurrStash, 1), % get current player
     \+isBot(CurrID),
-    write('new'), nl, write(CurrID),
     retract(player(CurrID, _, _, _, _)),
     NewSize is CurrStash-1,
     asserta(player(CurrID, CurrName, CurrColor, NewSize, 1)).
