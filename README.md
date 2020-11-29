@@ -119,7 +119,7 @@ In this case the player chose to place one ring from his stash on the cell B4
 ![Move Input](/images/typeInput.png "Move Input") 
 
 #### **Vaulting Assistant**
-Every time a player vaults over the enemie's balls, then he must relocate them. To facilitate this we created a vaulting assistant were the positions of the vaulted balls are listed and the player can choose the order of the relocations.
+Every time a player vaults over the enemy's balls, then he must relocate them. To facilitate this we created a vaulting assistant were the positions of the vaulted balls are listed and the player can choose the order of the relocations.
 
 In this case the player has vaulted over an enemie's ball located on B4.
 
