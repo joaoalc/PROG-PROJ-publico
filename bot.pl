@@ -1,17 +1,20 @@
 :- use_module(library(between)).
 :- use_module(library(random)).
-
+% decrementBotStash(BotID)
+% Decrements the number of rings the current bot/AI has
 decrementBotStash(BotID) :-
     player(BotID, CurrName, CurrColor, CurrStash, 1), % get current player
     retract(player(BotID, _, _, _, _)),
     NewSize is CurrStash-1,
     asserta(player(BotID, CurrName, CurrColor, NewSize, 1)).
 
+% executeBallMove(+In, +TypeOfMove, -Out)
 % moves balls for AI
 executeBallMove(In, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], Out) :-
     once(isValidBallMove(In, [_,Color,SrcLine,SrcCol,DestLine,DestCol])),
     moveBallBot(In, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], Out).
 
+% moveBallBot(+Board, +TypeOfMove, -UpdatedBoard)
 % move is not a vault (move ball)
 moveBallBot(Board,['MB', Color, SrcLine, SrcCol, DestLine, DestCol], UpdatedBoard) :-
         \+isVault(SrcLine, SrcCol, DestLine, DestCol),
@@ -27,12 +30,14 @@ moveBallBot(Board, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], UpdatedBoa
                 (move(Board, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], TmpBoard), % perform vault move
                 executeVaultMovesBot(TmpBoard, CoordsList, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], UpdatedBoard)) % relocate opponent's balls
         ).
-
+% checkStash
+% Checks if the stash isn't empty yet
 checkStash :-
     getPlayerTurn(ID, 1),
     getStashSize(ID, Size), !,
     Size > 0.
 
+% executeVaultMovesBot(+Board, +SourceCoordinatesList, +TypeOfMove, -UpdatedBoard).
 % if the vaulted balls list is empty then no vault is performed
 executeVaultMovesBot(UpdatedList, List, _, UpdatedList) :- length(List,0).
 
@@ -51,7 +56,7 @@ relocateBallsBot(Board, [SrcLine, SrcCol], UpdatedBoard) :-
     isValidBallRelocation(Board, [_,Ball,_,_,DestLine,DestCol]),
     executeMove('RB', Board, [_,_,SrcLine,SrcCol,DestLine,DestCol], UpdatedBoard).
 
-
+%moveGenerator(+TypeOfMove, +Color, +In, -Out)
 % generate second moves
 moveGenerator('MB', Color, In, Out) :-
     between(0,4,SrcLine), between(0,4,SrcCol),
@@ -88,7 +93,8 @@ moveGenerator('SM2', Color, In, Out) :-
     once(executeBallMove(Tmp, ['MB', Color, SrcLine, SrcCol, DestLine, DestCol], Out)).
 
 /* --------------------------------- VALID MOVES ------------------------- */
-% get all bot's valid moves
+% valid_moves(+GameState, +Player, -ListOfMoves)
+% get all valid moves of the Player bot and places them in ListOfMoves
 valid_moves(GameState, Player, ListOfMoves) :-
     getPlayerColor(Player, Color),
     findall(NewGameState,   % TODO put in valid_moves predicate 
@@ -107,20 +113,22 @@ printAll([Head|Rest], Ind) :-
     printAll(Rest, I).
 
 
-
-% best move Lvl 1 
+% chooseMove(+GameState, +Player, +BotDifficulty, -Move)
+% best move for Lvl 1 bots (highest level)
 chooseMove(GameState, Player, 1, Move) :-
     valid_moves(GameState, Player, ListOfMoves),
     calcValueBoards(ListOfMoves, Player, Scores),
     getBestBoards(ListOfMoves, Scores, Move),
     checkStashChange(Player, Move).
 
-% random moves Lvl 0
+% random moves for Lvl 0 bots (lowest level)
 chooseMove(GameState, Player, 0, Move) :-
     valid_moves(GameState, Player, ListOfMoves),
     random_member(Move, ListOfMoves),
     checkStashChange(Player, Move).   
 
+% checkStashChange(+Player, +GameState)
+% Checks if the bot placed a new ring with it's last play. Decrements the number of rings in the stash if so
 checkStashChange(Player, GameState) :-
     checkStash,
     once(countRings(GameState, Player, N)),
@@ -132,25 +140,31 @@ checkStashChange(_,_).
     
     
 
-
+% countRings(+GameState, +Player, -NumberOfRingsInBoard)
+% Gets the number of rings in a board of the Player's color. This is needed because each player can only have up to 8 balls in play.
 countRings(GameState, Player, N) :-
     getPlayerColor(Player, Color),
     selectRing(Color, Ring),
     countRingsBoard(GameState, Ring, N).
 
+% countRingsCell(+BoardPieces, +RingToCount, -NumberOfRingsInBoard)
+% Gets the number of rings in a board of the Player's color.
 countRingsBoard([], _, 0).
 countRingsBoard([First|Rest], Ring, N) :-
     countLines(First, Ring, N1),
     countRingsBoard(Rest, Ring, N2),
     N is N1+N2.
 
+% countRingsCell(+BoardLinePieces, +RingToCount, -NumberOfRingsInLine)
+% Gets the number of rings in a board's line of the Player's color.
 countLines([], _, 0).
 countLines([First|Rest], Ring, N) :-
     countRingsCell(First, Ring, NC),
     countLines(Rest, Ring, NL),
     N is NC+NL.
 
-countRingsCell([], _,0).
+% countRingsCell(+BoardCellPieces, +RingToCount, -NumberOfRingsInCell)
+% Gets the number of rings in a board's cell of the Player's color.
 countRingsCell([Top|Rest], Ring, N) :-
     Top == Ring,
     countRingsCell(Rest, Ring, N1),

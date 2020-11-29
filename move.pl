@@ -1,4 +1,4 @@
-
+% executePlayerTurn(+Board, +Player, -UpdatedBoard)
 executePlayerTurn(Board, Player, UpdatedBoard) :-
         getPlayerColor(Player, Color),
         repeat,
@@ -17,7 +17,7 @@ executePlayerTurn(Board, Player, UpdatedBoard) :-
                         moveBall(Board, Color, Move, UpdatedBoard)
                      
                  )).
-
+%checkRingStash(RingMoveType, Player)
 checkRingStash('MR',_).              
 checkRingStash('R', Player) :-
     getStashSize(Player, Size),
@@ -32,6 +32,7 @@ checkRingStash(_) :- nl, write('[X] No available rings'), nl, fail.
 getRingDestCoords(['R',_,DestLine,DestCol], DestLine, DestCol).                           
 getRingDestCoords(['MR',_,_,_, DestLine, DestCol], DestLine, DestCol).
 
+% moveBallAfterRing(+Board, +RingMove, +Color, -NewBoard)
 % choose and move a ball to the cell with the previously placed ring                               
 moveBallAfterRing(Board, RingMove, Color, NewBoard) :-
         (askForSecondMove ->
@@ -86,6 +87,7 @@ isEnemyBall(black, wb).
 
 getAllCoords([_,_,SrcLine,SrcCol,DestLine,DestCol], SrcLine, SrcCol, DestLine, DestCol).
 
+% moveBall(+Board, +Color, +Move, -UpdatedBoard)
 % verify if vault call is necessary                    
 moveBall(Board,_, Move, UpdatedBoard) :-
          once(getAllCoords(Move, SrcLine, SrcCol, DestLine, DestCol)),
@@ -105,6 +107,7 @@ moveBall(Board, Color, Move, UpdatedBoard) :-
                 (move(Board, Move, TmpBoard), !,
                 executeVaultMoves(TmpBoard, CoordsList, Move, UpdatedBoard))).
 
+% printVaultList(+VaultList)
 printVaultList([]).
 printVaultList([Head|Rest]) :-
         getNth(0, Head, Line),

@@ -42,7 +42,7 @@ setNextPlayer :-
     asserta(player(CurrID, CurrName, CurrColor, CurrStash, 0)), % set previous player turn to 0
     asserta(player(NextID, NextName, NextColor, NextStash, 1)). % set next player turn to 1
 
-
+%Decrement the number of rings in the stash
 decrementRingStash :-
     player(CurrID, CurrName, CurrColor, CurrStash, 1), % get current player
     \+isBot(CurrID),
@@ -63,6 +63,7 @@ getStashSize(ID, Size) :- player(ID,_,_,Size,_).    % TODO decrement stash
 
 
 % PLAYER INPUT ------------------------------------------
+%inputString(+Msg , -X)
 inputString(Msg , X) :-
     format('~n ~s', [Msg]),
     get_code(C),
@@ -109,7 +110,8 @@ inputListIndex(Length, Index) :-
 
 inputListIndex(_, _) :- nl, write('[X] Invalid list index'), nl, fail.
 
-    
+%inputCoords4(-Line, -Col)
+%Move input for movements with 2 steps
 inputCoords2(Line, Col) :-
     inputString('Line (A-E): ', L), !,
     \+number(L),
@@ -121,6 +123,8 @@ inputCoords2(Line, Col) :-
     number(C),
     Col is C-1.
 
+%inputCoords4(-SrcLine, -SrcCol, -DestLine, -DestCol)
+%Move input for movements with 4 steps
 inputCoords4(SrcLine, SrcCol, DestLine,DestCol) :-
     inputString('Source Line (A-E): ', L1), !,
     \+number(L1),
@@ -139,7 +143,7 @@ inputCoords4(SrcLine, SrcCol, DestLine,DestCol) :-
     number(C2),
     DestCol is C2-1.
 
-
+%inputMove(MoveLetter, Color, TypeOfMove)
 % Place ring from stash
 inputMove('R', Color, ['R', Color, Line, Col]) :-
     inputCoords2(Line, Col).

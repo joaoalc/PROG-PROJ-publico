@@ -52,7 +52,7 @@ Every board piece is represented by an atom. In order to print every element to 
     elem(br, 'BR').  % black ring
 
 ### **Board**
-The board consists of a list of lists. A row is represented by a list of lists as well, in which the interior lists (stacks) represent each cell of the board. In our game a cell can have more than one element in it and because of that we decided that the best way of representing a cell would be a stack. The first element of the cell is the top of the stack and the last is the bottom.
+The board consists of a list of lists. A row is represented by a list of lists as well, in which the interior lists (stacks) represent each cell of the board. In our game, a cell can have more than one element in it and, because of that, we decided that the best way of representing a cell would be a stack. The first element of the cell is the top of the stack and the last is the bottom.
 
     /*Initial board*/
     initial([
@@ -84,12 +84,12 @@ The board consists of a list of lists. A row is represented by a list of lists a
 
 ### **Console Visualization**
 Our board consists 5x5 matrix in which the columns are numbered from 1 to 5 and rows are named from A to E.
-As a simplification our displayGame function only prints the top 2 elements of each cell. We found that this change makes the board more intelligible for the player, as it reduces the amount of unnecessary information on screen.
+As a simplification, our displayGame function only prints the top 2 elements of each cell. We found that this change makes the board more intelligible for the player, as it reduces the amount of unnecessary information on screen.
 
 The displayGame function starts by printing the header with the current player's name, color and available rings, then calls the displayBoard predicate which prints the current game state.
 
 #### **Menu**
-In our menu we have the options for the three proposed gamemodes (player vs player, player vs computer and computer vs computer). The user must insert one 4 available options.
+In our menu we have the options for the three proposed gamemodes (player vs player, player vs computer and computer vs computer). The user must insert one of the 4 available options.
 
 ![Menu](/images/menu.png "Game Menu") 
 
@@ -143,14 +143,16 @@ The highest level uses the *value(+GameState, +Player, -Value)* predicate to obt
 ## **Board Evaluation**
 The *value(+GameState, +Player, -Value)* predicate determines the value of a valid move. The higher the result, the better the board is for that bot.
 The result returned from the predicate does not depend on the last move, it just depends on the resulting board.
+We iterate through the lines, columns and pieces of each board a single time and determine each board's score by adding up the scores of each piece in that circumstance.
 The result is calculated as follows:
 	-Each ball of the current bot's color reduces the result by 3.
 	-Each ball of the enemy bot's color increases the result by 1.2. The significantly lower value of this relative to the value decremented is meant to avoid infinite loops.
-	-Placing a ring in the same cell there is a ring of the same color reduces the result by 0.5 for each ring of that color in that cell previously.
-	-Placing a ring in the same cell there is a ring of the other player's color increases the result by 0.5 for each ring of that color in that cell previously.
+	-Placing a ring on the same cell there is a ring of the same color reduces the result by 0.5 for each ring of that color in that cell previously.
+	-Placing a ring on the same cell there is a ring of the other player's color increases the result by 0.5 for each ring of that color in that cell previously.
+The main functions used for board evaluation are found in evaluateBoard.pl
 
 ## **Conclusions**
-This project helped us improve our prolog programing skills as well as our problem solving capabilities. Until this semester we have had almost no exposure to declaritive programming languages, so this assignement was definitely the best way of interiorizing the subjects discussed in the theoretical classes.
+This project helped us improve our prolog programing skills as well as our problem solving capabilities. Until this semester, we have had almost no exposure to declaritive programming languages, so this assignement was definitely the best way of interiorizing the subjects discussed in the theoretical classes.
 At the end of this project, having implemented a game with 3 game modes (player vs player, player vs computer, computer vs computer), and having created a reasonable ai we conclude that all the proposed objectives have been accomplished.
 
 
