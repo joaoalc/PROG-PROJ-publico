@@ -166,6 +166,7 @@ countLines([First|Rest], Ring, N) :-
 
 % countRingsCell(+BoardCellPieces, +RingToCount, -NumberOfRingsInCell)
 % Gets the number of rings in a board's cell of the Player's color.
+countRingsCell([], _,0).
 countRingsCell([Top|Rest], Ring, N) :-
     Top == Ring,
     countRingsCell(Rest, Ring, N1),
