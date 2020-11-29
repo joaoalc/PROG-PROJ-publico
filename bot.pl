@@ -78,6 +78,7 @@ moveGenerator('R', Color, In, Out) :-
 
 % generate moves starting with ring placements
 moveGenerator('SM', Color, In, Out) :-
+    checkStash,
     between(0,4,Line), between(0,4,Col),
     once(move(In, ['R', Color, Line, Col], Tmp)),
     between(0,4,SrcLine), between(0,4,SrcCol),
