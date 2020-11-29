@@ -144,11 +144,13 @@ The highest level uses the *value(+GameState, +Player, -Value)* predicate to obt
 ## **Board Evaluation**
 The *value(+GameState, +Player, -Value)* predicate determines the value of a valid move. The higher the result, the better the board is for that bot.
 The result returned from the predicate does not depend on the last move, it just depends on the resulting board.
+We iterate through the lines, columns and pieces of each board a single time and determine each board's score by adding up the scores of each piece in that circumstance.
 The result is calculated as follows:
 	-Each ball of the current bot's color reduces the result by 3.
 	-Each ball of the enemy bot's color increases the result by 1.2. The significantly lower value of this relative to the value decremented is meant to avoid infinite loops.
-	-Placing a ring in the same cell there is a ring of the same color reduces the result by 0.5 for each ring of that color in that cell previously.
-	-Placing a ring in the same cell there is a ring of the other player's color increases the result by 0.5 for each ring of that color in that cell previously.
+	-Placing a ring on the same cell there is a ring of the same color reduces the result by 0.5 for each ring of that color in that cell previously.
+	-Placing a ring on the same cell there is a ring of the other player's color increases the result by 0.5 for each ring of that color in that cell previously.
+The main functions used for board evaluation are found in evaluateBoard.pl
 
 ## **Conclusions**
 This project helped us improve our prolog programing skills as well as our problem solving capabilities. Until this semester we have had almost no exposure to declaritive programming languages, so this assignement was definitely the best way of interiorizing the subjects discussed in the theoretical classes.
