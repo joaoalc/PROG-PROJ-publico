@@ -90,6 +90,8 @@ gameLoop(Board, Lvl, Winner) :-
     setNextPlayer, % switch to next player
     gameLoop(UpdatedBoard, Lvl, Winner).
 
+gameLoop(_, _, _) :- getPlayerTurn(BotID, 0), getPlayerName(BotID,Name), format('~n Congrats ~s, you win!!', Name), !.
+
 % bot vs bot
 gameLoopBvB(_,_,3) :- getPlayerName(3,Name), format('~n Congrats ~s, you win!!', Name), !.
 gameLoopBvB(_,_,4) :- getPlayerName(4,Name), format('~n Congrats ~s, you win!!', Name), !.
@@ -100,12 +102,16 @@ gameLoopBvB(Board, Lvl, _) :-
     setNextPlayer, % switch to next player
     gameLoopBvB(UpdatedBoard, Lvl, Winner).
 
+gameLoopBvB(_, _, _) :- getPlayerTurn(BotID, 0), getPlayerName(BotID,Name), format('~n Congrats ~s, you win!!', Name), !.
+
 % executeTurn(+GameState, +PlayerID, +Lvl, -NewGameState)
 % execute bot turn
 executeTurn(Board, BotID, Lvl, UpdatedBoard) :-
     isBot(BotID),
+    !,
     chooseMove(Board, BotID, Lvl, UpdatedBoard),
     displayGame(UpdatedBoard, BotID).
+
 
 % execute player turn
 executeTurn(Board, PlayerID, _, UpdatedBoard) :-

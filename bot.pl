@@ -118,7 +118,9 @@ printAll([Head|Rest], Ind) :-
 % chooseMove(+GameState, +Player, +BotDifficulty, -Move)
 % best move for Lvl 1 bots (highest level)
 chooseMove(GameState, Player, 1, Move) :-
-    valid_moves(GameState, Player, ListOfMoves),
+    once(valid_moves(GameState, Player, ListOfMoves)),
+    length(ListOfMoves, L),
+    L > 0,
     calcValueBoards(ListOfMoves, Player, Scores),
     getBestBoards(ListOfMoves, Scores, Move),
     checkStashChange(Player, Move).
@@ -126,6 +128,8 @@ chooseMove(GameState, Player, 1, Move) :-
 % random moves for Lvl 0 bots (lowest level)
 chooseMove(GameState, Player, 0, Move) :-
     valid_moves(GameState, Player, ListOfMoves),
+    length(ListOfMoves, L),
+    L > 0,
     random_member(Move, ListOfMoves),
     checkStashChange(Player, Move).   
 
