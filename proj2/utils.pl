@@ -21,3 +21,28 @@ createMatrix([], _).
 createMatrix([List|Rest], NCols) :-
    length(List, NCols),
    createMatrix(Rest, NCols).
+
+
+printElements([],0).
+printElements([Top|Head], 0).
+printElements([Top|Rest], N) :-
+                                N1 is N-1,
+                                format('~p ', [Top]),
+                                printElements(Rest, N1). % print next
+
+% printLine(+Line)
+% prints board row
+printLine([]) :- nl.
+printLine([Head|Tail]) :-
+    format('~p | ', [Head]),
+    printLine(Tail).
+
+% printMatrix(+Board)
+% prints board matrix
+printMatrix([]).
+printMatrix([Head|Tail]) :-
+    write('| '),
+    printLine(Head),
+    printMatrix(Tail).
+
+separator :- nl, write('+---------------+').
