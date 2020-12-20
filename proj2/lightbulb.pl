@@ -19,6 +19,11 @@ lb :-
 lb :-
    write('No results found!').
 
+lbFile :-
+   readFromFile('board.txt', Board),
+   setof(ResultBoard, lightbulb(Board, ResultBoard), List),
+   showResults(List, Board).
+
 %testBoard([[1, 1, 1], [1, 1, 1]]). %Example where no option is valid
 testBoard([[3, 3, 5, 2],[4, 6, 3, 3], [2, 3, 5, 5], [2, 4, 4, 4]]). %Solved example at the top; Has multiple solutions
 % testBoard([[2, 4, 4, 3],

@@ -22,14 +22,6 @@ createMatrix([List|Rest], NCols) :-
    length(List, NCols),
    createMatrix(Rest, NCols).
 
-
-printElements([],0).
-printElements([Top|Head], 0).
-printElements([Top|Rest], N) :-
-                                N1 is N-1,
-                                format('~p ', [Top]),
-                                printElements(Rest, N1). % print next
-
 % printLine(+Line)
 % prints board row
 printLine([]) :- nl.
@@ -46,3 +38,13 @@ printMatrix([Head|Tail]) :-
     printMatrix(Tail).
 
 separator :- nl, write('+---------------+').
+
+writeToFile(File) :-
+    open(File, write, Stream),
+    format(Stream, "np.nm", [feup]),
+    close(Stream).
+
+readFromFile(File, Board) :-
+    open(File, read, Stream),
+    read(Stream, Board),
+    close(Stream).
