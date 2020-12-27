@@ -10,8 +10,15 @@ lb :-
    printMatrix(NBoard),
 
    % bagof(ResultBoard, lightbulb(NBoard, ResultBoard), Ret),
-   setof(ResultBoard, lightbulb(NBoard, ResultBoard), List),
-   showResults(List, NBoard).
+    statistics(walltime, [Start|_]),
+   setof(ResultBoard, 
+   lightbulb(NBoard, ResultBoard), List),
+   % write(ResultBoard).
+    statistics(walltime, [End|_]),
+   Elapsed is End - Start,
+   showResults(List, NBoard),
+   format('~n~n [!] Elapsed time: ~p~n', [Elapsed]).
+
 
    % separator,
    % showResult(NBoard, ResultBoard).
@@ -21,19 +28,36 @@ lb :-
 
 lbFile :-
    readFromFile('board.txt', Board),
-   setof(ResultBoard, lightbulb(Board, ResultBoard), List),
+   setof(ResultBoard, 
+   lightbulb(Board, ResultBoard),  List),
    showResults(List, Board).
 
-%testBoard([[1, 1, 1], [1, 1, 1]]). %Example where no option is valid
-testBoard([[3, 3, 5, 2],[4, 6, 3, 3], [2, 3, 5, 5], [2, 4, 4, 4]]). %Solved example at the top; Has multiple solutions
-% testBoard([[2, 4, 4, 3],
-%            [4, 3, 6, 4], 
-%            [4, 8, 6, 6], 
-%            [2, 3, 4, 3]]). %First example
+% testBoard([[1, 1, 1], [1, 1, 1]]). %Example where no option is valid
+% testBoard([[3, 3, 5, 2],[4, 6, 3, 3], [2, 3, 5, 5], [2, 4, 4, 4]]). %Solved example at the top; Has multiple solutions
+testBoard([[2, 4, 4, 3],
+           [4, 3, 6, 4], 
+           [4, 8, 6, 6], 
+           [2, 3, 4, 3]]). %First example
 
+% testBoard([[3, 3, 5, 2, 3],
+%             [4, 6, 3, 3, 4], 
+%             [2, 3, 5, 5, 2], 
+%             [2, 4, 4, 4, 3], 
+%             [2, 4, 4, 4, 3]]).
 
+% testBoard([[2, 4, 4, 2],
+%            [4, 6, 4, 3], 
+%            [6,5,5,4], 
+%            [4,4,4,4]]).
+
+% testBoard([[4, 4, 4, 3],
+%             [2,4,4,5], 
+%             [3,5,6,4], 
+%             [3,4,4,2]]).
 
 lightbulb(NumbersBoard, ResultBoard) :-
+  
+   
    length(NumbersBoard, Collen),
    getRowLength(NumbersBoard, RowLen),
    length(ResultBoard, Collen),
