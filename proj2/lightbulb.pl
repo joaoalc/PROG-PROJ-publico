@@ -18,7 +18,8 @@ lb :-
    % write(ResultBoard).
     statistics(walltime, [End|_]),
    Elapsed is End - Start,
-   showResults(List, NBoard),
+   length(NBoard, N),
+   showResults(List, NBoard, N),
    format('~n~n [!] Elapsed time: ~p~n', [Elapsed]).
 
 
@@ -40,7 +41,7 @@ lbFile :-
 %           [3, 4, 5],
 %           [2, 3, 4]]). 
           
-testBoard([[3, 3, 5, 2],[4, 6, 3, 3], [2, 3, 5, 5], [2, 4, 4, 4]]). %Solved example at the top; Has multiple solutions
+% testBoard([[3, 3, 5, 2],[4, 6, 3, 3], [2, 3, 5, 5], [2, 4, 4, 4]]). %Solved example at the top; Has multiple solutions
 % testBoard([[2, 4, 4, 3],
 %            [4, 3, 6, 4], 
 %            [4, 8, 6, 6], 
@@ -82,17 +83,17 @@ lightbulb(NumbersBoard, ResultBoard) :-
    labeling([], FlattenedResults).
 
 /* SHOW RESULTS --------------------------------------------------*/
-showResults([], _).
-showResults([First|Rest], Original) :-
-   separator,
-   showResult(Original, First),
-   showResults(Rest, Original).
+showResults([], _, _).
+showResults([First|Rest], Original, N) :-
+   separator(N),
+   showResult(Original, First, N),
+   showResults(Rest, Original, N).
 
-showResult([], []).
-showResult([OriginalHead | OriginalRest], [OnHead | OnRest]) :-
+showResult([], [], _).
+showResult([OriginalHead | OriginalRest], [OnHead | OnRest], N) :-
    nl, write('| '), showResultLine(OriginalHead, OnHead),
-   separator,
-   showResult(OriginalRest, OnRest).
+   separator(N),
+   showResult(OriginalRest, OnRest, N).
 
 showResultLine([], []).
 showResultLine([FirstOriginal | RestOriginal], [FirstRes | RestRes]) :-

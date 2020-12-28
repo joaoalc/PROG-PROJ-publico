@@ -37,7 +37,15 @@ printMatrix([Head|Tail]) :-
     printLine(Head),
     printMatrix(Tail).
 
-separator :- nl, write('+---------------+').
+separatorAux(2).
+separatorAux(N) :- N1 is N-1,
+                   write('----'),
+                   separatorAux(N1).
+
+separator(N) :-
+    nl, write('+----'),
+    separatorAux(N),
+    write('---+').
 
 writeToFile(File) :-
     open(File, write, Stream),
