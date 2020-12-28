@@ -6,7 +6,8 @@
 :-consult('boardRandomization.pl').
 
 lb :- 
-   testBoard(NBoard),
+   once(testBoard(NBoard)),
+   checkBoard(NBoard),
    write('ORIGINAL ------'), nl,
    printMatrix(NBoard),
 
@@ -33,23 +34,28 @@ lbFile :-
    lightbulb(Board, ResultBoard),  List),
    showResults(List, Board).
 
-% testBoard([[1, 1, 1], [1, 1, 1]]). %Example where no option is valid
-% testBoard([[3, 3, 5, 2],[4, 6, 3, 3], [2, 3, 5, 5], [2, 4, 4, 4]]). %Solved example at the top; Has multiple solutions
-testBoard([[2, 4, 4, 3],
-           [4, 3, 6, 4], 
-           [4, 8, 6, 6], 
-           [2, 3, 4, 3]]). %First example
+% testBoard([[4,3], 
+%           [3,3]]). 
+% testBoard([[3, 2, 3], 
+%           [3, 4, 5],
+%           [2, 3, 4]]). 
+          
+testBoard([[3, 3, 5, 2],[4, 6, 3, 3], [2, 3, 5, 5], [2, 4, 4, 4]]). %Solved example at the top; Has multiple solutions
+% testBoard([[2, 4, 4, 3],
+%            [4, 3, 6, 4], 
+%            [4, 8, 6, 6], 
+%            [2, 3, 4, 3]]). %First example
 
-% testBoard([[3, 3, 5, 2, 3],
-%             [4, 6, 3, 3, 4], 
-%             [2, 3, 5, 5, 2], 
-%             [2, 4, 4, 4, 3], 
-%             [2, 4, 4, 4, 3]]).
+testBoard([[3, 3, 5, 2, 3],
+            [4, 6, 3, 3, 4], 
+            [2, 3, 5, 5, 2], 
+            [2, 4, 4, 4, 3], 
+            [2, 4, 4, 4, 3]]).
 
-% testBoard([[2, 4, 4, 2],
-%            [4, 6, 4, 3], 
-%            [6,5,5,4], 
-%            [4,4,4,4]]).
+testBoard([[2, 4, 4, 2],
+           [4, 6, 4, 3], 
+           [6,5,5,4], 
+           [4,4,4,4]]).
 
 % testBoard([[4, 4, 4, 3],
 %             [2,4,4,5], 
@@ -58,7 +64,6 @@ testBoard([[2, 4, 4, 3],
 
 lightbulb(NumbersBoard, ResultBoard) :-
   
-   
    length(NumbersBoard, Collen),
    getRowLength(NumbersBoard, RowLen),
    length(ResultBoard, Collen),
@@ -71,6 +76,8 @@ lightbulb(NumbersBoard, ResultBoard) :-
    sum(FlattenedResults, #\=, 0), %Exclude all zeros
         
    restrictSpot(FlattenedNumbers, FlattenedResults, Collen, RowLen, 1),
+
+   % write(ResultBoard), !,
     write('.'),
    labeling([], FlattenedResults).
 
@@ -96,3 +103,19 @@ showResultLine([FirstOriginal | RestOriginal], [FirstRes | RestRes]) :-
 showResultLine( [_ | RestOriginal], [_|RestRes]) :-
    write('  | '),
    showResultLine(RestOriginal, RestRes).
+
+% checking if all the numbers inserted in a board are valid
+checkBoard([]).
+checkBoard([Line | Rest]) :-
+   checkLine(Line),
+   checkBoard(Rest).
+
+checkBoard(_) :-
+   nl, write('Found one or more invalid numbers!'), nl, fail.
+
+checkLine([]).
+checkLine([First | Rest]) :-
+   number(First),
+   First > 0,
+   First < 10,
+   checkLine(Rest).
