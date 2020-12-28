@@ -3,6 +3,7 @@
 
 :-consult('restrictions.pl').
 :-consult('utils.pl').
+:-consult('boardRandomization.pl').
 
 lb :- 
    testBoard(NBoard),
