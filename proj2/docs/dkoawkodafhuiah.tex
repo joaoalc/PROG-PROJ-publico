@@ -1,0 +1,86 @@
+% This is samplepaper.tex, a sample chapter demonstrating the
+% LLNCS macro package for Springer Computer Science proceedings;
+% Version 2.20 of 2017/10/04
+%
+\documentclass[runningheads]{llncs}
+%
+\usepackage{graphicx}
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+%
+% If you use the hyperref package, please uncomment the following line
+% to display URLs in blue roman font according to Springer's eBook style:
+% \renewcommand\UrlFont{\color{blue}\rmfamily}
+
+\begin{document}
+%
+\title{LightBulbs - Constraint Logic Programming}
+%
+%\titlerunning{Abbreviated paper title}
+% If the paper title is too long for the running head, you can set
+% an abbreviated paper title here
+%
+\author{Ivo Saavedra - up201707093\and
+João Cardoso - up201806531 \\
+\small{FEUP-PLOG, 3MIEIC01, Grupo LightBulb}}
+
+%
+\authorrunning{F. Author et al.}
+% First names are abbreviated in the running head.
+% If there are more than two authors, 'et al.' is used.
+%
+\institute{Faculdade de Engenharia da Universidade do Porto, Rua Roberto Frias, 4200-465 Porto, Portugal}
+%
+\maketitle              % typeset the header of the contribution
+%
+\begin{abstract}
+This article contains the implementation details of the application developed for the second assignment for the
+Logical Programming subject. The goal of this project was to develop a program capable of creating and solving every instance of the lightbulb puzzle. The goal of this puzzle is to find every lit lightbulb, considering that a lightbulb is only lit if and only if the number inside it is equal to the number of lit neighboring lamps (including itself).
+
+\keywords{PROLOG  \and SICStus \and Lightbulbs.}
+\end{abstract}
+%
+%
+%
+\section{Introduction}
+This application was developed for the Logical Programming subject of the 3rd year of the MIEIC course with the goal of developing and consolidating our knowledge on Constraint Logic Programming with prolog.
+
+\section{Problem description}
+The lightbulb puzzle consists of a two dimensonal board consisting of n[1*] lightbulbs per line and m[1*] lightbulbs per column, where each lightbulb has a number on it.
+Each lightbulb is on if and only if it's number is equal to the number of lit neighboring (directly or diagonally adjacent) lightbulbs, including itself.
+
+\section{Problem description}
+The lightbulb puzzle consists of a two dimensonal board consisting of n[1*] lightbulbs per line and m[1*] lightbulbs per column, where each lightbulb has a number on it.
+Each lightbulb is on if and only if it's number is equal to the number of lit neighboring (directly or diagonally adjacent) lightbulbs, including itself.
+
+
+% ---- Bibliography ----
+%
+% BibTeX users should specify bibliography style 'splncs04'.
+% References will then be sorted and formatted in the correct style.
+%
+% \bibliographystyle{splncs04}
+% \bibliography{mybibliography}
+%
+\begin{thebibliography}{8}
+\bibitem{ref_article1}
+Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
+
+\bibitem{ref_lncs1}
+Author, F., Author, S.: Title of a proceedings paper. In: Editor,
+F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
+Springer, Heidelberg (2016). \doi{10.10007/1234567890}
+
+\bibitem{ref_book1}
+Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
+Location (1999)
+
+\bibitem{ref_proc1}
+Author, A.-B.: Contribution title. In: 9th International Proceedings
+on Proceedings, pp. 1--2. Publisher, Location (2010)
+
+\bibitem{ref_url1}
+LNCS Homepage, \url{http://www.springer.com/lncs}. Last accessed 4
+Oct 2017
+\end{thebibliography}
+\end{document}
