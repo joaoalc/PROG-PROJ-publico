@@ -35,7 +35,7 @@ João Cardoso - up201806531 \\
 %
 \begin{abstract}
 This article contains the implementation details of the application developed for the second assignment for the
-Logical Programming subject. The goal of this project was to develop a program capable of creating and solving every instance of the lightbulb puzzle. The goal of this puzzle is to find every lit lightbulb, considering that a lightbulb is only lit if and only if the number inside it is equal to the number of lit neighboring lamps (including itself).
+Logical Programming subject. The goal of this project was to develop a program capable of creating and solving every instance of the Light bulb puzzle. The goal of this puzzle is to find every lit light bulb, considering that a light bulb is only lit if and only if the number inside it is equal to the number of lit neighboring lamps (including itself).
 
 \keywords{PROLOG  \and SICStus \and Lightbulbs.}
 \end{abstract}
@@ -43,12 +43,45 @@ Logical Programming subject. The goal of this project was to develop a program c
 %
 %
 \section{Introduction}
-This application was developed for the Logical Programming subject of the 3rd year of the MIEIC course with the goal of developing and consolidating our knowledge on Constraint Logic Programming with prolog.
+This article was developed as complement for the second partical assignment of the Logical Programming subject of the 3rd year of the MIEIC course. The goal of this project was to develop an application capable of creating and solving "Lightbulb" type puzzles using the SISCstus prolog development system along with the restriction tools provided by the CLPFD library. The objective of these puzzles is to determine which light bulbs inside a n*n square are turned on. A light bulb is only on when the number of adjacent bulbs (including itself) equals the number attributed to it. This document is organized in the following manner:
+	\begin{itemize}
+		\item[•] \textbf{Problem Description:} detailed description of the problem being analyzed
+		\item[•] \textbf{Approach:} section describing the implementation of the application
+		\begin{itemize}
+			\item[-] \textbf{Decision Variables:} description of the decision variables and their domains
+			\item[-] \textbf{Constraints:} details of the rigid and flexible constraints
+		\end{itemize}
+		\item[•] \textbf{Solution Presentation:} description of the adopted solution presentation
+		\item[•] \textbf{Experiments and Results:}
+		\begin{itemize}
+			\item[-] \textbf{Dimension Analysis:} results obtained after testing boards of different sizes
+			\item[-] \textbf{Search Strategies:} result comparison of different heuristics search functions
+		\end{itemize}
+		\item[•] \textbf{Conclusions}
+		\item[•] \textbf{References}
+	\end{itemize}
 
 \section{Problem description}
-The lightbulb puzzle consists of a two dimensonal board consisting of n[1*] lightbulbs per line and m[1*] lightbulbs per column, where each lightbulb has a number on it.
-Each lightbulb is on if and only if it's number is equal to the number of lit neighboring (directly or diagonally adjacent) lightbulbs, including itself.
+The Lightbulb puzzle consists of a two dimensonal board consisting of n[1*] light bulbs per line and m[1*] light bulbs per column, where each lightbulb has a number on it.
+Each lightbulb is on if and only if it's number is equal to the number of lit neighboring (directly or diagonally adjacent) lightbulbs, including itself. When given a board we must determine all it's possible solutions; the number of solutions may range from one to many, however there are cases in which the board is impossible to solve. Having that in consideration we classified the LightBulbs puzzle as a decision problem.
 
+\section{Approach}
+
+\subsection{Decision Variables}
+
+\subsection{Constraints}
+
+\subsection{Evaluation Function}
+
+\section{Solution Visualization}
+
+\section{Experiments and Results}
+\subsection{Dimension Analysis}
+\subsection{Search Strategies}
+
+\section{Conclusions}
+
+\section{References}
 
 % ---- Bibliography ----
 %
