@@ -12,7 +12,7 @@ randomLightbulb(_, _) :-
     write('No solutions found!').
 
 randomBoardNumber(Number) :-
-    random(1, 10, Number).
+    random(2, 10, Number).
 
 generateRandomBoard(RandomBoard, RowLen, Collen) :-
     length(RandomBoard, Collen),
@@ -52,7 +52,8 @@ solveRandomSuccessfulLightbulb(RowLen, ColLen) :- %Refactor the lightbuld functi
     bagof(Results, lightbulb(Numbers, Results),  List),
 
     statistics(walltime, [End|_]), % stop counting
-
+    nl,
+    write(Numbers), nl, write(Results), nl,
     Elapsed is End - Start,
     displayResults(List, Numbers, Elapsed).
 
@@ -73,6 +74,7 @@ randomLightbulbProblem(FlattenedResults, FlattenedNums, FlattenedBoard, RowLen, 
 restrictions(FlattenedNumbers, FlattenedResults, RowLen, ColLen) :-
     domain(FlattenedNumbers, 1, 9),
     restrictSpot(FlattenedNumbers, FlattenedResults, RowLen, ColLen, 1),
+    write(FlattenedNumbers),
     labeling([value(selRandom)], FlattenedNumbers).
 
 selRandom(Var, Rest, BB0, BB1):- % seleciona valor de forma aleatória
