@@ -42,10 +42,10 @@ lbFile :-
 %           [2, 3, 4]]). 
           
 % testBoard([[3, 3, 5, 2],[4, 6, 3, 3], [2, 3, 5, 5], [2, 4, 4, 4]]). %Solved example at the top; Has multiple solutions
-% testBoard([[2, 4, 4, 3],
-%            [4, 3, 6, 4], 
-%            [4, 8, 6, 6], 
-%            [2, 3, 4, 3]]). %First example
+testBoard([[2, 4, 4, 3],
+           [4, 3, 6, 4], 
+           [4, 8, 6, 6], 
+           [2, 3, 4, 3]]). %First example
 
 testBoard([[3, 3, 5, 2, 3],
             [4, 6, 3, 3, 4], 

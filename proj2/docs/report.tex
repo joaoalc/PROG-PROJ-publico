@@ -5,6 +5,7 @@
 \documentclass[runningheads]{llncs}
 %
 \usepackage{graphicx}
+\graphicspath{{./images/}}
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
 %
@@ -68,12 +69,26 @@ Each lightbulb is on if and only if it's number is equal to the number of lit ne
 \section{Approach}
 
 \subsection{Decision Variables}
+For this puzzle the decision variables are the values inside each cell of the input board. As previously stated, each board cell as a value representing the number of adjacent bulbs that need to be lit in order for the current cell to be as well.
+Taking into consideration that every cell can at most have eight adjacent cells and that for the bulb to be lit we need to have N adjacent lit bulbs plus the current one we come to the conclusion that the maximum number inside a light bulb is 8+1=9. As for the minimum value we came to the conclusion that it should be 2. If the value inside a bulb was equal to zero, then that bulb would always be turned off, and if it was one then it would always be turned on, because of the constraints of this puzzle.
 
 \subsection{Constraints}
-
-\subsection{Evaluation Function}
+As previously mentioned, a bulb is only lit when the number inside it is equal to the number of adjacent light bulbs (including itself) that are lit. In order to accomplish this we iterated over all of the input board's cells and for each cell we fetched every adjacent variable. The maximum number of adjacent cells is eight, so for each light bulb we needed eight variables. If the current cell had less than eight neighbors, for instance, if it was in a corner, then the adjacent variables that were out of bounds would take the value of zero.
+After having gotten all the adjacent variables we started applying the constraints. The first one being that the sum of all the adjacent variables should be different from the number inside the current bulb 
+(TODO: EXPLAIN)
 
 \section{Solution Visualization}
+In order to make the solution more intelligible, the input board is displayed along with the result board, in which the latter
+only contains the cells that have a lit bulb, allowing for an easier understanding of the solution. The elapsed time is also displayed for the experiments and results section.
+The predicates responsible for displaying the results are called after the solution is obtained. As each board can originate more than one result the solution consists of a list of matrices, each one representing the possible output boards for the original board. The \textbf{showResults} predicate is responsible for iterating over the result matrices and displaying each one in the console.
+
+\begin{figure}
+\includegraphics[scale=1]{solutionDisplay}
+\centering
+\caption{solution display example}
+\centering
+\end{figure}
+
 
 \section{Experiments and Results}
 \subsection{Dimension Analysis}
