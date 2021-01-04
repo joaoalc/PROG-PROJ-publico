@@ -41,8 +41,8 @@ solveRandomSuccessfulLightbulb(RowLen, ColLen) :- %Refactor the lightbuld functi
     write(FlattenedResults), write(FlattenedNumbers),
     restrictSpot(FlattenedNumbers, FlatRes, RowLen, ColLen, 1),
     write('.'),
-   labeling([], FlatRes),
-   write(FlatRes).
+    labeling([], FlatRes),
+    write(FlatRes).
 
 randomSuccessfulLightbulb(FlattenedResults, FlattenedNums, RowLen, ColLen) :-
     generateVariableBoard(ResultBoard, RowLen, ColLen),
@@ -50,14 +50,27 @@ randomSuccessfulLightbulb(FlattenedResults, FlattenedNums, RowLen, ColLen) :-
     randomizeResultBoard(FlattenedResults),
     generateVariableBoard(NumberBoard, RowLen, ColLen),
     flatten(NumberBoard, FlattenedNumbers),
-    setof(FlattenedNumbers, restrictions(FlattenedNumbers, FlattenedResults, RowLen, ColLen), List),
-    random_member(FlattenedNums, List).
+    restrictions(FlattenedNumbers, FlattenedResults, RowLen, ColLen),
+    write(FlattenedNumbers),
+    write(FlattenedResults).
+
+randomLightbulbProblem(FlattenedResults, FlattenedNums, FlattenedBoard, RowLen, ColLen) :-
+    generateVariableBoard(NumberBoard, RowLen, ColLen),
+    flatten(NumberBoard, FlattenedNumbers),
+    restrictions(FlattenedNumbers, FlattenedBoard, RowLen, ColLen).
 
 
 restrictions(FlattenedNumbers, FlattenedResults, RowLen, ColLen) :-
     domain(FlattenedNumbers, 1, 9),
     restrictSpot(FlattenedNumbers, FlattenedResults, RowLen, ColLen, 1),
-    labeling([], FlattenedNumbers).
+    labeling([value(selRandom)], FlattenedNumbers).
+
+selRandom(Var, Rest, BB0, BB1):- % seleciona valor de forma aleatória
+fd_set(Var, Set), fdset_to_list(Set, List),
+random_member(Value, List), % da library(random)
+( first_bound(BB0, BB1), Var #= Value ;
+later_bound(BB0, BB1), Var #\= Value ).
+
 
 randomizeResultBoard([]).
 
