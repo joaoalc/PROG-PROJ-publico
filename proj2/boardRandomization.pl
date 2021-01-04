@@ -42,6 +42,7 @@ solveRandomSuccessfulLightbulb(RowLen, ColLen) :- %Refactor the lightbuld functi
     domain(FlatRes, 0, 1), %1 is lit, 0 is unlit
     sum(FlatRes, #\=, 0), %Exclude all zeros
     restrictSpot(FlattenedNumbers, FlatRes, RowLen, ColLen, 1),
+    write(Numbers),
 
 
     unflattenList(FlattenedNumbers, RowLen, ColLen, Numbers),
