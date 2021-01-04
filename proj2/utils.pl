@@ -58,15 +58,13 @@ readFromFile(File, Board) :-
     close(Stream).
 
 unflattenList(List, RowLen, ColLen, ResultBoard) :-
-    unflatten(List, RowLen, ColLen, [], ResultBoard, NL),
-    write(ResultBoard).
+    unflatten(List, RowLen, ColLen, [], ResultBoard, NL).
 
 unflatten(_, _, 0, ResBoard, ResBoard, _).
 
 unflatten(List, RowLen, ColLen, ResBoard, ResultBoard, NewList) :-
     unflattenLine(List, RowLen, [], ResLine, NewList),
     append(ResBoard, [ResLine], RBoard),
-    write(RBoard),
     CL is ColLen - 1,
     unflatten(NewList, RowLen, CL, RBoard, ResultBoard, NL).
 

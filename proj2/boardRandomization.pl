@@ -33,11 +33,8 @@ randomizeLine([First|Line]) :-
 
 
 solveRandomSuccessfulLightbulb(RowLen, ColLen) :- %Refactor the lightbuld function to use flattened boards; use setof here to find every solution then use statistics and such
-   
-   % variable declaration
-    length(ResultBoard, ColLen),
-    createMatrix(ResultBoard, RowLen),
-    flatten(ResultBoard, FlattenedResults), 
+
+
 
     randomSuccessfulLightbulb(FlattenedResults, FlattenedNumbers, RowLen, ColLen),
     BoardSize is RowLen * ColLen,
@@ -45,9 +42,18 @@ solveRandomSuccessfulLightbulb(RowLen, ColLen) :- %Refactor the lightbuld functi
     domain(FlatRes, 0, 1), %1 is lit, 0 is unlit
     sum(FlatRes, #\=, 0), %Exclude all zeros
     restrictSpot(FlattenedNumbers, FlatRes, RowLen, ColLen, 1),
-    write('.'),
-    labeling([], FlatRes),
-    write(FlatRes).
+
+
+    unflattenList(FlattenedNumbers, RowLen, ColLen, Numbers),
+    write(Numbers),
+    %unflattenList(FlatRes, RowLen, ColLen, Results),
+    statistics(walltime, [Start|_]), % start statiscs
+    bagof(Results, lightbulb(Numbers, Results),  List),
+
+    statistics(walltime, [End|_]), % stop counting
+
+    Elapsed is End - Start,
+    displayResults(List, Numbers, Elapsed).
 
 randomSuccessfulLightbulb(FlattenedResults, FlattenedNums, RowLen, ColLen) :-
     generateVariableBoard(ResultBoard, RowLen, ColLen),
