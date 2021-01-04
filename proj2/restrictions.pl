@@ -75,7 +75,6 @@ restrictSpot(FullNumberList, FullResultList, NumCols, NumLines, N) :-
     N1 is N + 1,
     restrictSpot(FullNumberList, FullResultList, NumCols, NumLines, N1).
 
-
 restrictSpot(_, _, NumCols, NumLines, N) :-
     N > NumCols * NumLines.
 

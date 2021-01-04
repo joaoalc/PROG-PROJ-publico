@@ -91,8 +91,10 @@ The other elements are assigned to the corresponding variables (2nd, 5th and 6th
 
 Since we repeat the steps above for each list element, when it gets to the end, every element will check wether each adjacent lightbulb (including itself) are lit up.
 
+
+\clearpage
 \subsection{Restrictions}
-"Sum condition"
+\subsection*{Sum condition}
 If the sum of every element in the "results list" is 0, then the "results list" is automatically invalid.
 
 \begin{figure}
@@ -102,7 +104,7 @@ If the sum of every element in the "results list" is 0, then the "results list" 
 	\centering
 	\end{figure}
 
-"Lockout condition"
+\subsection*{Lockout condition}
 First we check if the sum of the neighboring elements, excluding itself, is equal to the number on the lightbulb. If it is, then the current "results list" is automatically invalid.
 \begin{figure}
 	\includegraphics[scale=0.5]{lightbulb_impossible_state}
@@ -112,7 +114,7 @@ First we check if the sum of the neighboring elements, excluding itself, is equa
 	\end{figure}
 
 
-"Ligth condition"
+\subsection*{Light condition}
 For each element, we get the sum of the the neighboring elements, excluding itself, plus one (the +1 is because we are assuming that the lightbulb itself is on for this case).
 If that sum is equal to the number on the lightbulb we're checking, then the lightbulb can be on, but doesn't necessarily have to be.
 
@@ -123,8 +125,9 @@ If that sum is equal to the number on the lightbulb we're checking, then the lig
 	\centering
 	\end{figure}
 
-That lightbulb can always be off, unless it meets the "sum condition" or the "lockout condition".
+Each lighbulb lightbulb can always be off, unless it meets the "sum condition" or the "lockout condition".
 
+These restrictions are used both to obtain the solution and to create the problem using a solution.
 
 \clearpage
 \section{Solution Presentation}
