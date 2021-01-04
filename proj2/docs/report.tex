@@ -77,12 +77,18 @@ As previously mentioned, a bulb is only lit when the number inside it is equal t
 After having gotten all the adjacent variables we started applying the constraints. The first one being that the sum of all the adjacent variables should be different from the number inside the current bulb 
 (TODO: EXPLAIN)
 
-\section{Solution Visualization}
+\clearpage
+\section{Solution Presentation}
 In order to make the solution more intelligible, the input board is displayed along with the result board, in which the latter
 only contains the cells that have a lit bulb, allowing for an easier understanding of the solution. The elapsed time is also displayed for the experiments and results section.
 The predicates responsible for displaying the results are called after the solution is obtained. As each board can originate more than one result the solution consists of a list of matrices, each one representing the possible output boards for the original board. The \textbf{showResults} predicate is responsible for iterating over the result matrices and displaying each one in the console.
 
-\begin{figure}
+\begin{figure}[h]
+\includegraphics[scale=0.5]{showResults}
+\centering
+\caption{display result predicates}
+\centering
+\vspace{5mm}	
 \includegraphics[scale=1]{solutionDisplay}
 \centering
 \caption{solution display example}
@@ -95,6 +101,9 @@ The predicates responsible for displaying the results are called after the solut
 \subsection{Search Strategies}
 
 \section{Conclusions}
+The objective of this project was to develop an application capable of creating and solving light bulb puzzles. At the end of this assignment we feel that our knowledge on the CLPFD prolog module has definitely increased as well as our experience with constraint logical programming.
+
+
 
 \section{References}
 
