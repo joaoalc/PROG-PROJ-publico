@@ -35,9 +35,7 @@ randomizeLine([First|Line]) :-
 
 
 %Given a width and height, respectively, generates and solves a random lightbulb puzzle with at least one solution
-solveRandomSuccessfulLightbulb(RowLen, ColLen) :- %Refactor the lightbuld function to use flattened boards; use setof here to find every solution then use statistics and such
-
-
+solveRandomLightBulb(RowLen, ColLen) :- %Refactor the lightbuld function to use flattened boards; use setof here to find every solution then use statistics and such
 
     randomSuccessfulLightbulb(FlattenedResults, FlattenedNumbers, RowLen, ColLen),
     BoardSize is RowLen * ColLen,
@@ -48,7 +46,7 @@ solveRandomSuccessfulLightbulb(RowLen, ColLen) :- %Refactor the lightbuld functi
 
 
     unflattenList(FlattenedNumbers, RowLen, ColLen, Numbers),
-    write(Numbers),
+
     %unflattenList(FlatRes, RowLen, ColLen, Results),
     statistics(walltime, [Start|_]), % start statiscs
     bagof(Results, lightbulb(Numbers, Results),  List),
@@ -74,7 +72,6 @@ randomLightbulbProblem(FlattenedResults, FlattenedNums, FlattenedBoard, RowLen, 
 restrictions(FlattenedNumbers, FlattenedResults, RowLen, ColLen) :-
     domain(FlattenedNumbers, 1, 9),
     restrictSpot(FlattenedNumbers, FlattenedResults, RowLen, ColLen, 1),
-    write(FlattenedNumbers),
     labeling([value(selRandom)], FlattenedNumbers).
 
 selRandom(Var, Rest, BB0, BB1):- % seleciona valor de forma aleatória

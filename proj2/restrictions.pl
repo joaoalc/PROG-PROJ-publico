@@ -1,4 +1,5 @@
 
+
 %restrictSpot: Goes through each element in the flattened list and sets their individual restrictions relative to the neighboring elements
 %Exit condition
 restrictSpot(_, _, NumCols, NumLines, N) :-
@@ -137,6 +138,16 @@ restrictSpot(FullNumberList, FullResultList, NumCols, NumLines, N) :-
         Elem9 #= 0
     ),
 
+
+    /*  
+    +-----------------+
+    |Elem1|Elem2|Elem3|
+    |-----------------|
+    |Elem4|Self |Elem6|
+    |-----------------|
+    |Elem7|Elem8|Elem9|
+    +-----------------+
+    */
     %Lockout condition - See report for more info
     sum([Elem1, Elem2, Elem3, Elem4, Elem6, Elem7, Elem8, Elem9], #\=, Number),
     (
@@ -149,7 +160,5 @@ restrictSpot(FullNumberList, FullResultList, NumCols, NumLines, N) :-
     ),
     N1 is N + 1,
     restrictSpot(FullNumberList, FullResultList, NumCols, NumLines, N1).
-
-
 
 
