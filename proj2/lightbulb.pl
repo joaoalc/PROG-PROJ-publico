@@ -6,7 +6,7 @@
 :-consult('boardRandomization.pl').
 
 lightBulb :- 
-   once(testBoard5x5(NBoard)),
+   once(testBoard(NBoard)),
    checkBoard(NBoard),           % check if the input Board is valid
    statistics(walltime, [Start|_]), % start statiscs
    bagof(ResultBoard, lightbulb(NBoard, ResultBoard), List), % find all the possible solutions
@@ -19,7 +19,7 @@ lightBulb :- % in case there are no possible results
 
 % read board from file
 lightBulbFile :-
-   readFromFile('board.txt', Board),
+   readFromFile('boards.txt', Board),
    statistics(walltime, [Start|_]), % start statiscs
    bagof(ResultBoard, lightbulb(Board, ResultBoard),  List),
    statistics(walltime, [End|_]), % stop counting
@@ -50,10 +50,10 @@ testBoard5x5([[3, 3, 5, 2, 3],
 %            [6,5,5,4], 
 %            [4,4,4,4]]).
 
-% testBoard([[4, 4, 4, 3],
-%             [2,4,4,5], 
-%             [3,5,6,4], 
-%             [3,4,4,2]]).
+testBoard([[4, 4, 4, 3],
+            [2,4,4,5], 
+            [3,5,6,4], 
+            [3,4,4,2]]).
 
 lightbulb(NumbersBoard, ResultBoard) :-
    
