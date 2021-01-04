@@ -5,58 +5,50 @@
 :-consult('utils.pl').
 :-consult('boardRandomization.pl').
 
-lb :- 
-   once(testBoard(NBoard)),
-   checkBoard(NBoard),
-   write('ORIGINAL ------'), nl,
-   printMatrix(NBoard),
-
-   % bagof(ResultBoard, lightbulb(NBoard, ResultBoard), Ret),
-    statistics(walltime, [Start|_]),
-   setof(ResultBoard, 
-   lightbulb(NBoard, ResultBoard), List),
-   % write(ResultBoard).
-    statistics(walltime, [End|_]),
+lightBulb :- 
+   once(testBoard5x5(NBoard)),
+   checkBoard(NBoard),           % check if the input Board is valid
+   statistics(walltime, [Start|_]), % start statiscs
+   bagof(ResultBoard, lightbulb(NBoard, ResultBoard), List), % find all the possible solutions
+   statistics(walltime, [End|_]), % stop counting
    Elapsed is End - Start,
-   length(NBoard, N),
-   showResults(List, NBoard, N),
-   format('~n~n [!] Elapsed time: ~p~n', [Elapsed]).
+   displayResults(List, NBoard, Elapsed).
 
-
-   % separator,
-   % showResult(NBoard, ResultBoard).
-
-lb :-
+lightBulb :- % in case there are no possible results
    write('No results found!').
 
-lbFile :-
+% read board from file
+lightBulbFile :-
    readFromFile('board.txt', Board),
-   setof(ResultBoard, 
-   lightbulb(Board, ResultBoard),  List),
-   showResults(List, Board).
+   statistics(walltime, [Start|_]), % start statiscs
+   bagof(ResultBoard, lightbulb(Board, ResultBoard),  List),
+   statistics(walltime, [End|_]), % stop counting
+   Elapsed is End - Start,
+   displayResults(List, Board, Elapsed).
 
-% testBoard([[4,3], 
-%           [3,3]]). 
-% testBoard([[3, 2, 3], 
-%           [3, 4, 5],
-%           [2, 3, 4]]). 
+/* TEST BOARDS ------------------------------- */
+testBoard2x2([[4,3], 
+              [3,3]]). 
+
+testBoard3x3([[3, 2, 3], 
+          [3, 4, 5],
+          [2, 3, 4]]). 
           
-% testBoard([[3, 3, 5, 2],[4, 6, 3, 3], [2, 3, 5, 5], [2, 4, 4, 4]]). %Solved example at the top; Has multiple solutions
-testBoard([[2, 4, 4, 3],
+testBoard4x4([[2, 4, 4, 3],
            [4, 3, 6, 4], 
            [4, 8, 6, 6], 
            [2, 3, 4, 3]]). %First example
 
-testBoard([[3, 3, 5, 2, 3],
+testBoard5x5([[3, 3, 5, 2, 3],
             [4, 6, 3, 3, 4], 
             [2, 3, 5, 5, 2], 
-            [2, 4, 4, 4, 3], 
-            [2, 4, 4, 4, 3]]).
+            [5, 4, 6, 4, 3], 
+            [3, 4, 4, 4, 3]]).
 
-testBoard([[2, 4, 4, 2],
-           [4, 6, 4, 3], 
-           [6,5,5,4], 
-           [4,4,4,4]]).
+% testBoard([[2, 4, 4, 2],
+%            [4, 6, 4, 3], 
+%            [6,5,5,4], 
+%            [4,4,4,4]]).
 
 % testBoard([[4, 4, 4, 3],
 %             [2,4,4,5], 
@@ -64,25 +56,35 @@ testBoard([[2, 4, 4, 2],
 %             [3,4,4,2]]).
 
 lightbulb(NumbersBoard, ResultBoard) :-
-  
+   
    length(NumbersBoard, Collen),
    getRowLength(NumbersBoard, RowLen),
+   
+   % variable declaration
    length(ResultBoard, Collen),
    createMatrix(ResultBoard, RowLen),
    flatten(ResultBoard, FlattenedResults), %Get the flattened lists, since it's easier and more efficient to work with them
    flatten(NumbersBoard, FlattenedNumbers), %Get the flattened lists, since it's easier and more efficient to work with them
    domain(FlattenedResults, 0, 1), %1 is lit, 0 is unlit
-   %Temporary test code
 
+   % applying restrictions
    sum(FlattenedResults, #\=, 0), %Exclude all zeros
         
    restrictSpot(FlattenedNumbers, FlattenedResults, Collen, RowLen, 1),
 
-   % write(ResultBoard), !,
-    write('.'),
+   % solution search
    labeling([], FlattenedResults).
 
-/* SHOW RESULTS --------------------------------------------------*/
+/* RESULT PRESENTATION --------------------------------------------------*/
+displayResults(List, NBoard, Elapsed) :-
+   write('ORIGINAL -------'), nl,
+   printMatrix(NBoard),
+   length(NBoard, BoardSize),
+   showResults(List, NBoard, BoardSize),
+   length(List, N),
+   format('~n~n [!] Number of solutions: ~p~n', [N]),
+   format('~n [!] Elapsed time: ~p~n', [Elapsed]).
+
 showResults([], _, _).
 showResults([First|Rest], Original, N) :-
    separator(N),
@@ -105,6 +107,7 @@ showResultLine( [_ | RestOriginal], [_|RestRes]) :-
    write('  | '),
    showResultLine(RestOriginal, RestRes).
 
+/* INPUT BOARD VALIDATION ------------------------------------ */
 % checking if all the numbers inserted in a board are valid
 checkBoard([]).
 checkBoard([Line | Rest]) :-
@@ -117,6 +120,6 @@ checkBoard(_) :-
 checkLine([]).
 checkLine([First | Rest]) :-
    number(First),
-   First > 0,
-   First < 10,
+   First > 0,     % each number must be greatter or equal to 1
+   First < 10,    % each number must be less than 10
    checkLine(Rest).

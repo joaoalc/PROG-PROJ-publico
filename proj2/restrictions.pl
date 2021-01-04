@@ -27,7 +27,6 @@ restrictSpot(FullNumberList, FullResultList, NumCols, NumLines, N) :-
         Elem3 #= 0
     ),
 
-    %write('N = '), write(N), nl,    
     Side4 is N - 1,
     (Side4 mod NumCols =:= 0 -> %Was N at the start of a line?
         Elem4 #= 0;
@@ -65,7 +64,6 @@ restrictSpot(FullNumberList, FullResultList, NumCols, NumLines, N) :-
         Elem9 #= 0
     ),
 
-    % writke([Elem1, Elem2, Elem3, Elem4, Elem6, Elem7, Elem8, Elem9]), nl,
     sum([Elem1, Elem2, Elem3, Elem4, Elem6, Elem7, Elem8, Elem9], #\=, Number),
     (
         ( % a light that has the same number of adjacent bulbs as it's  number can be on or off
