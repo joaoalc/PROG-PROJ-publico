@@ -1,5 +1,7 @@
 :-use_module(library(random)).
 
+%Creates a random lightbulb puzzle. This one is purely random and doesn't guarentee a solution.
+%For one that guarentees at least one solution, look for randomSuccessfulLightbulb
 randomLightbulb(RowLen, Collen) :-
     generateRandomBoard(RandomBoard, RowLen, Collen),
     write('Board:'),
@@ -32,6 +34,7 @@ randomizeLine([First|Line]) :-
     randomizeLine(Line).
 
 
+%Given a width and height, respectively, generates and solves a random lightbulb puzzle with at least one solution
 solveRandomSuccessfulLightbulb(RowLen, ColLen) :- %Refactor the lightbuld function to use flattened boards; use setof here to find every solution then use statistics and such
 
 
@@ -42,7 +45,6 @@ solveRandomSuccessfulLightbulb(RowLen, ColLen) :- %Refactor the lightbuld functi
     domain(FlatRes, 0, 1), %1 is lit, 0 is unlit
     sum(FlatRes, #\=, 0), %Exclude all zeros
     restrictSpot(FlattenedNumbers, FlatRes, RowLen, ColLen, 1),
-    write(Numbers),
 
 
     unflattenList(FlattenedNumbers, RowLen, ColLen, Numbers),
@@ -52,11 +54,10 @@ solveRandomSuccessfulLightbulb(RowLen, ColLen) :- %Refactor the lightbuld functi
     bagof(Results, lightbulb(Numbers, Results),  List),
 
     statistics(walltime, [End|_]), % stop counting
-    nl,
-    write(Numbers), nl, write(Results), nl,
     Elapsed is End - Start,
     displayResults(List, Numbers, Elapsed).
 
+%Given a width and height, respectively, generates a random lightbulb puzzle with at least one solution
 randomSuccessfulLightbulb(FlattenedResults, FlattenedNums, RowLen, ColLen) :-
     generateVariableBoard(ResultBoard, RowLen, ColLen),
     flatten(ResultBoard, FlattenedResults),
@@ -69,7 +70,6 @@ randomLightbulbProblem(FlattenedResults, FlattenedNums, FlattenedBoard, RowLen, 
     generateVariableBoard(NumberBoard, RowLen, ColLen),
     flatten(NumberBoard, FlattenedNumbers),
     restrictions(FlattenedNumbers, FlattenedBoard, RowLen, ColLen).
-
 
 restrictions(FlattenedNumbers, FlattenedResults, RowLen, ColLen) :-
     domain(FlattenedNumbers, 1, 9),
@@ -84,6 +84,7 @@ random_member(Value, List), % da library(random)
 later_bound(BB0, BB1), Var #\= Value ).
 
 
+%Creates a random board with lit or unlit lightbulbs; used in creating random lightbulb puzzles with at least one solution
 randomizeResultBoard([]).
 
 randomizeResultBoard([First|FlattenedResults]) :-
