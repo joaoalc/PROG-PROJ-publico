@@ -63,34 +63,39 @@ This article was developed as complement for the second partical assignment of t
 	\end{itemize}
 
 \section{Problem description}
-The Lightbulb puzzle consists of a two dimensonal board consisting of n[1*] light bulbs per line and m[1*] light bulbs per column, where each lightbulb has a number on it.
+The Lightbulb puzzle consists of a two dimensonal board consisting of N light bulbs per line and M light bulbs per column, where each lightbulb has a number on it.\hfill \break
 Each lightbulb is on if and only if it's number is equal to the number of lit neighboring (directly or diagonally adjacent) lightbulbs, including itself. When given a board we must determine all it's possible solutions; the number of solutions may range from one to many, however there are cases in which the board is impossible to solve. Having that in consideration we classified the LightBulbs puzzle as a decision problem.
 
 \section{Approach}
 
 \subsection{Decision Variables}
-For this puzzle the decision variables are the values inside each cell of the input board. As previously stated, each board cell as a value representing the number of adjacent bulbs that need to be lit in order for the current cell to be as well.
+For this puzzle the decision variables are the values inside each cell of the input board. As previously stated, each board cell as a value representing the number of adjacent bulbs that need to be lit in order for the current cell to be as well.\hfill \break
 Taking into consideration that every cell can at most have eight adjacent cells and that for the bulb to be lit we need to have N adjacent lit bulbs plus the current one we come to the conclusion that the maximum number inside a light bulb is 8+1=9. As for the minimum value we came to the conclusion that it should be 1. If the value inside a bulb was equal to zero, then that bulb would always be turned off, because of the constraints of this puzzle.
 
 \subsection{Constraints}
-\subsubsection{Elements} \hfill \break
-Our problem is a constraint satisfaction problem, therefore, every constraint is a hard constraint, which always have to be true (if they are called).
-We have a "results list", where each element is a variable that can be 1, if the corresponding lightbulb is turned off or, otherwise, 0. This list is a flattened version of the list that is returned at the end. It's first element is at line 1 column 1, the second is at line 2 column 1, etc...
+
+\subsection{Elements}
+Our problem is a constraint satisfaction problem, therefore, every constraint is a hard constraint, which always have to be true (if they are called).\hfill \break
+We have a "results list", where each element is a variable that can be 1, if the corresponding lightbulb is turned off or, otherwise, 0. This list is a flattened version of the list that is returned at the end. It's first element is at line 1 column 1, the second is at line 2 column 1, etc...\hfill \break
 [Note: we use nth1, so the first element will be index 1.]
 
-\subsubsection{Element searching} \hfill \break
-As previously mentioned, a bulb is only lit when the number inside it is equal to the number of adjacent light bulbs (including itself) that are lit. In order to accomplish this we iterated over all of the input board's cells and for each cell we fetched every adjacent variable. The maximum number of adjacent cells is eight, so for each light bulb we needed eight variables. If the current cell had less than eight neighbors, for instance, if it was in a corner, then the adjacent variables that were out of bounds would take the value of zero.
-After having gotten all the adjacent variables we started applying the constraints. The first one being that the sum of all the adjacent variables should be different from the number inside the current bulb.
-For example, being given a 4x3 board:
-We are using a flattened list, therefore, the line length is 4 and the existing elements are 1 through 16.
-The program starts by checking for the first (1 - top left) cell, it first checks for the cell above and to the left of it first (1 - 4 - 1 = -4). Since that element isn't in the board, the would be element's value is zero.
-The same thing happens for the element above, above (1 - 4 = -3), above to the right (1 - 4 + 1 = -2) and center to the left (1 - 1 = 0), and, later on, to the element under and to the left.
-There isn't a check for itself, since, if an element exists, then it exists.
-The other elements are assigned to the corresponding variables (2nd, 5th and 6th elements of the "results list").
+\subsection{Element searching}
+As previously mentioned, a bulb is only lit when the number inside it is equal to the number of adjacent light bulbs (including itself) that are lit. In order to accomplish this we iterated over all of the input board's cells and for each cell we fetched every adjacent variable. The maximum number of adjacent cells is eight, so for each light bulb we needed eight variables. If the current cell had less than eight neighbors, for instance, if it was in a corner, then the adjacent variables that were out of bounds would take the value of zero.\hfill \break
+After having gotten all the adjacent variables we started applying the constraints. The first one being that the sum of all the adjacent variables should be different from the number inside the current bulb.\hfill \break
+For example, being given a 4x3 board:\hfill \break
+We are using a flattened list, therefore, the line length is 4 and the existing elements are 1 through 16.\hfill \break
+The program starts by checking for the first (1 - top left) cell, it first checks for the cell above and to the left of it first (1 - 4 - 1 = -4). Since that element isn't in the board, the would be element's value is zero.\hfill \break
+The same thing happens for the element above, above (1 - 4 = -3), above to the right (1 - 4 + 1 = -2) and center to the left (1 - 1 = 0), and, later on, to the element under and to the left.\hfill \break
+There isn't a check for itself, since, if an element exists, then it exists.\hfill \break
+The other elements are assigned to the corresponding variables (2nd, 5th and 6th elements of the "results list").\hfill \break
 
 Since we repeat the steps above for each list element, when it gets to the end, every element will check wether each adjacent lightbulb (including itself) are lit up.
 
-\subsubsection*{Sum condition} \hfill \break
+
+\clearpage
+\subsection{Restrictions}
+[Note: These restriction names aren't official and were made for the sake of comprehension]\hfill \break
+\subsection*{Sum condition}
 If the sum of every element in the "results list" is 0, then the "results list" is automatically invalid.
 
 \begin{figure}
@@ -121,16 +126,16 @@ If that sum is equal to the number on the lightbulb we're checking, then the lig
 	\centering
 \end{figure}
 
-Each lighbulb lightbulb can always be off, unless it meets the "sum condition" or the "lockout condition".
+Each lighbulb lightbulb can always be off, unless it meets the "sum condition" or the "lockout condition".\hfill \break
 
-These restrictions are used both to obtain the solution and to create the problem using a solution.
+These restrictions are used both to obtain the solution and to create the problem using a solution.\hfill \break
 
 
 
 \clearpage
 \section{Solution Presentation}
 In order to make the solution more intelligible, the input board is displayed along with the result board, in which the latter
-only contains the cells that have a lit bulb, allowing for an easier understanding of the solution. The elapsed time is also displayed for the experiments and results section.
+only contains the cells that have a lit bulb, allowing for an easier understanding of the solution. The elapsed time is also displayed for the experiments and results section.\hfill \break
 The predicates responsible for displaying the results are called after the solution is obtained. As each board can originate more than one result the solution consists of a list of matrices, each one representing the possible output boards for the original board. The \textbf{showResults} predicate is responsible for iterating over the result matrices and displaying each one in the console.
 
 \begin{figure}[h]
@@ -148,9 +153,10 @@ The predicates responsible for displaying the results are called after the solut
 \section{Experiments and Results}
 \subsection{Dimension Analysis}
 The Dimension Analysis graph indicates how our program scales with board size. Board size indicates the length and width of the square board.
-Time indicates the time it takes to solve it.
-We used a randomly created board with at least one solution.
+Time indicates the time it takes to solve it.\hfill \break
+We used a randomly created board with at least one solution.\hfill \break
 As expected, the time to solve increased with the board size, however, the spike from 7 to 8 was unexpected. Despite that, the time increase relative to the board size increase seemed to stabilize after that, so we'll assume the spike was an anomaly.
+We also found that the time it took for a board to be solved tended to increase the more solutions there were.\hfill \break
 We did one test por board size.
 
 \begin{figure}
@@ -164,9 +170,8 @@ We did one test por board size.
 We ran every our application with different search options but obtained similar results to the ones displayed on figure. 6. These options didn't have that much of an effect on our tests because most off them affect the domain of the variables which in our case was between 0 and 1. Another reason for this, was the fact that this puzzle represents a "satisfaction" problem in which we, for every board, calculate all the possible solutions, therefore the order in which they originated didn't affect the execution time.
 
 \section{Conclusions}
-The objective of this project was to develop an application capable of creating and solving light bulb puzzles. At the end of this assignment we feel that our knowledge on the CLPFD prolog module has definitely increased as well as our experience with constraint logical programming.
-
-We also found that the time it took for a board to be solved tended to increase the more solutions there were.
+The objective of this project was to develop an application capable of creating and solving light bulb puzzles. At the end of this assignment we feel that our knowledge on the CLPFD prolog module has definitely increased as well as our experience with constraint logical programming.\hfill \break
+In the end, we did all the requirements and also implemented file I/O support of lightbulb puzzles.
 
 % ---- Bibliography ----
 %

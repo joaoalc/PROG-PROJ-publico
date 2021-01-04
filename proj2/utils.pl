@@ -47,6 +47,7 @@ separator(N) :-
     separatorAux(N),
     write('---+').
 
+%File I/O related predicates
 writeToFile(File) :-
     open(File, write, Stream),
     format(Stream, "np.nm", [feup]),
@@ -57,6 +58,8 @@ readFromFile(File, Board) :-
     read(Stream, Board),
     close(Stream).
 
+
+%Makes a board out of a list, given it's width and length
 unflattenList(List, RowLen, ColLen, ResultBoard) :-
     unflatten(List, RowLen, ColLen, [], ResultBoard, NL).
 

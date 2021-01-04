@@ -1,8 +1,10 @@
 
+%restrictSpot: Goes through each element in the flattened list and sets their individual restrictions relative to the neighboring elements
+%Exit condition
 restrictSpot(_, _, NumCols, NumLines, N) :-
     N > NumCols * NumLines.
 
-
+%Used when there is only one element per line
 restrictSpot(FullNumberList, FullResultList, 1, NumLines, N) :-
     NumLines \== 1,
     N =< 1 * NumLines,
@@ -23,9 +25,11 @@ restrictSpot(FullNumberList, FullResultList, 1, NumLines, N) :-
         Elem8 #= 0
     ),
 
+    %Lockout condition - See report for more info
     sum([Elem2, Elem8], #\=, Number),
     (
         ( % a light that has the same number of adjacent bulbs as it's  number can be on or off
+            %Light condition - See report for more info
             sum([Elem2, 1, Elem8], #=, Number), 
             ElemSelf #=1 %As long as the outermost condition is met, any element can be zero, but if this innermost contition is met, it can also be one
         );
@@ -34,6 +38,7 @@ restrictSpot(FullNumberList, FullResultList, 1, NumLines, N) :-
     N1 is N + 1,
     restrictSpot(FullNumberList, FullResultList, 1, NumLines, N1).
 
+%Used when there is only one element per column
 restrictSpot(FullNumberList, FullResultList, NumCols, 1, N) :-
     NumCols \== 1,
     N =< NumCols * 1,
@@ -53,10 +58,11 @@ restrictSpot(FullNumberList, FullResultList, NumCols, 1, N) :-
         nth1(Side6, FullResultList, Elem6)
     ),
 
+    %Lockout condition - See report for more info
     sum([Elem4, Elem6], #\=, Number),
     (
         ( % a light that has the same number of adjacent bulbs as it's  number can be on or off
-            sum([Elem4, 1, Elem6], #=, Number), 
+            sum([Elem4, 1, Elem6], #=, Number), %Light condition - See report for more info
             ElemSelf #=1 %As long as the outermost condition is met, any element can be zero, but if this innermost contition is met, it can also be one
         );
         ElemSelf #= 0
@@ -131,9 +137,11 @@ restrictSpot(FullNumberList, FullResultList, NumCols, NumLines, N) :-
         Elem9 #= 0
     ),
 
+    %Lockout condition - See report for more info
     sum([Elem1, Elem2, Elem3, Elem4, Elem6, Elem7, Elem8, Elem9], #\=, Number),
     (
         ( % a light that has the same number of adjacent bulbs as it's  number can be on or off
+            %Light condition - See report for more info
             sum([Elem1, Elem2, Elem3, Elem4, 1, Elem6, Elem7, Elem8, Elem9], #=, Number), 
             ElemSelf #=1 %As long as the outermost condition is met, any element can be zero, but if this innermost contition is met, it can also be one
         );
