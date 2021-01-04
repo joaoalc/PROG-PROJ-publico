@@ -119,7 +119,7 @@ If that sum is equal to the number on the lightbulb we're checking, then the lig
 	\centering
 	\caption{Light condition example}
 	\centering
-	\end{figure}
+\end{figure}
 
 Each lighbulb lightbulb can always be off, unless it meets the "sum condition" or the "lockout condition".
 
@@ -147,14 +147,26 @@ The predicates responsible for displaying the results are called after the solut
 
 \section{Experiments and Results}
 \subsection{Dimension Analysis}
+The Dimension Analysis graph indicates how our program scales with board size. Board size indicates the length and width of the square board.
+Time indicates the time it takes to solve it.
+We used a randomly created board with at least one solution.
+As expected, the time to solve increased with the board size, however, the spike from 7 to 8 was unexpected. Despite that, the time increase relative to the board size increase seemed to stabilize after that, so we'll assume the spike was an anomaly.
+We did one test por board size.
+
+\begin{figure}
+	\includegraphics[scale=0.5]{graph}
+	\centering
+	\caption{Effect of the board size on execution time}
+	\centering
+\end{figure}
+
 \subsection{Search Strategies}
+We ran every our application with different search options but obtained similar results to the ones displayed on figure. 6. These options didn't have that much of an effect on our tests because most off them affect the domain of the variables which in our case was between 0 and 1. Another reason for this, was the fact that this puzzle represents a "satisfaction" problem in which we, for every board, calculate all the possible solutions, therefore the order in which they originated didn't affect the execution time.
 
 \section{Conclusions}
 The objective of this project was to develop an application capable of creating and solving light bulb puzzles. At the end of this assignment we feel that our knowledge on the CLPFD prolog module has definitely increased as well as our experience with constraint logical programming.
 
-
-
-\section{References}
+We also found that the time it took for a board to be solved tended to increase the more solutions there were.
 
 % ---- Bibliography ----
 %
@@ -165,24 +177,11 @@ The objective of this project was to develop an application capable of creating 
 % \bibliography{mybibliography}
 %
 \begin{thebibliography}{8}
-\bibitem{ref_article1}
-Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
-
-\bibitem{ref_lncs1}
-Author, F., Author, S.: Title of a proceedings paper. In: Editor,
-F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
-Springer, Heidelberg (2016). \doi{10.10007/1234567890}
-
-\bibitem{ref_book1}
-Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
-Location (1999)
-
-\bibitem{ref_proc1}
-Author, A.-B.: Contribution title. In: 9th International Proceedings
-on Proceedings, pp. 1--2. Publisher, Location (2010)
-
 \bibitem{ref_url1}
-LNCS Homepage, \url{http://www.springer.com/lncs}. Last accessed 4
-Oct 2017
+SICstus Documentation, \url{https://sicstus.sics.se/sicstus/docs/latest4/html/sicstus.html}. Last accessed 4
+Jan 2020
+\bibitem{ref_url1}
+SWI Prolog Documentation, \url{https://www.swi-prolog.org/}. Last accessed 4
+Jan 2020
 \end{thebibliography}
 \end{document}
