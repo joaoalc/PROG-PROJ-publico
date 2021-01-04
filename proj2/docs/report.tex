@@ -73,13 +73,12 @@ For this puzzle the decision variables are the values inside each cell of the in
 Taking into consideration that every cell can at most have eight adjacent cells and that for the bulb to be lit we need to have N adjacent lit bulbs plus the current one we come to the conclusion that the maximum number inside a light bulb is 8+1=9. As for the minimum value we came to the conclusion that it should be 1. If the value inside a bulb was equal to zero, then that bulb would always be turned off, because of the constraints of this puzzle.
 
 \subsection{Constraints}
-
-\subsection{Elements}
+\subsubsection{Elements} \hfill \break
 Our problem is a constraint satisfaction problem, therefore, every constraint is a hard constraint, which always have to be true (if they are called).
 We have a "results list", where each element is a variable that can be 1, if the corresponding lightbulb is turned off or, otherwise, 0. This list is a flattened version of the list that is returned at the end. It's first element is at line 1 column 1, the second is at line 2 column 1, etc...
 [Note: we use nth1, so the first element will be index 1.]
 
-\subsection{Element searching}
+\subsubsection{Element searching} \hfill \break
 As previously mentioned, a bulb is only lit when the number inside it is equal to the number of adjacent light bulbs (including itself) that are lit. In order to accomplish this we iterated over all of the input board's cells and for each cell we fetched every adjacent variable. The maximum number of adjacent cells is eight, so for each light bulb we needed eight variables. If the current cell had less than eight neighbors, for instance, if it was in a corner, then the adjacent variables that were out of bounds would take the value of zero.
 After having gotten all the adjacent variables we started applying the constraints. The first one being that the sum of all the adjacent variables should be different from the number inside the current bulb.
 For example, being given a 4x3 board:
@@ -91,10 +90,7 @@ The other elements are assigned to the corresponding variables (2nd, 5th and 6th
 
 Since we repeat the steps above for each list element, when it gets to the end, every element will check wether each adjacent lightbulb (including itself) are lit up.
 
-
-\clearpage
-\subsection{Restrictions}
-\subsection*{Sum condition}
+\subsubsection*{Sum condition} \hfill \break
 If the sum of every element in the "results list" is 0, then the "results list" is automatically invalid.
 
 \begin{figure}
@@ -103,18 +99,18 @@ If the sum of every element in the "results list" is 0, then the "results list" 
 	\caption{No whole board unlit example}
 	\centering
 	\end{figure}
-
-\subsection*{Lockout condition}
+\clearpage
+\subsubsection*{Lockout condition} \hfill \break
 First we check if the sum of the neighboring elements, excluding itself, is equal to the number on the lightbulb. If it is, then the current "results list" is automatically invalid.
 \begin{figure}
 	\includegraphics[scale=0.5]{lightbulb_impossible_state}
 	\centering
 	\caption{Lockout condition example}
 	\centering
-	\end{figure}
+\end{figure}
 
 
-\subsection*{Light condition}
+\subsubsection*{Light condition} \hfill \break
 For each element, we get the sum of the the neighboring elements, excluding itself, plus one (the +1 is because we are assuming that the lightbulb itself is on for this case).
 If that sum is equal to the number on the lightbulb we're checking, then the lightbulb can be on, but doesn't necessarily have to be.
 
@@ -128,6 +124,8 @@ If that sum is equal to the number on the lightbulb we're checking, then the lig
 Each lighbulb lightbulb can always be off, unless it meets the "sum condition" or the "lockout condition".
 
 These restrictions are used both to obtain the solution and to create the problem using a solution.
+
+
 
 \clearpage
 \section{Solution Presentation}
