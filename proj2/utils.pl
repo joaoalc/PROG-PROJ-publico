@@ -56,3 +56,21 @@ readFromFile(File, Board) :-
     open(File, read, Stream),
     read(Stream, Board),
     close(Stream).
+
+unflattenList(List, RowLen, ColLen, ResultBoard) :-
+    unflatten(List, RowLen, ColLen, [], ResultBoard, NL).
+
+unflatten(_, _, 0, ResBoard, ResBoard, _).
+
+unflatten(List, RowLen, ColLen, ResBoard, ResultBoard, NewList) :-
+    unflattenLine(List, RowLen, [], ResLine, NewList),
+    append(ResBoard, [ResLine], RBoard),
+    CL is ColLen - 1,
+    unflatten(NewList, RowLen, CL, RBoard, ResultBoard, NL).
+
+
+unflattenLine(List, 0, RLine, RLine, List).
+unflattenLine([First|List], RowLen, RLine, ResLine, L2) :-
+    append(RLine, [First], RL),
+    RowL is RowLen - 1,
+    unflattenLine(List, RowL, RL, ResLine, L2).
