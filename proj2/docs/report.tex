@@ -26,7 +26,7 @@ João Cardoso - up201806531 \\
 \small{FEUP-PLOG, 3MIEIC01, Grupo LightBulb}}
 
 %
-\authorrunning{F. Author et al.}
+\authorrunning{ }
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
@@ -38,13 +38,13 @@ João Cardoso - up201806531 \\
 This article contains the implementation details of the application developed for the second assignment for the
 Logical Programming subject. The goal of this project was to develop a program capable of creating and solving every instance of the Light bulb puzzle. The goal of this puzzle is to find every lit light bulb, considering that a light bulb is only lit if and only if the number inside it is equal to the number of lit neighboring lamps (including itself).
 
-\keywords{PROLOG  \and SICStus \and Lightbulbs.}
+\keywords{Prolog  \and SICStus \and Light Bulbs.}
 \end{abstract}
 %
 %
 %
 \section{Introduction}
-This article was developed as complement for the second partical assignment of the Logical Programming subject of the 3rd year of the MIEIC course. The goal of this project was to develop an application capable of creating and solving "Lightbulb" type puzzles using the SISCstus prolog development system along with the restriction tools provided by the CLPFD library. The objective of these puzzles is to determine which light bulbs inside a n*n square are turned on. A light bulb is only on when the number of adjacent bulbs (including itself) equals the number attributed to it. This document is organized in the following manner:
+This article was developed as complement for the second practical assignment of the Logical Programming subject of the 3rd year of the MIEIC course. The goal of this project was to develop an application capable of creating and solving "Light bulb" type puzzles using the SISCstus prolog development system along with the restriction tools provided by the CLPFD library. The objective of these puzzles is to determine which light bulbs inside a n*n square are turned on. A light bulb is only on when the number of adjacent bulbs (including itself) equals the number attributed to it. This document is organized in the following manner:
 	\begin{itemize}
 		\item[•] \textbf{Problem Description:} detailed description of the problem being analyzed
 		\item[•] \textbf{Approach:} section describing the implementation of the application
@@ -63,8 +63,8 @@ This article was developed as complement for the second partical assignment of t
 	\end{itemize}
 
 \section{Problem description}
-The Lightbulb puzzle consists of a two dimensonal board consisting of n[1*] light bulbs per line and m[1*] light bulbs per column, where each lightbulb has a number on it.
-Each lightbulb is on if and only if it's number is equal to the number of lit neighboring (directly or diagonally adjacent) lightbulbs, including itself. When given a board we must determine all it's possible solutions; the number of solutions may range from one to many, however there are cases in which the board is impossible to solve. Having that in consideration we classified the LightBulbs puzzle as a decision problem.
+The Light bulb puzzle consists of a two dimensional board consisting of n[1*] light bulbs per line and m[1*] light bulbs per column, where each light bulb has a number on it.
+Each light bulb is on if and only if it's number is equal to the number of lit neighboring (directly or diagonally adjacent) light bulbs, including itself. When given a board we must determine all it's possible solutions; the number of solutions may range from one to many, however there are cases in which the board is impossible to solve. Having that in consideration we classified the Light Bulbs puzzle as a decision problem.
 
 \section{Approach}
 
@@ -75,7 +75,7 @@ Taking into consideration that every cell can at most have eight adjacent cells 
 \subsection{Constraints}
 \subsubsection{Elements} \hfill \break
 Our problem is a constraint satisfaction problem, therefore, every constraint is a hard constraint, which always have to be true (if they are called).
-We have a "results list", where each element is a variable that can be 1, if the corresponding lightbulb is turned off or, otherwise, 0. This list is a flattened version of the list that is returned at the end. It's first element is at line 1 column 1, the second is at line 2 column 1, etc...
+We have a "results list", where each element is a variable that can be 1, if the corresponding light bulb is turned off or, otherwise, 0. This list is a flattened version of the list that is returned at the end. It's first element is at line 1 column 1, the second is at line 2 column 1, etc...
 [Note: we use nth1, so the first element will be index 1.]
 
 \subsubsection{Element searching} \hfill \break
@@ -88,7 +88,7 @@ The same thing happens for the element above, above (1 - 4 = -3), above to the r
 There isn't a check for itself, since, if an element exists, then it exists.
 The other elements are assigned to the corresponding variables (2nd, 5th and 6th elements of the "results list").
 
-Since we repeat the steps above for each list element, when it gets to the end, every element will check wether each adjacent lightbulb (including itself) are lit up.
+Since we repeat the steps above for each list element, when it gets to the end, every element will check weather each adjacent light bulb (including itself) are lit up.
 
 \subsubsection*{Sum condition} \hfill \break
 If the sum of every element in the "results list" is 0, then the "results list" is automatically invalid.
@@ -101,7 +101,7 @@ If the sum of every element in the "results list" is 0, then the "results list" 
 	\end{figure}
 \clearpage
 \subsubsection*{Lockout condition} \hfill \break
-First we check if the sum of the neighboring elements, excluding itself, is equal to the number on the lightbulb. If it is, then the current "results list" is automatically invalid.
+First we check if the sum of the neighboring elements, excluding itself, is equal to the number on the light bulb. If it is, then the current "results list" is automatically invalid.
 \begin{figure}
 	\includegraphics[scale=0.5]{lightbulb_impossible_state}
 	\centering
@@ -111,8 +111,8 @@ First we check if the sum of the neighboring elements, excluding itself, is equa
 
 
 \subsubsection*{Light condition} \hfill \break
-For each element, we get the sum of the the neighboring elements, excluding itself, plus one (the +1 is because we are assuming that the lightbulb itself is on for this case).
-If that sum is equal to the number on the lightbulb we're checking, then the lightbulb can be on, but doesn't necessarily have to be.
+For each element, we get the sum of the the neighboring elements, excluding itself, plus one (the +1 is because we are assuming that the light bulb itself is on for this case).
+If that sum is equal to the number on the light bulb we're checking, then the light bulb can be on, but doesn't necessarily have to be.
 
 \begin{figure}
 	\includegraphics[scale=0.5]{lightbulb_light_condition_example}
@@ -121,7 +121,7 @@ If that sum is equal to the number on the lightbulb we're checking, then the lig
 	\centering
 \end{figure}
 
-Each lighbulb lightbulb can always be off, unless it meets the "sum condition" or the "lockout condition".
+Each ligh bulb can always be off, unless it meets the "sum condition" or the "lockout condition".
 
 These restrictions are used both to obtain the solution and to create the problem using a solution.
 
@@ -151,7 +151,7 @@ The Dimension Analysis graph indicates how our program scales with board size. B
 Time indicates the time it takes to solve it.
 We used a randomly created board with at least one solution.
 As expected, the time to solve increased with the board size, however, the spike from 7 to 8 was unexpected. Despite that, the time increase relative to the board size increase seemed to stabilize after that, so we'll assume the spike was an anomaly.
-We did one test por board size.
+We did one test per board size.
 
 \begin{figure}
 	\includegraphics[scale=0.5]{graph}
@@ -163,12 +163,13 @@ We did one test por board size.
 \subsection{Search Strategies}
 We ran every our application with different search options but obtained similar results to the ones displayed on figure. 6. These options didn't have that much of an effect on our tests because most off them affect the domain of the variables which in our case was between 0 and 1. Another reason for this, was the fact that this puzzle represents a "satisfaction" problem in which we, for every board, calculate all the possible solutions, therefore the order in which they originated didn't affect the execution time.
 
+\clearpage
 \section{Conclusions}
-The objective of this project was to develop an application capable of creating and solving light bulb puzzles. At the end of this assignment we feel that our knowledge on the CLPFD prolog module has definitely increased as well as our experience with constraint logical programming.
+The objective of this project was to develop an application capable of creating and solving light bulb puzzles. At the end of this assignment we feel that our knowledge on the CLPFD prolog module has definitely increased as well as our experience with constraint logical programming. \hfill \break
 We observed, as was expected, that the execution time of the application increased with the size of the board being solved.
-The results showed that in spite of the rapid increase of the execution time between the board sizes of 7 and 8 the graph was mostly linear which indicates that our implementation of this problem was acceptable.
+The results showed that in spite of the rapid increase of the execution time between the board sizes of 7 and 8 the graph was mostly linear which indicates that our implementation of this problem was acceptable. \hfill \break
 As far as the required features we implemented others like reading boards from a file, generating random possible light bulb puzzles and checking weather an input board is valid.
-The main flaw of our application would be the overuse of if statements which are prone to failures and maybe aren't that efficient. 
+The main flaw of our application would be the overuse of if statements which are prone to failures and maybe aren't that efficient. \hfill \break
 Taking all these factors into consideration we believe that this project was a success as we were able to develop an application capable of generating and solving light bulb type puzzles.
 
 % ---- Bibliography ----
@@ -183,7 +184,7 @@ Taking all these factors into consideration we believe that this project was a s
 \bibitem{ref_url1}
 SICstus Documentation, \url{https://sicstus.sics.se/sicstus/docs/latest4/html/sicstus.html}. Last accessed 4
 Jan 2020
-\bibitem{ref_url1}
+\bibitem{ref_url2}
 SWI Prolog Documentation, \url{https://www.swi-prolog.org/}. Last accessed 4
 Jan 2020
 \end{thebibliography}
