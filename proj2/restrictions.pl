@@ -68,7 +68,7 @@ restrictSpot(FullNumberList, FullResultList, NumCols, NumLines, N) :-
     (
         ( % a light that has the same number of adjacent bulbs as it's  number can be on or off
             sum([Elem1, Elem2, Elem3, Elem4, 1, Elem6, Elem7, Elem8, Elem9], #=, Number), 
-            ElemSelf #=1
+            ElemSelf #=1 %As long as the outermost condition is met, any element can be zero, but if this innermost contition is met, it can also be one
         );
         ElemSelf #= 0
     ),
